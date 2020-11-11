@@ -1,0 +1,21 @@
+<cu-custom bgColor="bg-blue-1">
+  <view slot="content">手机号登录</view>
+</cu-custom>
+<view class="padding">
+  <view class="margin-top-xl margin-bottom-lg text-black">
+    <view class="margin-bottom-lg padding-bottom solids-bottom">
+      <input type="number" placeholder="请输入手机号" class="text-lg" bindinput="inputEventGetValue" data-paramtype="phoneNumber" maxlength="11"></input>
+    </view>
+    <view class="flex padding-bottom solids-bottom align-center">
+      <input password type="text" class="flex-sub text-lg fitcode" placeholder="请输入验证码" bindinput="inputEventGetValue" data-paramtype="fitCode" maxlength="6"></input>
+      <view class="border-blue-1 text-blue-1 margin-left-sm radius padding-lr-sm text-df" style="height:60rpx;line-height:60rpx" bindtap="sendFitCode">{{sendCodeContent}}</view>
+    </view>
+  </view>
+  <button class="bg-blue-1 margin-bottom" bindtap="login">同意协议并登录</button>
+  <view class="text-sm text-grey">
+    已阅读并同意
+    <a href="" class="text-blue">《用户服务协议》、</a>
+    <a href="" class="text-blue">《隐私权政策》</a>
+  </view>
+</view>
+<view class="pos-ab totast radius text-center text-sm padding-lr padding-tb-sm {{noticeShow == true?'':'dp-none'}}">{{noticeContent}}</view>

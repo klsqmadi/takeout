@@ -1,0 +1,19 @@
+<cu-custom bgColor="bg-blue-1" isBack="true">
+  <view slot="backText">账单</view>
+</cu-custom>
+<view class="text-lg bg-white padding flex justify-between">
+  <picker mode="date" value="{{seleteTime.date}}" start="{{seleteTime.start}}" end="{{seleteTime.end}}" bindchange="dateChange" fields="month">
+    <text class="text-blue">{{seleteTime.date}}</text>
+    <text class="cuIcon-write"></text>
+  </picker>
+  <view>收入￥ <text class="text-red">{{seleteTime.totalIncome}}</text></view>
+</view>
+<view class="margin-top-sm bg-white">
+  <view class="flex padding justify-between align-center solids-bottom" wx:for="{{incomeDetail}}">
+    <view>
+      <view class="text-lg text-black">{{item.orderNumber}}</view>
+      <view class="text-grey">{{item.time}}</view>
+    </view>
+    <view class="text-yellow text-lg text-bold">+{{item.income}}</view>
+  </view>
+</view>

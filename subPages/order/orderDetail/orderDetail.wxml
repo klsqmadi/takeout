@@ -1,0 +1,121 @@
+<!--subPages/order/orderDetail/orderDetail.wxml-->
+<cu-custom bgColor="bg-blue-1" isBack="true">
+  <view slot="backText">订单详情</view>
+</cu-custom>
+<!-- --- -->
+<view class="flex padding margin-top margin-lr justify-around align-center bg-white" style="border-radius: 20rpx;">
+  <view class="flex-sub text-blue padding text-center" bindtap="ringCustomer">
+    <view class="cuIcon-dianhua"></view>
+    <view>联系客户</view>
+  </view>
+  <view class="flex-sub padding text-center" bindtap="ringExpressman">
+    <view class="cuIcon-expressman"></view>
+    <view>联系骑手</view>
+  </view>
+</view>
+<!-- --- -->
+<view class="padding margin bg-white" style="border-radius: 20rpx;">
+  <view class="text-bold text-lg text-black-1 solids-bottom padding-bottom margin-bottom">订单信息</view>
+  <view class="flex align-center margin-bottom solids-bottom padding-bottom">
+    <view class="margin-right text-lg" style="width:140rpx">订单状态</view>
+    <view class="flex-sub text-right text-df  text-blue" wx:if="{{item.orderState == '交易成功'}}">{{item.orderState}}
+    </view>
+    <view class="flex-sub text-right text-df  " wx:elif="{{item.orderState == '待接单'}}">
+      <text class="text-red">{{item.orderState}}</text>
+      <text class="padding-lr-sm padding-tb-xs border radius margin-left-sm text-blue" bindtap="acceptOrder">接单</text>
+      <text class="padding-lr-sm padding-tb-xs border radius margin-left-sm text-red"
+        bindtap="refuseReceiveOrder">拒绝接单</text>
+    </view>
+    <view class="flex-sub text-right text-df  text-red" wx:elif="{{item.orderState == '拒绝接单'}}">{{item.orderState}}
+    </view>
+    <view class="flex-sub text-right text-df  text-yellow" wx:elif="{{item.orderState == '待发货'}}">{{item.orderState}}
+    </view>
+    <view class="flex-sub text-right text-df  text-green" wx:elif="{{item.orderState == '待送达'}}">{{item.orderState}}
+    </view>
+  </view>
+  <view class="flex align-center margin-bottom solids-bottom padding-bottom">
+    <view class="margin-right text-lg" style="width:140rpx">订单号</view>
+    <view class="flex-sub text-right text-df text-grey flex justify-end align-center">
+      <view>{{item.orderNumber}}</view>
+      <view class="margin-lr-sm bg-grey" style="width:3rpx;height:30rpx"></view>
+      <view class="text-blue">复制</view>
+    </view>
+  </view>
+  <view class="flex margin-bottom solids-bottom padding-bottom">
+    <view class="margin-right text-lg" style="width:140rpx">备注</view>
+    <view class="flex-sub text-df text-grey">{{item.remarks}}</view>
+  </view>
+  <view class="flex align-center">
+    <view class="margin-right text-lg" style="width:140rpx">下单时间</view>
+    <view class="flex-sub text-right text-df text-grey">{{item.time}}</view>
+  </view>
+</view>
+<!-- --- -->
+<view class="padding margin-bottom margin-lr bg-white" style="border-radius: 20rpx;">
+  <view>
+    <view class="margin-bottom flex" wx:for="{{item.items}}" wx:for-item="items">
+      <view class="bg-black radius margin-right-sm" style="width:100rpx;height:100rpx"></view>
+      <view class="flex-sub margin-right-sm">
+        <view class="text-black-1 text-lg text-bold" style="margin-bottom:8rpx">{{items.itemName}}</view>
+        <view class="text-grey" style="margin-bottom:8rpx">{{items.specification}}</view>
+        <view class="text-grey">x{{items.number}}</view>
+      </view>
+      <view class="text-red text-right text-sm text-bold" style="width:20%;height:46rpx;line-height:46rpx">￥<text
+          class="text-lg">{{items.price}}</text></view>
+    </view>
+  </view>
+  <view class="flex justify-between padding-bottom solids-bottom margin-bottom-sm">
+    <view class="text-lg">配送费</view>
+    <view class="text-sm text-red">￥<text class="text-lg tex">{{item.freight}}</text></view>
+  </view>
+  <view class="text-right text-df flex justify-end">
+    <view class="margin-right text-df">
+      共计
+      <text class="text-blue text-xl">{{item.itemsNumber}}</text>
+      件商品
+    </view>
+    <view>
+      实付
+      <text class="text-df text-black-1">￥</text>
+      <text class="text-xl text-bold text-red">{{item.freight}}</text>
+    </view>
+  </view>
+</view>
+<!-- --- -->
+<view class="margin-bottom margin-lr padding bg-white" style="border-radius: 20rpx;">
+  <view class="text-bold text-lg text-black-1 solids-bottom padding-bottom margin-bottom">配送信息</view>
+  <view class="flex align-center margin-bottom solids-bottom padding-bottom">
+    <view class="margin-right text-lg" style="width:140rpx">送达时间</view>
+    <view class="flex-sub text-right text-df text-grey">尽快送达</view>
+  </view>
+  <view class="flex margin-bottom solids-bottom padding-bottom">
+    <view class="margin-right text-lg" style="width:140rpx">收获地址</view>
+    <view class="flex-sub text-df text-grey">{{item.address}}
+    </view>
+  </view>
+  <view class="flex align-center">
+    <view class="margin-right text-lg" style="width:140rpx">配送方式</view>
+    <view class="flex-sub text-right text-df text-grey">{{item.deliveredMethod}}</view>
+  </view>
+</view>
+<view class="text-center text-grey padding-top-sm border-top text-sm margin-bottom">已经到底啦</view>
+<!-- --- -->
+<view class="cu-modal {{currentModalType == 'show'?'show':''}}">
+  <view class="cu-dialog">
+    <view class="padding margin-sm">
+      确定要
+      <text class="text-red">拒绝</text> 接此单吗
+    </view>
+    <view class="flex padding-tb-sm">
+      <view class="flex-sub " bindtap="hideModal">取消</view>
+      <view class="flex-sub text-red" bindtap="confirmRefuseOrder">确定</view>
+    </view>
+  </view>
+</view>
+<view class="cu-modal bottom-modal {{currentModalType == 'bottomModal'?'show':''}} ">
+  <view class="cu-dialog text-center">
+    <view class="padding-xl bg-white margin-bottom" bindtap="confirmRing" wx:if="{{telephoneNumber}}">{{telephoneNumber}}</view>
+    <view class="padding-xl bg-white margin-bottom" wx:else><text class="{{ring == '呼叫客户'?'cuIcon-dianhua':'cuIcon-expressman'}} text-blue margin-right-sm"></text>{{ring}}</view>
+    <view class="padding-xl bg-white" bindtap="hideModal">取消</view>
+  </view>
+</view>

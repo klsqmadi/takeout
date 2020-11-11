@@ -1,0 +1,12 @@
+/* pages/login/login.wxss */
+page{
+  background: #ffffff;
+}
+.totast{
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  color: #ffffff;
+  background: #000000;
+  opacity: .6;
+}

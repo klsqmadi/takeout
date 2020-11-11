@@ -1,0 +1,254 @@
+<!--subPages/order/handleGoods/handleGoods.wxml-->
+<cu-custom bgColor="bg-blue-1" isBack="true">
+  <view slot="backText">商品管理</view>
+</cu-custom>
+<view class="bg-white nav">
+  <view class="flex text-center">
+    <view class="cu-item flex-sub text-blacks {{tabCurrentIndex == index?'cur':''}}" wx:for="{{tabContent}}"
+      bindtap="tabSwitch" data-index="{{index}}" wx:key="index" style="border-color:#1195DD">
+      {{item}}
+    </view>
+  </view>
+</view>
+<!-- --- -->
+<view hidden="{{tabCurrentIndex == 1}}">
+  <view class="VerticalBox">
+    <scroll-view class="VerticalNav nav" scroll-y scroll-with-animation scroll-top="{{VerticalNavTop}}"
+      style="height:calc(100vh - 340rpx)">
+      <view class="cu-item {{index==TabCur?'text-green cur':''}} text-sm"
+        style="max-width:175rpx;height:auto;white-space: wrap;word-break: break-all;line-height:30rpx;padding:33rpx 20rpx 30rpx"
+        wx:for="{{list}}" wx:key bindtap='tabSelect' data-id="{{index}}">{{item.name}}</view>
+    </scroll-view>
+    <scroll-view class="VerticalMain" scroll-y scroll-with-animation style="height:calc(100vh - 340rpx)"
+      scroll-into-view="main-{{MainCur}}" bindscroll="VerticalMain">
+      <view class="padding-top padding-lr" wx:for="{{list}}" wx:key id="main-{{index}}" wx:for-index="index">
+        <view class="bg-white solid-bottom padding-sm">{{item.name}}</view>
+        <view class="bg-white padding-sm">
+          <view class="flex margin-bottom" wx:for="{{item.goods}}" wx:for-item="goods" wx:for-index="itemIndex"
+            catchtap="showEditModal" data-currentModalType="{{modalName[0]}}" data-index="{{index}}"
+            data-itemIndex="{{itemIndex}}">
+            <view class="cu-avatar xl bg-black margin-right-sm radius" style="width:160rpx;height:160rpx"></view>
+            <view class="flex-sub flex flex-direction justify-around">
+              <view class="text-black text-cut" style="width:270rpx">{{goods.goodsName}}</view>
+              <view class="text-grey text-cut text-sm" style="width:270rpx">{{goods.introduce}}</view>
+              <view class="text-grey text-sm margin-top-xs flex">
+                <view class="margin-right-xl">月售 {{goods.saled}}份</view>
+                <view>规格...</view>
+              </view>
+              <view class="text-red text-df margin-top-xs"> <text class="text-orange text-sm">￥</text> {{goods.price}}
+              </view>
+            </view>
+            <view class="flex align-end">
+              <!-- <view class="round {{isCheckedBoxShow == true?'':'of-hid'}} {{goods.isChecked == true?'cuIcon-roundcheck text-xl text-green':''}}" style="width:40rpx;height:40rpx;border:1rpx solid #D2D2D2;font-size:42rpx"></view> -->
+              <checkbox class="round {{isCheckBoxShow == true?'':'dp-none'}}" checked="{{goods.isChecked}}"
+                catchtap="clickChecked" data-itemIndex="{{itemIndex}}" data-index="{{index}}" data-iid="{{goods.iid}}">
+              </checkbox>
+            </view>
+          </view>
+        </view>
+
+      </view>
+    </scroll-view>
+  </view>
+  <view class="cu-bar btn-group pos-fix-bl bg-white" style="width:100vw">
+    <button class="cu-btn bg-red shadow-blur {{isCheckBoxShow == true?'dp-none':''}}"
+      bindtap="controlCheckBoxShowOrHide" data-flag="{{true}}">删除商品</button>
+    <button class="cu-btn bg-blue-1 {{isCheckBoxShow == true?'dp-none':''}}" bindtap="showModal"
+      data-currentModalType="{{modalName[2]}}">新增商品</button>
+    <button class="cu-btn bg-grey shadow-blur {{isCheckBoxShow == true?'':'dp-none'}}"
+      bindtap="controlCheckBoxShowOrHide" data-flag="{{false}}">取消</button>
+    <button class="cu-btn bg-red {{isCheckBoxShow == true?'':'dp-none'}}"
+      bindtap="showDeleteModal">删除商品({{deletedGoodsLength}})</button>
+    <!-- <view class="flex-sub padding text-center bg-red">删除</view>
+  <view class="flex-sub padding text-center bg-blue-1">新增商品</view> -->
+  </view>
+</view>
+
+
+<view hidden="{{tabCurrentIndex == 0}}">
+  <view class="VerticalBox">
+    <scroll-view class="VerticalNav nav" scroll-y scroll-with-animation scroll-top="{{VerticalNavTop1}}"
+      style="height:calc(100vh - 240rpx)">
+      <view class="cu-item {{index==TabCur1?'text-green cur':''}} text-sm"
+        style="max-width:175rpx;height:auto;white-space: wrap;word-break: break-all;line-height:30rpx;padding:33rpx 20rpx 30rpx"
+        wx:for="{{list1}}" wx:key bindtap='tabSelect1' data-id="{{index}}">{{item.name}}</view>
+    </scroll-view>
+    <scroll-view class="VerticalMain" scroll-y scroll-with-animation style="height:calc(100vh - 240rpx)"
+      scroll-into-view="main1-{{MainCur1}}" bindscroll="VerticalMain1">
+      <view class="padding-top padding-lr" wx:for="{{list1}}" wx:key id="main1-{{index}}" wx:for-index="index">
+        <view class="bg-white solid-bottom padding-sm">{{item.name}}</view>
+        <view class="bg-white padding-sm">
+          <view class="flex margin-bottom" wx:for="{{item.goods}}" wx:for-item="goods" wx:for-index="itemIndex">
+            <view class="cu-avatar xl bg-black margin-right-sm radius" style="width:160rpx;height:160rpx"></view>
+            <view class="flex-sub flex flex-direction justify-around">
+              <view class="text-black text-cut" style="width:270rpx">{{goods.goodsName}}</view>
+              <view class="text-grey text-cut text-sm" style="width:270rpx">{{goods.introduce}}</view>
+              <view class="text-grey text-sm margin-top-xs">月售 {{goods.saled}} 份</view>
+              <view class="text-red text-df margin-top-xs"> <text class="text-orange text-sm">￥</text> {{goods.price}}
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+</view>
+<!-- 删除选中为0警告 -->
+<view class="cu-modal {{currentModalType == 'deleteNotice'?'show':''}}">
+  <view class="cu-dialog">
+    <view class="padding margin-sm">
+      请先选择商品
+    </view>
+    <view class="flex padding-tb-sm">
+      <view class="flex-sub text-red" bindtap="hideModal">确定</view>
+    </view>
+  </view>
+</view>
+<!-- 删除模态框 -->
+<view class="cu-modal {{currentModalType == 'delete'?'show':''}}">
+  <view class="cu-dialog">
+    <view class="padding margin-sm">
+      确定删除这
+      <text class="text-blue">{{deletedGoodsLength}}个</text>
+      商品吗？
+    </view>
+    <view class="flex padding-tb-sm">
+      <view class="flex-sub " bindtap="hideModal">取消</view>
+      <view class="flex-sub text-red" bindtap="deleteGoods">确定</view>
+    </view>
+  </view>
+</view>
+<!-- 新增商品模态框 -->
+<view class="cu-modal {{currentModalType == 'add'?'show':''}}">
+  <view class="cu-dialog">
+    <view class="cu-form-group" style="width:140rpx;height:140rpx;background:#F8F8F8;margin:40rpx auto 0;padding:0">
+      <view class="grid col-1 grid-square flex-sub">
+        <view class="bg-img" wx:if="{{addGood.addGoodImage.length > 0}}">
+          <image src="{{addGood.addGoodImage[0]}}" mode='aspectFill' style="left:0;right:0;"></image>
+          <view class="cu-tag bg-red" bindtap="deleteImage" data-index="0">
+            <text class="cuIcon-close"></text>
+          </view>
+        </view>
+        <view class="solids" bindtap="chooseImage" wx:if="{{addGood.addGoodImage.length == 0}}">
+          <text class="cuIcon-cameraadd"></text>
+        </view>
+      </view>
+    </view>
+    <!-- <view class="padding text-center margin-auto margin-top" style="width:140rpx;height:140rpx" wx:if="{{addGood.addGoodImage.length > 0}}">
+      <image src="{{addGood.addGoodImage[0]}}"></image>
+      <view class="cu-tag bg-red" bindtap="deleteImage" data-index="0">
+        <text class="cuIcon-close"></text>
+      </view>
+    </view>
+    <view class="solids padding text-center margin-auto margin-top" style="width:140rpx;height:140rpx" wx:if="{{addGood.addGoodImage.length == 0}}" bindtap="chooseImage">
+      <view class="cuIcon-cameraadd padding-top-xs" style="font-size:60rpx"></view>
+    </view> -->
+
+    <view class="padding-xl" style="padding-top:0">
+      <view class="cu-form-group" style="background:#f8f8f8;padding:0;font-size:26rpx">
+        <view class="title">类型</view>
+        <picker value="{{addGood.addGoodIndex}}" bindchange="pickerChange" range="{{pickerRanges}}">
+          <view class="picker">{{addGood.addGoodIndex?pickerRanges[addGood.addGoodIndex]:'选择商品类型'}}</view>
+        </picker>
+      </view>
+      <view class="flex">
+        <view class="title margin-right-sm">名称</view>
+        <input type="text" class="flex-sub margin-right border-bottom padding-bottom-sm margin-bottom addGoodName"
+          value="{{addGood.addGoodName}}" style="height:1.6rem"></input>
+      </view>
+      <view class="flex">
+        <view class="title margin-right-sm">介绍</view>
+        <input type="text" class="flex-sub margin-right border-bottom padding-bottom-sm margin-bottom addGoodIntroduce"
+          value="{{addGood.addGoodIntroduce}}" style="height:1.6rem"></input>
+      </view>
+      <view class="flex">
+        <view class="title margin-right-sm">价格</view>
+        <input type="number" class="flex-sub margin-right border-bottom padding-bottom-sm addGoodPrice"
+          value="{{addGood.addGoodName}}" style="height:1.6rem;"></input>
+        <view class="text-grey">(均不超过15个字)</view>
+      </view>
+    </view>
+    <view class="flex padding-tb-sm">
+      <view class="flex-sub " bindtap="hideModal">取消</view>
+      <view class="flex-sub text-red" bindtap="addGoods">增加商品</view>
+    </view>
+  </view>
+</view>
+<!-- 编辑商品模态框 -->
+<view class="cu-modal {{currentModalType == 'edit'?'show':''}}">
+  <view class="cu-dialog">
+    <view class="cu-form-group" style="width:140rpx;height:140rpx;background:#F8F8F8;margin:40rpx auto 0;padding:0">
+      <view class="grid col-1 grid-square flex-sub">
+        <view class="bg-img" wx:if="{{addGood.addGoodImage.length > 0}}">
+          <image src="{{addGood.addGoodImage[0]}}" mode='aspectFill' style="left:0;right:0;"></image>
+          <view class="cu-tag bg-red" catchtap="deleteImage" data-index="0">
+            <text class="cuIcon-close"></text>
+          </view>
+        </view>
+        <view class="solids" bindtap="chooseImage" wx:if="{{addGood.addGoodImage.length == 0}}">
+          <text class="cuIcon-cameraadd"></text>
+        </view>
+      </view>
+    </view>
+    <view class="padding-xl" style="padding-top:0">
+      <view class="cu-form-group" style="background:#f8f8f8;padding:0;font-size:26rpx">
+        <view class="title">类型</view>
+        <picker value="{{addGood.addGoodIndex}}" catchchange="pickerChange" range="{{pickerRanges}}">
+          <view class="picker">{{addGood.addGoodIndex>= 0?pickerRanges[addGood.addGoodIndex]:'选择商品类型'}}</view>
+        </picker>
+      </view>
+      <view class="flex">
+        <view class="title margin-right-sm">名称</view>
+        <input type="text" class="flex-sub margin-right border-bottom padding-bottom-sm margin-bottom editGoodName"
+          value="{{addGood.addGoodName}}" style="height:1.6rem"></input>
+      </view>
+      <view class="flex">
+        <view class="title margin-right-sm">介绍</view>
+        <input type="text" class="flex-sub margin-right border-bottom padding-bottom-sm margin-bottom editGoodIntroduce"
+          value="{{addGood.addGoodIntroduce}}" style="height:1.6rem"></input>
+      </view>
+      <view class="flex">
+        <view class="title margin-right-sm">价格</view>
+        <input type="number" class="flex-sub margin-right border-bottom padding-bottom-sm editGoodPrice"
+          value="{{addGood.addGoodPrice}}" style="height:1.6rem;"></input>
+        <view class="text-grey">(均不超过15个字)</view>
+      </view>
+    </view>
+    <view class="padding-lr-xl padding-bottom">
+      <view class="border-blue padding-lr margin-bottom-sm radius padding-bottom-sm">
+        <view class="margin-tb-sm">杯型</view>
+        <view class="flex flex-wrap text-center ">
+          <view class="border-black padding-tb-xs radius margin-bottom-xl padding-lr pos-re margin-right-xl">
+            大杯大杯大杯大杯大杯
+            <view class="round pos-ab bg-red" style="right:-18rpx;top:-10rpx;width:38rpx;height:38rpx"><text class="cuIcon-close" style="font-size:32rpx"></text></view>
+            <view class="round pos-ab bg-green" style="left:-18rpx;bottom:-18rpx;width:38rpx;height:38rpx"><text class="cuIcon-write" style="font-size:32rpx"></text></view>
+            <!-- <view class="round pos-ab text-white bg-red text-center" style="width:32rpx;height:32rpx;line-height:34rpx;right:-14rpx;top:-14rpx">X</view> -->
+          </view>
+          <view class="border-black padding-tb-xs radius margin-bottom-xl padding-lr pos-re margin-right-xl">
+            大杯
+            <view class="round pos-ab bg-red" style="right:-18rpx;top:-10rpx;width:38rpx;height:38rpx"><text class="cuIcon-close" style="font-size:32rpx"></text></view>
+            <view class="round pos-ab bg-green" style="left:-18rpx;bottom:-18rpx;width:38rpx;height:38rpx"><text class="cuIcon-write" style="font-size:32rpx"></text></view>
+            <!-- <view class="round pos-ab text-white bg-red text-center" style="width:32rpx;height:32rpx;line-height:34rpx;right:-14rpx;top:-14rpx">X</view> -->
+          </view>
+          <view class="border-black padding-tb-xs radius margin-bottom-xl padding-lr pos-re margin-right-xl">
+            大杯大
+            <view class="round pos-ab bg-red" style="right:-18rpx;top:-10rpx;width:38rpx;height:38rpx"><text class="cuIcon-close" style="font-size:32rpx"></text></view>
+            <view class="round pos-ab bg-green" style="left:-18rpx;bottom:-18rpx;width:38rpx;height:38rpx"><text class="cuIcon-write" style="font-size:32rpx"></text></view>
+            <!-- <view class="round pos-ab text-white bg-red text-center" style="width:32rpx;height:32rpx;line-height:34rpx;right:-14rpx;top:-14rpx">X</view> -->
+          </view>
+          <view class="border-black padding-tb-xs radius margin-bottom-xl padding-lr pos-re margin-right-xl">
+            大杯大杯
+            <view class="round pos-ab bg-red" style="right:-18rpx;top:-10rpx;width:38rpx;height:38rpx"><text class="cuIcon-close" style="font-size:32rpx"></text></view>
+            <view class="round pos-ab bg-green" style="left:-18rpx;bottom:-18rpx;width:38rpx;height:38rpx"><text class="cuIcon-write" style="font-size:32rpx"></text></view>
+            <!-- <view class="round pos-ab text-white bg-red text-center" style="width:32rpx;height:32rpx;line-height:34rpx;right:-14rpx;top:-14rpx">X</view> -->
+          </view>
+        </view>
+      </view>
+      <view class="bg-blue-1 padding-tb-sm text-center radius">添加规格</view>
+    </view>
+    <view class="flex padding-tb-sm">
+      <view class="flex-sub " bindtap="hideEditModal">取消</view>
+      <view class="flex-sub text-red" bindtap="confirmEditGood">确定修改</view>
+    </view>
+  </view>
+</view>

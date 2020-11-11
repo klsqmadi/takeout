@@ -1,0 +1,44 @@
+<cu-custom bgColor="bg-blue-1" isBack="true">
+  <view slot="backText">店铺信息</view>
+</cu-custom>
+<view class="flex align-center padding bg-white" bindtap="getImage" data-inputType="storeImageUrl" data-title="店铺图片">
+  <view style="margin-right:290rpx;width:200rpx">店铺图片</view>
+  <image class="radius bg-black" style="width:140rpx;height:140rpx">店铺图片</image>
+  <view class="margin-left cuIcon-right" style="font-size:36rpx"></view>
+</view>
+<view class="flex padding margin-top-sm bg-white" bindtap="getInput" data-inputType="storeName" data-title="店铺名称">
+  <view class="margin-right-xl">店铺名称</view>
+  <view class="flex-sub text-right">{{storeInfo.storeName}}</view>
+  <view class="margin-left cuIcon-right" style="font-size:36rpx"></view>
+</view>
+<view class="flex padding margin-top-sm bg-white" bindtap="getInput" data-inputType="sotreAddress" data-title="店铺地址">
+  <view style="margin-right:100rpx">店铺地址</view>
+  <view class="flex-sub text-right">{{storeInfo.sotreAddress}}</view>
+  <view class="margin-left cuIcon-right" style="font-size:36rpx"></view>
+</view>
+<view class="flex padding margin-top-sm bg-white" bindtap="getInput" data-inputType="sotreIntroduce" data-title="店铺简介">
+  <view style="margin-right:100rpx">店铺简介</view>
+  <view class="flex-sub text-right">{{storeInfo.sotreIntroduce}}</view>
+  <view class="margin-left cuIcon-right" style="font-size:36rpx"></view>
+</view>
+<view class="flex padding margin-top-sm bg-white" bindtap="getInput" data-inputType="phoneNumber" data-title="联系电话">
+  <view style="margin-right:100rpx">联系电话</view>
+  <view class="flex-sub text-right">{{storeInfo.phoneNumber}}</view>
+  <view class="margin-left cuIcon-right" style="font-size:36rpx"></view>
+</view>
+<!-- --- -->
+<view class="margin-top margin-lr-xl text-center padding bg-green radius" wx:if="{{showChangeButton}}">确定修改</view>
+<view class="cu-modal {{currentModalType == 'show'?'show':''}}">
+  <view class="cu-dialog">
+    <view class="padding">
+      <view class="margin-bottom text-center">{{inputTitle}}</view>
+      <view class="padding">
+        <input type="text" class="border-bottom padding-bottom-sm margin-bottom" value="{{inputValue}}" style="height:1.6rem" bindinput="eventInput"></input>
+      </view>
+      <view class="flex">
+        <view class="flex-sub text-center text-grey" bindtap="hideModal">取消</view>
+        <view class="flex-sub text-center text-blue" bindtap="confirm">确定</view>
+      </view>
+    </view>
+  </view>
+</view>

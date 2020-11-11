@@ -1,0 +1,83 @@
+<!--pages/order/order.wxml-->
+<cu-custom bgColor="bg-blue-1">
+  <view slot="content">订单</view>
+</cu-custom>
+<!-- --- -->
+<view class="bg-white nav">
+  <view class="flex text-center">
+    <view class="cu-item flex-sub text-black {{tabCurrentIndex == 0?'cur':''}} pos-re" bindtap="tabSelect" data-index="0">
+      全部
+      <view class="cu-tag badge" style="top: 14rpx;right: 14rpx;border-radius:100%" wx:if="{{orders['all'].newsRedDot}}"></view>
+    </view>
+    <view class="cu-item flex-sub text-black {{tabCurrentIndex == 1?'cur':''}} pos-re" bindtap="tabSelect" data-index="1">
+      待接单
+      <view class="cu-tag badge" style="top: 14rpx;right: 14rpx;border-radius:100%" wx:if="{{orders['pendingOrders'].newsRedDot}}"></view>
+    </view>
+    <view class="cu-item flex-sub text-black {{tabCurrentIndex == 2?'cur':''}} pos-re" bindtap="tabSelect" data-index="2">
+     待发货
+      <view class="cu-tag badge" style="top: 14rpx;right: 14rpx;border-radius:100%" wx:if="{{orders['pendingDelivered'].newsRedDot}}"></view>
+    </view>
+    <view class="cu-item flex-sub text-black {{tabCurrentIndex == 3?'cur':''}} pos-re"bindtap="tabSelect" data-index="3" >
+      待送达
+      <view class="cu-tag badge" style="top: 14rpx;right: 14rpx;border-radius:100%" wx:if="{{orders['pendingArrive'].newsRedDot}}"></view>
+    </view>
+  </view>
+</view>
+<view>
+  <view class="bg-white padding-lr-lg padding-tb-sm margin-top-sm" wx:for="{{orders[currentType].list}}" wx:key="index">
+    <!-- --- -->
+    <view class="flex solids-bottom padding-bottom-sm">
+      <view class="flex-sub">
+        <view class="text-black">{{item.shopName}}</view>
+        <view class="text-grey">{{item.time}}</view>
+      </view>
+      <view class="flex-sub text-right">
+        <view class="text-blue" wx:if="{{item.orderState == '交易成功'}}">{{item.orderState}}</view>
+        <view class="text-red" wx:elif="{{item.orderState == '待接单'}}">{{item.orderState}}</view>
+        <view class="text-red" wx:elif="{{item.orderState == '拒绝接单'}}">{{item.orderState}}</view>
+        <view class="text-yellow" wx:elif="{{item.orderState == '待发货'}}">{{item.orderState}}</view>
+        <view class="text-green" wx:elif="{{item.orderState == '待送达'}}">{{item.orderState}}</view>
+        <view class="text-gray">{{item.orderNumber}}</view>
+      </view>
+    </view>
+    <!-- --- -->
+    <view class="flex margin-top-sm solids-bottom padding-bottom-sm">
+      <view class="bg-black margin-right-sm radius" style="width:150rpx;height:150rpx"></view>
+      <view class="flex-sub of-hid text-sm" style="height:150rpx;font-weight:100rpx">
+        <view class="flex justify-between align-center" style="height:calc(150rpx / 4)" wx:for="{{item.items}}" wx:key="index">
+          <view class="text-darkGray text-cut" style="width:60%">{{item.itemName}}</view>
+          <view class="text-cut" style="width:10%">x {{item.number}}</view>
+          <view class="text-black-1 text-right text-cut" style="width:30%">${{item.price}}</view>
+        </view>
+        <view class="text-center bg-gray shadow shadow-lg radius" style="height:calc(150rpx / 4);line-height:20.5px" wx:if="{{item.itemsNumber >= 5?true:false}}">
+          <text class="cuIcon-more"></text>
+        </view>
+      </view>
+    </view>
+    <!-- --- -->
+    <view class="flex justify-end margin-top-xs text-sm text-black-1 padding-bottom-sm solids-bottom">
+        <view>共{{item.itemsNumber}}件商品 合计:</view>
+        <view class="text-orange margin-lr-sm text-df" style="margin-top:1px">${{item.money}}</view>
+        <view>(含配送费${{item.freight}})</view>
+      </view>
+    <!-- --- -->
+    <view class="flex justify-end margin-top-sm">
+      <view class="padding-lr padding-tb-xs border radius" bindtap="goToOrderDetail" data-item="{{item}}">查看详情</view>
+      <view class="padding-lr padding-tb-xs border radius margin-left text-blue" wx:if="{{item.orderState == '待接单'}}" bindtap="acceptOrder" data-index="{{index}}">接单</view>
+      <view class="padding-lr padding-tb-xs border radius margin-left text-red" wx:if="{{item.orderState == '待接单'}}" bindtap="refuseReceiveOrder" data-index="{{index}}">拒绝接单</view>
+    </view>
+  </view>
+</view>
+<!-- --- -->
+<view class="cu-modal {{currentModalType == 'show'?'show':''}}">
+  <view class="cu-dialog">
+    <view class="padding margin-sm">
+      确定要
+      <text class="text-red">拒绝</text> 接此单吗
+    </view>
+    <view class="flex padding-tb-sm">
+      <view class="flex-sub " bindtap="hideModal">取消</view>
+      <view class="flex-sub text-red" bindtap="confirmRefuseOrder">确定</view>
+    </view>
+  </view>
+</view>

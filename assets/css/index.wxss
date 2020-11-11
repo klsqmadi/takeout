@@ -1,0 +1,11 @@
+/**  
+ * 引入colorui框架 
+ */
+@import '/colorui/main.wxss';
+@import '/colorui/icon.wxss';
+@import '/colorui/animation.wxss';
+/**
+ * 引入项目基本配置css
+ */
+@import './normalize.wxss';
+@import './base.wxss';

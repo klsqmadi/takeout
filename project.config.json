@@ -12,7 +12,7 @@
     "minified": true,
     "newFeature": false,
     "coverView": true,
-    "nodeModules": false,
+    "nodeModules": true,
     "autoAudits": false,
     "showShadowRootInWxmlPanel": true,
     "scopeDataCheck": false,
@@ -46,29 +46,83 @@
   "simulatorType": "wechat",
   "simulatorPluginLibVersion": {},
   "condition": {
-    "search": {
-      "current": -1,
-      "list": []
-    },
-    "conversation": {
-      "current": -1,
+    "plugin": {
       "list": []
     },
     "game": {
-      "current": -1,
-      "list": []
-    },
-    "plugin": {
-      "current": -1,
       "list": []
     },
     "gamePlugin": {
-      "current": -1,
       "list": []
     },
     "miniprogram": {
-      "current": -1,
-      "list": []
+      "list": [
+        {
+          "id": 0,
+          "name": "pages/order/order",
+          "pathName": "pages/order/order",
+          "query": "",
+          "scene": null
+        },
+        {
+          "id": 1,
+          "name": "subPages/work/ goods",
+          "pathName": "subPages/work/handleGoods/handleGoods",
+          "query": "",
+          "scene": null
+        },
+        {
+          "id": 2,
+          "name": "pages/work/work",
+          "pathName": "pages/work/work",
+          "query": "",
+          "scene": null
+        },
+        {
+          "id": 3,
+          "name": "subPages/work/category",
+          "pathName": "subPages/work/handleCategory/handleCategory",
+          "query": "",
+          "scene": null
+        },
+        {
+          "id": 4,
+          "name": "subPages/profile/bizStatus",
+          "pathName": "subPages/profile/bizStatus/bizStatus",
+          "query": "",
+          "scene": null
+        },
+        {
+          "id": 5,
+          "name": "subPages/order/orderDetail",
+          "pathName": "subPages/order/orderDetail/orderDetail",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "cash",
+          "pathName": "subPages/work/takeCash/takeCash",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "subPages/work/takeCash/takeCash",
+          "pathName": "subPages/work/takeCash/takeCash",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "subPages/profile/storeInfo/storeInfo",
+          "pathName": "subPages/profile/storeInfo/storeInfo",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/login/login",
+          "pathName": "pages/login/login",
+          "scene": null
+        }
+      ]
     }
   }
 }

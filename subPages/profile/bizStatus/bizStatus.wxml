@@ -1,0 +1,30 @@
+<!--subPages/profile/bizStatus/bizStatus.wxml-->
+<cu-custom bgColor="bg-blue-1" isBack="true">
+  <view slot="backText">营业状态 ({{currentStatus}})</view>
+</cu-custom>
+<view class="padding text-center flex">
+  <view class="text-xl margin-tb margin-left">当前营业状态:</view>
+  <view wx:if="{{currentStatus == '营业中'}}" class="margin-auto text-xl text-blue"
+    style="width:300rpx;height:100rpx;line-height:100rpx;">{{currentStatus}}</view>
+  <view wx:elif="{{currentStatus == '打烊中'}}" class="margin-auto text-xl text-yellow"
+    style="width:300rpx;height:100rpx;line-height:100rpx;">{{currentStatus}}</view>
+  <view wx:elif="{{currentStatus == '停业中'}}" class="margin-auto text-xl text-red"
+    style="width:300rpx;height:100rpx;line-height:100rpx;">{{currentStatus}}</view>
+</view>
+<view class="flex text-center text-lg margin-top-xl ">
+  <button class="cu-btn {{currentStatus != '停业中'?'bg-blue-1':'bg-red'}} flex-sub margin" bindtap="openStore" disabled="{{currentStatus != '停业中'?false:true}}">营业</button>
+  <button class="cu-btn {{currentStatus != '停业中'?'bg-yellow':'bg-red'}} flex-sub margin" bindtap="closeStore" disabled="{{currentStatus != '停业中'?false:true}}">打烊</button>
+</view>
+
+<view class="cu-modal {{currentModalType == 'show'?'show':''}}">
+  <view class="cu-dialog">
+    <view class="padding margin-sm">
+      确定要切换为
+      <text class="{{changeStatus == '营业'?'text-blue':'text-orange'}}">{{changeStatus}}</text>
+    </view>
+    <view class="flex padding-tb-sm">
+      <view class="flex-sub " bindtap="hideModal">取消</view>
+      <view class="flex-sub text-red" bindtap="changeStatus">确定</view>
+    </view>
+  </view>
+</view>

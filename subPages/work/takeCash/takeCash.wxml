@@ -1,0 +1,11 @@
+<cu-custom bgColor="bg-blue-1" isBack="true">
+  <view slot="backText">提现</view>
+</cu-custom>
+<view class="bg-white">
+  <view class="padding-top">
+    <view class="text-xl text-center">可提现金额</view>
+    <view class="text-xsl text-red text-center margin-tb">999</view>
+  </view>
+  <navigator url="./incomeDetail/incomeDetail"><view class="text-center margin-auto margin-bottom bg-gray padding-sm radius" style="width:140rpx;height:">明细</view></navigator>
+  <view class="margin-auto padding text-center bg-red radius" style="width:400rpx;height:20rpx;line-height:20rpx;box-sizing:content-box">提现</view>
+</view>
