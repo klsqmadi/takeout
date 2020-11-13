@@ -27,6 +27,9 @@
 .border-black{
 	border:1rpx solid #000000;
 }
+.border-red{
+	border:1rpx solid #e54d42;
+}
 .border-blue{
 	border:1rpx solid #1195DD;
 }

@@ -64,7 +64,6 @@
   </view>
 </view>
 
-
 <view hidden="{{tabCurrentIndex == 0}}">
   <view class="VerticalBox">
     <scroll-view class="VerticalNav nav" scroll-y scroll-with-animation scroll-top="{{VerticalNavTop1}}"
@@ -93,17 +92,6 @@
     </scroll-view>
   </view>
 </view>
-<!-- 删除选中为0警告 -->
-<view class="cu-modal {{currentModalType == 'deleteNotice'?'show':''}}">
-  <view class="cu-dialog">
-    <view class="padding margin-sm">
-      请先选择商品
-    </view>
-    <view class="flex padding-tb-sm">
-      <view class="flex-sub text-red" bindtap="hideModal">确定</view>
-    </view>
-  </view>
-</view>
 <!-- 删除模态框 -->
 <view class="cu-modal {{currentModalType == 'delete'?'show':''}}">
   <view class="cu-dialog">
@@ -119,7 +107,7 @@
   </view>
 </view>
 <!-- 新增商品模态框 -->
-<view class="cu-modal {{currentModalType == 'add'?'show':''}}">
+<view class="cu-modal {{currentModalType == 'add'?'show':''}}" style="top:152rpx">
   <view class="cu-dialog">
     <view class="cu-form-group" style="width:140rpx;height:140rpx;background:#F8F8F8;margin:40rpx auto 0;padding:0">
       <view class="grid col-1 grid-square flex-sub">
@@ -168,6 +156,23 @@
         <view class="text-grey">(均不超过15个字)</view>
       </view>
     </view>
+    <view class="padding-lr-xl padding-bottom">
+      <view class="border-blue padding-lr margin-bottom-xl radius padding-bottom-sm pos-re" wx:for="{{addGood.standard}}" wx:for-item="item" wx:for-index="index">
+        <view class="margin-tb-sm">{{item.title}}</view>
+        <view class="flex flex-wrap text-center" >
+          <view class="border-black padding-tb-xs radius margin-bottom-xl padding-lr pos-re margin-right-xl" wx:for="{{item.type}}" wx:for-item="typeItem" wx:for-index="typeIndex">
+            {{typeItem}}
+            <view class="round pos-ab bg-red" style="right:-18rpx;top:-18rpx;width:38rpx;height:38rpx" catchtap="deleteStandard" data-typeindex="{{typeIndex}}" data-index="{{index}}"><text class="cuIcon-close" style="font-size:32rpx"></text></view>
+            <view class="round pos-ab bg-green" style="left:-18rpx;bottom:-18rpx;width:38rpx;height:38rpx" catchtap="editStandard" data-typeindex="{{typeIndex}}" data-index="{{index}}"><text class="cuIcon-write" style="font-size:32rpx"></text></view>
+            <!-- <view class="round pos-ab text-white bg-red text-center" style="width:32rpx;height:32rpx;line-height:34rpx;right:-14rpx;top:-14rpx">X</view> -->
+          </view>
+          <view class="radius margin-bottom-sm padding-lr bg-blue text-white" style="height:60rpx;line-height:60rpx" catchtap="addStandardType" data-index="{{index}}">增加类型</view>
+        </view>
+        <view class="round pos-ab bg-red" style="right:-18rpx;top:-18rpx;width:38rpx;height:38rpx" catchtap="deleteStandard" data-index="{{index}}"><text class="cuIcon-close" style="font-size:32rpx"></text></view>
+        <view class="round pos-ab bg-green" style="left:-18rpx;bottom:-18rpx;width:38rpx;height:38rpx" catchtap="editStandard" data-index="{{index}}"><text class="cuIcon-write" style="font-size:32rpx"></text></view>
+      </view>
+      <view class="bg-blue-1 padding-tb-sm text-center radius" bindtap="addStandard">添加规格</view>
+    </view>
     <view class="flex padding-tb-sm">
       <view class="flex-sub " bindtap="hideModal">取消</view>
       <view class="flex-sub text-red" bindtap="addGoods">增加商品</view>
@@ -175,7 +180,7 @@
   </view>
 </view>
 <!-- 编辑商品模态框 -->
-<view class="cu-modal {{currentModalType == 'edit'?'show':''}}">
+<view class="cu-modal {{currentModalType == 'edit'?'show':''}}" style="top:152rpx">
   <view class="cu-dialog">
     <view class="cu-form-group" style="width:140rpx;height:140rpx;background:#F8F8F8;margin:40rpx auto 0;padding:0">
       <view class="grid col-1 grid-square flex-sub">
@@ -188,6 +193,13 @@
         <view class="solids" bindtap="chooseImage" wx:if="{{addGood.addGoodImage.length == 0}}">
           <text class="cuIcon-cameraadd"></text>
         </view>
+      </view>
+    </view>
+    <view class="padding">
+      <view class="pos-re flex justify-between {{addGood.selling== true?'border-blue':'border-red'}} padding-lr margin-auto" style="border-radius:30rpx;width:280rpx;height:60rpx;line-height:60rpx">
+        <view class="{{addGood.selling== true?'text-white':'text-black'}}" bindtap="sellingSlideClick" style="z-index:2">出售中</view>
+        <view class="{{addGood.selling== true?'text-black':'text-white'}}" bindtap="sellingSlideClick" style="z-index:2">售罄的</view>
+        <view class="pos-ab {{addGood.selling == true?'bg-blue':'bg-red'}}" style="width:50%;;height:83%;left:4rpx;top:6rpx;z-index:1;border-radius:30rpx;transition:.5s; transform:{{addGood.selling == true?'translateX(0)':'translateX(130rpx)'}}"></view>
       </view>
     </view>
     <view class="padding-xl" style="padding-top:0">
@@ -215,40 +227,49 @@
       </view>
     </view>
     <view class="padding-lr-xl padding-bottom">
-      <view class="border-blue padding-lr margin-bottom-sm radius padding-bottom-sm">
-        <view class="margin-tb-sm">杯型</view>
-        <view class="flex flex-wrap text-center ">
-          <view class="border-black padding-tb-xs radius margin-bottom-xl padding-lr pos-re margin-right-xl">
-            大杯大杯大杯大杯大杯
-            <view class="round pos-ab bg-red" style="right:-18rpx;top:-10rpx;width:38rpx;height:38rpx"><text class="cuIcon-close" style="font-size:32rpx"></text></view>
-            <view class="round pos-ab bg-green" style="left:-18rpx;bottom:-18rpx;width:38rpx;height:38rpx"><text class="cuIcon-write" style="font-size:32rpx"></text></view>
+      <view class="border-blue padding-lr margin-bottom-xl radius padding-bottom-sm pos-re" wx:for="{{addGood.standard}}" wx:for-item="item" wx:for-index="index">
+        <view class="margin-tb-sm">{{item.title}}</view>
+        <view class="flex flex-wrap text-center" >
+          <view class="border-black padding-tb-xs radius margin-bottom-xl padding-lr pos-re margin-right-xl" wx:for="{{item.type}}" wx:for-item="typeItem" wx:for-index="typeIndex">
+            {{typeItem}}
+            <view class="round pos-ab bg-red" style="right:-18rpx;top:-18rpx;width:38rpx;height:38rpx" catchtap="deleteStandard" data-typeindex="{{typeIndex}}" data-index="{{index}}"><text class="cuIcon-close" style="font-size:32rpx"></text></view>
+            <view class="round pos-ab bg-green" style="left:-18rpx;bottom:-18rpx;width:38rpx;height:38rpx" catchtap="editStandard" data-typeindex="{{typeIndex}}" data-index="{{index}}"><text class="cuIcon-write" style="font-size:32rpx"></text></view>
             <!-- <view class="round pos-ab text-white bg-red text-center" style="width:32rpx;height:32rpx;line-height:34rpx;right:-14rpx;top:-14rpx">X</view> -->
           </view>
-          <view class="border-black padding-tb-xs radius margin-bottom-xl padding-lr pos-re margin-right-xl">
-            大杯
-            <view class="round pos-ab bg-red" style="right:-18rpx;top:-10rpx;width:38rpx;height:38rpx"><text class="cuIcon-close" style="font-size:32rpx"></text></view>
-            <view class="round pos-ab bg-green" style="left:-18rpx;bottom:-18rpx;width:38rpx;height:38rpx"><text class="cuIcon-write" style="font-size:32rpx"></text></view>
-            <!-- <view class="round pos-ab text-white bg-red text-center" style="width:32rpx;height:32rpx;line-height:34rpx;right:-14rpx;top:-14rpx">X</view> -->
-          </view>
-          <view class="border-black padding-tb-xs radius margin-bottom-xl padding-lr pos-re margin-right-xl">
-            大杯大
-            <view class="round pos-ab bg-red" style="right:-18rpx;top:-10rpx;width:38rpx;height:38rpx"><text class="cuIcon-close" style="font-size:32rpx"></text></view>
-            <view class="round pos-ab bg-green" style="left:-18rpx;bottom:-18rpx;width:38rpx;height:38rpx"><text class="cuIcon-write" style="font-size:32rpx"></text></view>
-            <!-- <view class="round pos-ab text-white bg-red text-center" style="width:32rpx;height:32rpx;line-height:34rpx;right:-14rpx;top:-14rpx">X</view> -->
-          </view>
-          <view class="border-black padding-tb-xs radius margin-bottom-xl padding-lr pos-re margin-right-xl">
-            大杯大杯
-            <view class="round pos-ab bg-red" style="right:-18rpx;top:-10rpx;width:38rpx;height:38rpx"><text class="cuIcon-close" style="font-size:32rpx"></text></view>
-            <view class="round pos-ab bg-green" style="left:-18rpx;bottom:-18rpx;width:38rpx;height:38rpx"><text class="cuIcon-write" style="font-size:32rpx"></text></view>
-            <!-- <view class="round pos-ab text-white bg-red text-center" style="width:32rpx;height:32rpx;line-height:34rpx;right:-14rpx;top:-14rpx">X</view> -->
-          </view>
+          <view class="radius margin-bottom-sm padding-lr bg-blue text-white" style="height:60rpx;line-height:60rpx" catchtap="addStandardType" data-index="{{index}}">增加类型</view>
         </view>
+        <view class="round pos-ab bg-red" style="right:-18rpx;top:-18rpx;width:38rpx;height:38rpx" catchtap="deleteStandard" data-index="{{index}}"><text class="cuIcon-close" style="font-size:32rpx"></text></view>
+        <view class="round pos-ab bg-green" style="left:-18rpx;bottom:-18rpx;width:38rpx;height:38rpx" catchtap="editStandard" data-index="{{index}}"><text class="cuIcon-write" style="font-size:32rpx"></text></view>
       </view>
-      <view class="bg-blue-1 padding-tb-sm text-center radius">添加规格</view>
+      <view class="bg-blue-1 padding-tb-sm text-center radius" bindtap="addStandard">添加规格</view>
     </view>
     <view class="flex padding-tb-sm">
       <view class="flex-sub " bindtap="hideEditModal">取消</view>
       <view class="flex-sub text-red" bindtap="confirmEditGood">确定修改</view>
+    </view>
+  </view>
+</view>
+
+<view class="cu-modal {{showInputModal == 'inputModal'?'show':''}}" style="z-index:999999">
+  <view class="cu-dialog">
+    <view class="padding text-center">
+      <view class="margin-top solids-bottom padding-bottom-sm">
+        <input type="text" value="{{inputValue}}" bindinput="onTimeGetInputValue"></input>
+      </view>
+      <view class="flex padding-tb-sm">
+        <view class="flex-sub" bindtap="hideInputModal">取消</view>
+        <view class="flex-sub text-red" bindtap="confirmEditStandard">确定</view>
+    </view>
+    </view>
+  </view>
+</view>
+<view class="cu-modal {{showNoticeModal == 'noticeModal'?'show':''}}" style="z-index:999999">
+  <view class="cu-dialog">
+    <view class="padding margin-sm">
+      {{noticeContent}}
+    </view>
+    <view class="flex padding-tb-sm">
+      <view class="flex-sub text-red" bindtap="hideNoticeModal">确定</view>
     </view>
   </view>
 </view>
