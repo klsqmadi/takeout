@@ -4,12 +4,31 @@ Page({
     tabContent: ['出售中', '售罄的'],
     tabCurrentIndex: 0,
     TabCur: 0,
-    TabCur1:0,
+    TabCur1: 0,
     MainCur: 0,
     MainCur1: 0,
     VerticalNavTop: 0,
     VerticalNavTop1: 0,
-    list: [
+    list: [{
+      name: '热销',
+      id: 0,
+      goods: [{
+          goodsName: '1香酥小鸡腿1个',
+          introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
+          saled: 120,
+          price: 12.00,
+          isChecked: false,
+          iid: 0,
+          standard: [{
+            title: '杯型',
+            type: ['大杯', '中杯', '小杯']
+          }],
+          selling: true
+        },
+
+      ]
+    }],
+    list1: [
       {
         name: '热销',
         id: 0,
@@ -21,28 +40,11 @@ Page({
             price: 12.00,
             isChecked: false,
             iid: 0,
-            standard:[
-              {
-                title:'杯型',
-                type:['大杯','中杯','小杯']
-              }
-            ],
-            selling:true
-          },
-          
-        ]
-      }
-    ],
-    list1: [{
-        name: '热销',
-        id: 0,
-        goods: [{
-            goodsName: '1香酥小鸡腿1个',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 12.00,
-            isChecked: false,
-            iid: 0
+            standard: [{
+              title: '杯型',
+              type: ['大杯', '中杯', '小杯']
+            }],
+            selling: false
           },
           {
             goodsName: '2劲爆双层牛肉堡+鸡块+饮料',
@@ -87,15 +89,21 @@ Page({
         ]
       },
       {
-        name: '特色炒饭',
+        name: '11特色炒饭',
         id: 1,
-        goods: [{
-            goodsName: '7香酥小鸡腿1个',
+        goods: [
+          {
+            goodsName: '1香酥小鸡腿1个',
             introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
             saled: 120,
             price: 12.00,
             isChecked: false,
-            iid: 6
+            iid: 0,
+            standard: [{
+              title: '杯型',
+              type: ['大杯', '中杯', '小杯']
+            }],
+            selling: false
           },
           {
             goodsName: '8劲爆双层牛肉堡+鸡块+饮料',
@@ -1100,6 +1108,7 @@ Page({
     deletedGoods: [],
     deletedGoodsLength: 0,
     currentModalType: '',
+    list1CurrentModalType: '',
     modalName: ['edit', 'delete', 'add', 'deleteNotice'],
     modal: {
       edit: {
@@ -1122,15 +1131,15 @@ Page({
       addGoodIntroduce: '',
       addGoodPrice: '',
       saled: 0,
-      standard:[],
-      standardIndex:'',
-      standardTypeIndex:undefined,
+      standard: [],
+      standardIndex: '',
+      standardTypeIndex: undefined,
     },
     pickerRanges: [],
-    showInputModal:'',
-    inputValue:'',
-    showNoticeModal:'',
-    noticeContent:''
+    showInputModal: '',
+    inputValue: '',
+    showNoticeModal: '',
+    noticeContent: ''
   },
   onLoad() {
     wx.showLoading({
@@ -1296,7 +1305,7 @@ Page({
     })
   },
   hideModal(e) {
-    if (this.data.currentModalType == 'add' ||this.data.currentModalType == 'edit') {
+    if (this.data.currentModalType == 'add' || this.data.currentModalType == 'edit') {
       this.clearthisDataAddGood()
     }
     this.setData({
@@ -1312,28 +1321,30 @@ Page({
     }).exec();
   },
   clearthisDataAddGood() {
-    let {addGood} = this.data
+    let {
+      addGood
+    } = this.data
     addGood.addGoodIndex = addGood.addGoodItemIndex = addGood.addGoodIndex2 = null
     addGood.addGoodImage = []
     addGood.addGoodName = addGood.addGoodIntroduce = addGood.addGoodPrice = ''
     addGood.saled = 0
     addGood.standard = []
   },
-  onTimeGetInputValue(e){
+  onTimeGetInputValue(e) {
     this.setData({
-      inputValue:e.detail.value
+      inputValue: e.detail.value
     })
   },
-  showNoticeModal(e,content){
+  showNoticeModal(e, content) {
     this.setData({
-      showNoticeModal:'noticeModal',
-      noticeContent:content
+      showNoticeModal: 'noticeModal',
+      noticeContent: content
     })
   },
-  hideNoticeModal(){
+  hideNoticeModal() {
     this.setData({
-      showNoticeModal:'',
-      noticeContent:''
+      showNoticeModal: '',
+      noticeContent: ''
     })
   },
   /**
@@ -1342,7 +1353,7 @@ Page({
   showDeleteModal(e) {
     //判断是否选择删除商品,如数量为0,弹出提示框
     if (this.data.deletedGoodsLength == 0) {
-      this.showNoticeModal(e,'请选择要删除的商品')
+      this.showNoticeModal(e, '请选择要删除的商品')
       setTimeout(() => {
         this.hideNoticeModal()
       }, 1500)
@@ -1390,9 +1401,11 @@ Page({
   addGoods(e) {
     //在api中传输,在success中清空addGood
     //获取 新增商品名字,介绍,价格 input框内的值
-    const {addGoodIndex} = this.data.addGood
+    const {
+      addGoodIndex
+    } = this.data.addGood
     console.log(addGoodIndex);
-    
+
     let addGood = {
       goodsName: '',
       introduce: '',
@@ -1400,16 +1413,16 @@ Page({
       price: '',
       isChecked: false,
       iid: 0,
-      standard:JSON.parse(JSON.stringify(this.data.addGood.standard)) 
+      standard: JSON.parse(JSON.stringify(this.data.addGood.standard))
     }
     this.getQueryInputValue('.addGoodName', addGood, "goodsName")
     this.getQueryInputValue('.addGoodIntroduce', addGood, "introduce")
     this.getQueryInputValue('.addGoodPrice', addGood, "price")
     //给一个setTimeout 为了同上面一样进入微任务队列,防止异步操作,下面作为主线程任务先行执行
     setTimeout(() => {
-      if(addGood.goodsName == ''||addGood.price == ''||addGoodIndex == null||addGoodIndex == ''){
-        this.showNoticeModal(e,'商品类型,名称及价格不允许为空')
-      }else{
+      if (addGood.goodsName == '' || addGood.price == '' || addGoodIndex == null || addGoodIndex == '') {
+        this.showNoticeModal(e, '商品类型,名称及价格不允许为空')
+      } else {
         this.data.list[addGoodIndex].goods.push(addGood)
         this.clearthisDataAddGood()
         this.setData({
@@ -1470,10 +1483,22 @@ Page({
      * 如果不是,index是大类索引,
      * 利用index和itemindex拿到当前点击的商品的信息,赋值给addGood
      */
-    if(!this.data.isCheckBoxShow){
-      const {addGood} = this.data
-      const {index,itemindex} = e.currentTarget.dataset
-      const {goodsName,introduce,price,saled,standard,selling} = this.data.list[index].goods[itemindex]
+    if (!this.data.isCheckBoxShow) {
+      let {
+        addGood
+      } = this.data
+      const {
+        index,
+        itemindex
+      } = e.currentTarget.dataset
+      const {
+        goodsName,
+        introduce,
+        price,
+        saled,
+        standard,
+        selling
+      } = this.data.list[index].goods[itemindex]
       addGood.addGoodName = goodsName
       addGood.addGoodIntroduce = introduce
       addGood.addGoodPrice = price
@@ -1495,129 +1520,258 @@ Page({
      * 该函数用于隐藏编辑模态框
      */
     this.hideModal()
-    const {addGood} = this.data
+    const {
+      addGood
+    } = this.data
     addGood.addGoodIndex = addGood.addGoodItemIndex = addGood.addGoodIndex2 = null
     addGood.addGoodImage = []
     addGood.addGoodName = addGood.addGoodIntroduce = addGood.addGoodIntroduce = ''
     addGood.saled = addGood.price = 0
+    addGood.selling = true
     this.setData({
       addGood: this.data.addGood
     })
   },
   confirmEditGood(e) {
-    const index2 =this.data.addGood.addGoodIndex2
+    const index2 = this.data.addGood.addGoodIndex2
     const index = this.data.addGood.addGoodIndex
     const itemIndex = this.data.addGood.addGoodItemIndex
-    const addGood = { 
+    const addGood = {
       goodsName: '',
       introduce: '',
       saled: this.data.addGood.saled,
       price: '',
       isChecked: false,
-      iid: 0, 
-      standard:JSON.parse(JSON.stringify(this.data.addGood.standard))
+      iid: 0,
+      standard: JSON.parse(JSON.stringify(this.data.addGood.standard)),
+      selling: this.data.selling
     }
     //获取input内的值
     this.getQueryInputValue('.editGoodName', addGood, "goodsName")
     this.getQueryInputValue('.editGoodIntroduce', addGood, "introduce")
     this.getQueryInputValue('.editGoodPrice', addGood, "price")
     setTimeout(() => {
-      if(addGood.goodsName == ''|| addGood.price == ''){
-        this.showNoticeModal(e,'名称及价格不允许为空')
-      }else{
-        if (index == index2) {
-          //判断是否从原本所在的类切换到其他类
-          this.data.list[index].goods[itemIndex] = addGood
+      if (addGood.goodsName == '' || addGood.price == '') {
+        this.showNoticeModal(e, '名称及价格不允许为空')
+      } else {
+        if (addGood.selling) {
+          if (index == index2) {
+            //判断是否从原本所在的类切换到其他类
+            this.data.list[index].goods[itemIndex] = addGood
+          } else {
+            this.data.list[index].goods.push(addGood)
+            this.data.list[index2].goods.splice(itemIndex, 1)
+          }
         } else {
-          this.data.list[index].goods.push(addGood)
-          this.data.list[index2].goods.splice(itemIndex, 1)
+          const categoryName = this.data.list[index].name
+          let flag = this.data.list1.findIndex(item => item.name == categoryName)
+          if (flag == -1) {
+            const newList = {
+              name: categoryName,
+              id: this.data.list[index].id,
+              goods: []
+            }
+            this.data.list1.push(newList)
+            this.data.list1[this.data.list1.length-1].goods.push(addGood)
+            this.data.list[index2].goods.splice(itemIndex, 1)
+          } else {
+            this.data.list1[flag].goods.push(addGood)
+            this.data.list[index2].goods.splice(itemIndex, 1)
+          }
         }
         this.clearthisDataAddGood()
         this.setData({
           list: this.data.list,
+          list1: this.data.list1,
           addGood: this.data.addGood
         })
         this.hideModal()
       }
-    },50)
+    }, 100)
     //时间毫米数不够 ，坑
+  },
+  showEditModal1(e, list1CurrentModalType) {
+    let {
+      addGood
+    } = this.data
+    const {
+      index,
+      itemindex
+    } = e.currentTarget.dataset
+    const {
+      goodsName,
+      introduce,
+      price,
+      saled,
+      standard,
+      selling
+    } = this.data.list1[index].goods[itemindex]
+    addGood.addGoodName = goodsName
+    addGood.addGoodIntroduce = introduce
+    addGood.addGoodPrice = price
+    addGood.saled = saled
+    addGood.addGoodIndex2 = addGood.addGoodIndex = index
+    addGood.addGoodItemIndex = itemindex
+    addGood.standard = JSON.parse(JSON.stringify(standard))
+    addGood.selling = selling
+    this.setData({
+      addGood: this.data.addGood,
+      list1CurrentModalType: 'list1'
+    })
+  },
+  hideEditModal1() {
+    let {
+      addGood
+    } = this.data
+    addGood.addGoodIndex = addGood.addGoodItemIndex = addGood.addGoodIndex2 = null
+    addGood.addGoodImage = []
+    addGood.addGoodName = addGood.addGoodIntroduce = addGood.addGoodIntroduce = ''
+    addGood.saled = addGood.price = 0
+    addGood.selling = true
+    this.setData({
+      addGood: this.data.addGood,
+      list1CurrentModalType: ''
+    })
+  },
+  confirmEditGood1() {
+    const index = this.data.addGood.addGoodIndex
+    const itemIndex = this.data.addGood.addGoodItemIndex
+    const addGood = {
+      goodsName: this.data.addGood.addGoodName,
+      introduce: this.data.addGood.addGoodIntroduce,
+      saled: this.data.addGood.saled,
+      price: this.data.addGood.addGoodPrice,
+      isChecked: false,
+      iid: 0,
+      standard: JSON.parse(JSON.stringify(this.data.addGood.standard)),
+      selling: this.data.addGood.selling
+    }
+    if (addGood.selling) {
+      const categoryName = this.data.list1[index].name
+      let flag = this.data.list.findIndex(item => item.name == categoryName)
+      if (flag == -1) {
+        const newList = {
+          name: categoryName,
+          id: this.data.list1[index].id,
+          goods: []
+        }
+        this.data.list.push(newList)
+        this.data.list[this.data.list.length-1].goods.push(addGood)
+        this.data.list1[index].goods.splice(itemIndex, 1)
+      } else {
+        this.data.list[flag].goods.push(addGood)
+        this.data.list1[index].goods.splice(itemIndex, 1)
+      }
+    }
+    this.clearthisDataAddGood()
+    this.setData({
+      list: this.data.list,
+      list1: this.data.list1,
+      addGood: this.data.addGood,
+      list1CurrentModalType: ''
+    })
   },
   /**
    * 新增商品和编辑商品公用模块--规格增删查改
    */
-  sellingSlideClick(){
-    let {addGood} = this.data
+  sellingSlideClick() {
+    let {
+      addGood
+    } = this.data
     addGood.selling = !addGood.selling
+    const temp = `addGood.selling`
     this.setData({
-      addGood:this.data.addGood
+      [temp]: addGood.selling
     })
   },
-  hideInputModal(){
+  hideInputModal() {
     this.data.addGood.standardTypeIndex = undefined
     this.setData({
-      showInputModal:'',
-      addGood:this.data.addGood
+      showInputModal: '',
+      addGood: this.data.addGood
     })
   },
-  deleteStandard(e){
-    let {addGood} = this.data
-    const {index,typeindex} = e.currentTarget.dataset
-    if(typeindex === undefined){
-      addGood.standard.splice(index,1) 
-    }else{
-      addGood.standard[index].type.splice(typeindex,1)
+  deleteStandard(e) {
+    let {
+      addGood
+    } = this.data
+    const {
+      index,
+      typeindex
+    } = e.currentTarget.dataset
+    if (typeindex === undefined) {
+      addGood.standard.splice(index, 1)
+    } else {
+      addGood.standard[index].type.splice(typeindex, 1)
     }
     this.setData({
-      addGood:this.data.addGood
+      addGood: this.data.addGood
     })
   },
-  editStandard(e){
-    const {addGood} = this.data
-    const {index,typeindex} = e.currentTarget.dataset
-    if(typeindex === undefined){
+  editStandard(e) {
+    const {
+      addGood
+    } = this.data
+    const {
+      index,
+      typeindex
+    } = e.currentTarget.dataset
+    if (typeindex === undefined) {
       addGood.standardIndex = index
       this.setData({
-        inputValue:addGood.standard[index].title
+        inputValue: addGood.standard[index].title
       })
-    }else {
+    } else {
       addGood.standardIndex = index
       addGood.standardTypeIndex = typeindex
       this.setData({
-        inputValue:addGood.standard[index].type[typeindex],
+        inputValue: addGood.standard[index].type[typeindex],
       })
     }
     this.setData({
-      showInputModal:'inputModal'
+      showInputModal: 'inputModal'
     })
   },
-  confirmEditStandard(){
-    let {addGood,inputValue} = this.data
-    let {standardIndex,standardTypeIndex} = addGood
-    if(standardTypeIndex === undefined){
+  confirmEditStandard() {
+    let {
+      addGood,
+      inputValue
+    } = this.data
+    let {
+      standardIndex,
+      standardTypeIndex
+    } = addGood
+    if (standardTypeIndex === undefined) {
       addGood.standard[standardIndex].title = inputValue
-    }else{
+    } else {
       addGood.standard[standardIndex].type[standardTypeIndex] = inputValue
     }
-   this.hideInputModal()
+    this.hideInputModal()
   },
-  addStandard(){
-    let {addGood} = this.data
+  addStandard() {
+    let {
+      addGood
+    } = this.data
     const standard = {
-      title:'请填写规格名称',
-      type:[]
+      title: '请填写规格名称',
+      type: []
     }
     addGood.standard.push(standard)
     this.setData({
-      addGood:this.data.addGood
+      addGood: this.data.addGood
     })
   },
-  addStandardType(e){
-    let {addGood} = this.data
-    const {index} = e.currentTarget.dataset
+  addStandardType(e) {
+    let {
+      addGood
+    } = this.data
+    const {
+      index
+    } = e.currentTarget.dataset
     const type = '请添加类型名称'
     addGood.standard[index].type.push(type)
     this.setData({
-      addGood:this.data.addGood
+      addGood: this.data.addGood
     })
   },
 })

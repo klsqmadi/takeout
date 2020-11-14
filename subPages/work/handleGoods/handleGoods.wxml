@@ -77,7 +77,7 @@
       <view class="padding-top padding-lr" wx:for="{{list1}}" wx:key id="main1-{{index}}" wx:for-index="index">
         <view class="bg-white solid-bottom padding-sm">{{item.name}}</view>
         <view class="bg-white padding-sm">
-          <view class="flex margin-bottom" wx:for="{{item.goods}}" wx:for-item="goods" wx:for-index="itemIndex">
+          <view class="flex margin-bottom" wx:for="{{item.goods}}" wx:for-item="goods" wx:for-index="itemIndex" bindtap="showEditModal1" data-index="{{index}}" data-itemindex="{{itemIndex}}">
             <view class="cu-avatar xl bg-black margin-right-sm radius" style="width:160rpx;height:160rpx"></view>
             <view class="flex-sub flex flex-direction justify-around">
               <view class="text-black text-cut" style="width:270rpx">{{goods.goodsName}}</view>
@@ -270,6 +270,21 @@
     </view>
     <view class="flex padding-tb-sm">
       <view class="flex-sub text-red" bindtap="hideNoticeModal">确定</view>
+    </view>
+  </view>
+</view>
+<view class="cu-modal {{list1CurrentModalType == 'list1'?'show':''}}">
+  <view class="cu-dialog">
+    <view class="padding">
+      <view class="pos-re flex justify-between {{addGood.selling== true?'border-blue':'border-red'}} padding-lr margin-auto" style="border-radius:30rpx;width:280rpx;height:60rpx;line-height:60rpx">
+        <view class="{{addGood.selling== true?'text-white':'text-black'}}" bindtap="sellingSlideClick" style="z-index:2">出售中</view>
+        <view class="{{addGood.selling== true?'text-black':'text-white'}}" bindtap="sellingSlideClick" style="z-index:2">售罄的</view>
+        <view class="pos-ab {{addGood.selling == true?'bg-blue':'bg-red'}}" style="width:50%;;height:83%;left:4rpx;top:6rpx;z-index:1;border-radius:30rpx;transition:.5s; transform:{{addGood.selling == true?'translateX(0)':'translateX(130rpx)'}}"></view>
+      </view>
+    </view>
+    <view class="flex padding-tb-sm">
+      <view class="flex-sub " bindtap="hideEditModal1">取消</view>
+      <view class="flex-sub text-red" bindtap="confirmEditGood1">确定修改</view>
     </view>
   </view>
 </view>
