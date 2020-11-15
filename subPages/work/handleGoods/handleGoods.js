@@ -1362,6 +1362,11 @@ Page({
     }
   },
   deleteGoods(e) {
+    /**
+     * 该函数用于删除商品
+     * @param (flag1)
+     * @param (temp)
+     */
     let flag1 = 0;
     let temp = 0;
     //对deleteGoods 进行多条件排序
@@ -1375,14 +1380,13 @@ Page({
       } else if (a["index"] > b["index"])
         return 1
       else return -1
-
     })
     for (const item of this.data.deletedGoods) {
-      //temp用来判断是否index改变
+      //temp用来判断是否index改变,是否切换了分类
       if (temp != item.index) {
         flag1 = 0
       }
-      //判断itemIndex跟flag的大小,存在flag比itemIndex大的情况,
+      //判断itemIndex跟flag的大小,可能存在flag比itemIndex大的情况,
       this.data.list[item.index].goods.splice(item.itemIndex - flag1, 1)
       temp = item.index
       flag1++
@@ -1399,13 +1403,14 @@ Page({
    * 增加商品模块 相关函数
    */
   addGoods(e) {
-    //在api中传输,在success中清空addGood
-    //获取 新增商品名字,介绍,价格 input框内的值
-    const {
-      addGoodIndex
-    } = this.data.addGood
-    console.log(addGoodIndex);
-
+    /**
+     * 函数用于确认新增商品
+     * @param (addGoodIndex) 与要商品要前往的分类有关
+     * 在api中传输,在success中清空addGood
+     * 获取 新增商品名字,介绍,价格 input框内的值
+     */
+    const {addGoodIndex} = this.data.addGood
+    //创建一个新的对象,因为addGood的属性与要添加商品的对象属性不一样
     let addGood = {
       goodsName: '',
       introduce: '',
@@ -1413,16 +1418,19 @@ Page({
       price: '',
       isChecked: false,
       iid: 0,
-      standard: JSON.parse(JSON.stringify(this.data.addGood.standard))
+      standard: JSON.parse(JSON.stringify(this.data.addGood.standard)),
+      selling:true
     }
     this.getQueryInputValue('.addGoodName', addGood, "goodsName")
     this.getQueryInputValue('.addGoodIntroduce', addGood, "introduce")
     this.getQueryInputValue('.addGoodPrice', addGood, "price")
     //给一个setTimeout 为了同上面一样进入微任务队列,防止异步操作,下面作为主线程任务先行执行
     setTimeout(() => {
+      //判断是否为空
       if (addGood.goodsName == '' || addGood.price == '' || addGoodIndex == null || addGoodIndex == '') {
         this.showNoticeModal(e, '商品类型,名称及价格不允许为空')
       } else {
+        //往分类添加新的商品
         this.data.list[addGoodIndex].goods.push(addGood)
         this.clearthisDataAddGood()
         this.setData({
@@ -1475,22 +1483,17 @@ Page({
    */
   showEditModal(e) {
     /**
+     * 该函数用于显示编辑模态框
      * @param (index) (事件所传递参数，大类的索引)
      * @param (itemindex) (事件所传递参数，小类的索引)
      * @param (addGood) (页面全局变量，用于在编辑时,临时储存,确定编辑后,再赋值到原数组)
-     * 该函数用于显示编辑模态框
      * if判断当前是否为checkBox显示阶段,如果是，不给继续
      * 如果不是,index是大类索引,
      * 利用index和itemindex拿到当前点击的商品的信息,赋值给addGood
      */
     if (!this.data.isCheckBoxShow) {
-      let {
-        addGood
-      } = this.data
-      const {
-        index,
-        itemindex
-      } = e.currentTarget.dataset
+      let {addGood} = this.data
+      const {index,itemindex} = e.currentTarget.dataset
       const {
         goodsName,
         introduce,
@@ -1516,8 +1519,8 @@ Page({
   },
   hideEditModal() {
     /**
-     * @param (addGood) (页面全局变量,点击取消编辑时,将addGood赋空)
      * 该函数用于隐藏编辑模态框
+     * @param (addGood) (页面全局变量,点击取消编辑时,将addGood赋空)
      */
     this.hideModal()
     const {
@@ -1533,6 +1536,12 @@ Page({
     })
   },
   confirmEditGood(e) {
+    /**
+     * 函数用于(确认)编辑修改商品
+     * @param (index) 与商品所在分类有关,不过是现在(当前)所在的分类
+     * @param (index2) 与商品所在分类有关,不过是之前(第一次获取到的)所在的分类
+     * @param (itemIndex) 与商品所在详细分类里的位置有关
+     */
     const index2 = this.data.addGood.addGoodIndex2
     const index = this.data.addGood.addGoodIndex
     const itemIndex = this.data.addGood.addGoodItemIndex
@@ -1551,30 +1560,42 @@ Page({
     this.getQueryInputValue('.editGoodIntroduce', addGood, "introduce")
     this.getQueryInputValue('.editGoodPrice', addGood, "price")
     setTimeout(() => {
+      //判断是否为空
       if (addGood.goodsName == '' || addGood.price == '') {
         this.showNoticeModal(e, '名称及价格不允许为空')
       } else {
+        //判断是在出售中还是售罄中,true在出售中
         if (addGood.selling) {
+          //在出售中
+          //判断是否从原本所在的类切换到其他分类,相等即说明index相对第一次获取到的index2没有改变,即没有切换分类
           if (index == index2) {
-            //判断是否从原本所在的类切换到其他类
+            //没有切换分类,拿到itemIndex,将对应的商品直接用addGood覆盖
             this.data.list[index].goods[itemIndex] = addGood
           } else {
+            //切换分类,需要将之前分类里的商品删除,再在新的分类里添加新的商品
             this.data.list[index].goods.push(addGood)
             this.data.list[index2].goods.splice(itemIndex, 1)
           }
         } else {
+          //售罄中
+          //拿到当前所在的分类的名字
           const categoryName = this.data.list[index].name
+          //去售罄中查询是否有这个分类的名字
           let flag = this.data.list1.findIndex(item => item.name == categoryName)
+          //flag == -1说明售罄中不存在这个分类
           if (flag == -1) {
+            //需要新建一个分类
             const newList = {
               name: categoryName,
               id: this.data.list[index].id,
               goods: []
             }
+            //往售罄中添加新的分类,再在新的分类(售罄中)添加编辑好的商品,然后将编辑好的商品从原来的所在分类(出售中)删除
             this.data.list1.push(newList)
             this.data.list1[this.data.list1.length-1].goods.push(addGood)
             this.data.list[index2].goods.splice(itemIndex, 1)
           } else {
+            //flag != -1 说明售罄中存在这个分离,往这个分类(售罄中)添加编辑好的商品,然后将编辑好的商品从原来的所在分类(出售中)删除
             this.data.list1[flag].goods.push(addGood)
             this.data.list[index2].goods.splice(itemIndex, 1)
           }
@@ -1590,6 +1611,10 @@ Page({
     }, 100)
     //时间毫米数不够 ，坑
   },
+  /**
+   * 这三个函数是上面三个函数的复制份
+   * 纯粹用于售罄
+   */
   showEditModal1(e, list1CurrentModalType) {
     let {
       addGood
@@ -1675,9 +1700,10 @@ Page({
    * 新增商品和编辑商品公用模块--规格增删查改
    */
   sellingSlideClick() {
-    let {
-      addGood
-    } = this.data
+    /**
+     * 函数用于切换 出售中和售罄的位置
+     */
+    let {addGood} = this.data
     addGood.selling = !addGood.selling
     const temp = `addGood.selling`
     this.setData({
@@ -1685,20 +1711,26 @@ Page({
     })
   },
   hideInputModal() {
+    /**
+     * 函数用于隐藏inputModal，同时将standardTypeIndex设为undefined,即默认为类型
+     */
     this.data.addGood.standardTypeIndex = undefined
+    const temp = `addGood.standardTypeIndex`
+    const temp1 = `addGood.standard`
     this.setData({
       showInputModal: '',
-      addGood: this.data.addGood
+      [temp]: this.data.addGood.standardTypeIndex,
+      [temp1]:this.data.addGood.standard
     })
   },
   deleteStandard(e) {
-    let {
-      addGood
-    } = this.data
-    const {
-      index,
-      typeindex
-    } = e.currentTarget.dataset
+    /**
+     * 函数用于删除类型或规格
+     * @param (typeindex) 与类型索引有关,用于知道类型在当前规格的位置,如果typeindex == undefined 说明当前点击的是编辑类型
+     * @param (index) 与规格索引有关,用于知道当前的规格位置
+     */
+    let {addGood} = this.data
+    const {index,typeindex} = e.currentTarget.dataset
     if (typeindex === undefined) {
       addGood.standard.splice(index, 1)
     } else {
@@ -1709,13 +1741,13 @@ Page({
     })
   },
   editStandard(e) {
-    const {
-      addGood
-    } = this.data
-    const {
-      index,
-      typeindex
-    } = e.currentTarget.dataset
+    /**
+     * 函数用于唤起inputModal,编辑修改（类型或规格的）Name
+     * @param (typeindex) 与类型索引有关,用于知道类型在当前规格的位置,如果typeindex == undefined 说明当前点击的是编辑类型
+     * @param (index) 与规格索引有关,用于知道当前的规格位置
+     */
+    const {addGood} = this.data
+    const {index,typeindex} = e.currentTarget.dataset
     if (typeindex === undefined) {
       addGood.standardIndex = index
       this.setData({
@@ -1733,14 +1765,13 @@ Page({
     })
   },
   confirmEditStandard() {
-    let {
-      addGood,
-      inputValue
-    } = this.data
-    let {
-      standardIndex,
-      standardTypeIndex
-    } = addGood
+    /**
+     * 用于(确定)编辑修改（规格或类型）的Name
+     * @param (typeindex) 与类型索引有关,用于知道类型在当前规格的位置,如果typeindex == undefined 说明当前点击的是编辑类型
+     * @param (standardIndex) 与规格索引有关,用于知道当前的规格位置
+     */
+    let {addGood,inputValue} = this.data
+    let {standardIndex,standardTypeIndex} = addGood
     if (standardTypeIndex === undefined) {
       addGood.standard[standardIndex].title = inputValue
     } else {
@@ -1749,29 +1780,33 @@ Page({
     this.hideInputModal()
   },
   addStandard() {
-    let {
-      addGood
-    } = this.data
+    /**
+     * 函数用于添加规格
+     * 新增规格
+     */
+    let {addGood} = this.data
     const standard = {
       title: '请填写规格名称',
       type: []
     }
     addGood.standard.push(standard)
+    const temp = `addGood.standard`
     this.setData({
-      addGood: this.data.addGood
+      [temp]: this.data.addGood.standard
     })
   },
   addStandardType(e) {
-    let {
-      addGood
-    } = this.data
-    const {
-      index
-    } = e.currentTarget.dataset
+    /**
+     * 函数用于添加类型
+     * @param (index) 用于知道当前的规格位置
+     */
+    let {addGood} = this.data
+    const {index} = e.currentTarget.dataset
     const type = '请添加类型名称'
     addGood.standard[index].type.push(type)
+    const temp = `addGood.standard`
     this.setData({
-      addGood: this.data.addGood
+      [temp]: this.data.addGood.standard
     })
   },
 })
