@@ -21,7 +21,20 @@ Page({
           iid: 0,
           standard: [{
             title: '杯型',
-            type: ['大杯', '中杯', '小杯']
+            type: [
+              {
+                typeName:'中杯',
+                typeSaledMoney:100
+              },
+              {
+                typeName:'大杯',
+                typeSaledMoney:10
+              },
+              {
+                typeName:'小杯',
+                typeSaledMoney:1
+              }
+            ]
           }],
           selling: true
         },
@@ -1133,11 +1146,13 @@ Page({
       saled: 0,
       standard: [],
       standardIndex: '',
-      standardTypeIndex: undefined,
+      standardTypeIndex: 0,
+      isStandardType:true
     },
     pickerRanges: [],
     showInputModal: '',
     inputValue: '',
+    inputValue1: '',
     showNoticeModal: '',
     noticeContent: ''
   },
@@ -1331,8 +1346,9 @@ Page({
     addGood.standard = []
   },
   onTimeGetInputValue(e) {
+    const {type} = e.currentTarget.dataset
     this.setData({
-      inputValue: e.detail.value
+      [type]: e.detail.value
     })
   },
   showNoticeModal(e, content) {
@@ -1748,16 +1764,19 @@ Page({
      */
     const {addGood} = this.data
     const {index,typeindex} = e.currentTarget.dataset
+    let temp = `addGood.isStandardType`
+    addGood.standardIndex = index
+    addGood.standardTypeIndex = typeindex
     if (typeindex === undefined) {
-      addGood.standardIndex = index
       this.setData({
-        inputValue: addGood.standard[index].title
+        inputValue: addGood.standard[index].title,
+        [temp]:false
       })
     } else {
-      addGood.standardIndex = index
-      addGood.standardTypeIndex = typeindex
       this.setData({
-        inputValue: addGood.standard[index].type[typeindex],
+        inputValue: addGood.standard[index].type[typeindex].typeName,
+        inputValue1:addGood.standard[index].type[typeindex].typeSaledMoney,
+        [temp]:true
       })
     }
     this.setData({
@@ -1770,12 +1789,13 @@ Page({
      * @param (typeindex) 与类型索引有关,用于知道类型在当前规格的位置,如果typeindex == undefined 说明当前点击的是编辑类型
      * @param (standardIndex) 与规格索引有关,用于知道当前的规格位置
      */
-    let {addGood,inputValue} = this.data
+    let {addGood,inputValue,inputValue1} = this.data
     let {standardIndex,standardTypeIndex} = addGood
     if (standardTypeIndex === undefined) {
       addGood.standard[standardIndex].title = inputValue
     } else {
-      addGood.standard[standardIndex].type[standardTypeIndex] = inputValue
+      addGood.standard[standardIndex].type[standardTypeIndex].typeSaledMoney = inputValue1
+      addGood.standard[standardIndex].type[standardTypeIndex].typeName = inputValue
     }
     this.hideInputModal()
   },
@@ -1802,11 +1822,14 @@ Page({
      */
     let {addGood} = this.data
     const {index} = e.currentTarget.dataset
-    const type = '请添加类型名称'
+    const type = {
+      typeName:'请添加类型名称',
+      typeSaledMoney:0
+    }
     addGood.standard[index].type.push(type)
     const temp = `addGood.standard`
     this.setData({
       [temp]: this.data.addGood.standard
     })
-  },
+  }
 })

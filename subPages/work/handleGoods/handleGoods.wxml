@@ -161,7 +161,8 @@
         <view class="margin-tb-sm">{{item.title}}</view>
         <view class="flex flex-wrap text-center" >
           <view class="border-black padding-tb-xs radius margin-bottom-xl padding-lr pos-re margin-right-xl" wx:for="{{item.type}}" wx:for-item="typeItem" wx:for-index="typeIndex">
-            {{typeItem}}
+            <text class="margin-right-xs">{{typeItem.typeName}}</text>
+            <text class="text-red">￥{{typeItem.typeSaledMoney}}</text>
             <view class="round pos-ab bg-red" style="right:-18rpx;top:-18rpx;width:38rpx;height:38rpx" catchtap="deleteStandard" data-typeindex="{{typeIndex}}" data-index="{{index}}"><text class="cuIcon-close" style="font-size:32rpx"></text></view>
             <view class="round pos-ab bg-green" style="left:-18rpx;bottom:-18rpx;width:38rpx;height:38rpx" catchtap="editStandard" data-typeindex="{{typeIndex}}" data-index="{{index}}"><text class="cuIcon-write" style="font-size:32rpx"></text></view>
             <!-- <view class="round pos-ab text-white bg-red text-center" style="width:32rpx;height:32rpx;line-height:34rpx;right:-14rpx;top:-14rpx">X</view> -->
@@ -231,7 +232,8 @@
         <view class="margin-tb-sm">{{item.title}}</view>
         <view class="flex flex-wrap text-center" >
           <view class="border-black padding-tb-xs radius margin-bottom-xl padding-lr pos-re margin-right-xl" wx:for="{{item.type}}" wx:for-item="typeItem" wx:for-index="typeIndex">
-            {{typeItem}}
+            <text class="margin-right-xs">{{typeItem.typeName}}</text>
+            <text class="text-red">￥{{typeItem.typeSaledMoney}}</text>
             <view class="round pos-ab bg-red" style="right:-18rpx;top:-18rpx;width:38rpx;height:38rpx" catchtap="deleteStandard" data-typeindex="{{typeIndex}}" data-index="{{index}}"><text class="cuIcon-close" style="font-size:32rpx"></text></view>
             <view class="round pos-ab bg-green" style="left:-18rpx;bottom:-18rpx;width:38rpx;height:38rpx" catchtap="editStandard" data-typeindex="{{typeIndex}}" data-index="{{index}}"><text class="cuIcon-write" style="font-size:32rpx"></text></view>
             <!-- <view class="round pos-ab text-white bg-red text-center" style="width:32rpx;height:32rpx;line-height:34rpx;right:-14rpx;top:-14rpx">X</view> -->
@@ -254,7 +256,13 @@
   <view class="cu-dialog">
     <view class="padding text-center">
       <view class="margin-top solids-bottom padding-bottom-sm">
-        <input type="text" value="{{inputValue}}" bindinput="onTimeGetInputValue"></input>
+        <view class="text-center {{addGood.isStandardType?'':'dp-none'}}">类型名称</view>
+        <view class="text-center {{addGood.isStandardType?'dp-none':''}}">规格名称</view>
+        <input type="text" value="{{inputValue}}" bindinput="onTimeGetInputValue" data-type="inputValue"></input>
+      </view>
+      <view class="margin-top solids-bottom padding-bottom-sm {{addGood.isStandardType?'':'dp-none'}}">
+        <view class="text-center">金额名称</view>
+        <input type="text" value="{{inputValue1}}" bindinput="onTimeGetInputValue" data-type="inputValue1"></input>
       </view>
       <view class="flex padding-tb-sm">
         <view class="flex-sub" bindtap="hideInputModal">取消</view>
