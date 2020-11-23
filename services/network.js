@@ -1,8 +1,11 @@
 import {
+  loading,
+  hideLoading,
+  totast,
   BASE_URL,
   USER_TOKEN,
   STATUS_CODE_TOKEN_OVERDUE,
-  STATUS_CODE_LOGIN_SUCCESSE
+  STATUS_CODE_SUCCESSE
 } from './config'
 /* import config from './config'
 
@@ -59,14 +62,22 @@ import {
   })
 } */
 
-export default function(option){
+export default function(option,headerContentType){
   return new Promise((reslove,reject)=>{
+    loading('加载中')
     wx.request({
-      url: `${BASE_URL}${option.url}` ,
+      url: `${BASE_URL}${option.url}`,
       method:option.method||'get',
+      header:{
+        'content-type':headerContentType || 'application/json'
+      },
       data:option.data||{},
+      timeout:10000,
       success:reslove,
       fail:reject
     })
+  }).catch(()=>{
+    hideLoading()
+    totast('系统错误',1500)
   })
 }

@@ -1,66 +1,38 @@
 // pages/profile/profile.js
+import {
+  getShopProfileInfo
+} from '../../services/profile'
+import {
+  BASE_URL,
+  loading,
+  hideLoading,
+  totast,
+  STATUS_CODE_getShopInfo_SUCCESS,
+  STATUS_CODE_SUCCESSE
+} from '../../services/config'
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    bizStatus: '停业中',
+    receiveStatus: '自动接单',
+    headImage:'',
+    shopName:'默认店铺名字'
   },
-
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad: function (options) {
-
+  onLoad() {
+    this._getShopInfo()
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
+  _getShopInfo() {
+    getShopProfileInfo().then(res => {
+      hideLoading()
+      if(res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getShopInfo_SUCCESS){
+        this.setData({
+          bizStatus:res.data.data.runStatus,
+          receiveStatus:res.data.data.autoOrder,
+          headImage:BASE_URL+'/'+res.data.data.shopHead,
+          shopName:res.data.data.shopName
+        })
+      }else{
+        totast('系统错误',1500)
+      }
+    })
   }
 })

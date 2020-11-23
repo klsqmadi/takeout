@@ -57,4 +57,4 @@
       <view class="flex-sub text-red" bindtap="addCategory">增加</view>
     </view>
   </view>
-</view> 
+</view>

@@ -8,6 +8,8 @@
     style="width:300rpx;height:100rpx;line-height:100rpx;">{{currentStatus}}</view>
   <view wx:elif="{{currentStatus == '手动接单'}}" class="margin-auto text-xl text-yellow"
     style="width:300rpx;height:100rpx;line-height:100rpx;">{{currentStatus}}</view>
+  <view wx:el class="margin-auto text-xl text-yellow"
+    style="width:300rpx;height:100rpx;line-height:100rpx;">{{currentStatus}}</view>
 </view>
 
 <view class="flex text-center text-lg margin-top-xl ">

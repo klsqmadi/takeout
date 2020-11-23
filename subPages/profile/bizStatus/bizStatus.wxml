@@ -10,6 +10,8 @@
     style="width:300rpx;height:100rpx;line-height:100rpx;">{{currentStatus}}</view>
   <view wx:elif="{{currentStatus == '停业中'}}" class="margin-auto text-xl text-red"
     style="width:300rpx;height:100rpx;line-height:100rpx;">{{currentStatus}}</view>
+    <view wx:el class="margin-auto text-xl text-red"
+    style="width:300rpx;height:100rpx;line-height:100rpx;">{{currentStatus}}</view>
 </view>
 <view class="flex text-center text-lg margin-top-xl ">
   <button class="cu-btn {{currentStatus != '停业中'?'bg-blue-1':'bg-red'}} flex-sub margin" bindtap="openStore" disabled="{{currentStatus != '停业中'?false:true}}">营业</button>

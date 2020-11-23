@@ -2,7 +2,8 @@ import request from './network'
 import {
   API_URL_getGoodsCategoryInfo,
   API_URL_deleteCategory,
-  API_URL_addCategory
+  API_URL_addCategory,
+  API_URL_modifyCategoryName
 } from './config'
 
 export function getGoodsCategoryInfo(){
@@ -19,11 +20,23 @@ export function deleteCategory(ids){
   })
 }
 
-export function addCategory(){
+export function addCategory(categoryName){
   return request({
     url:API_URL_addCategory,
-    method:'POST'
+    method:'POST',
+    data:categoryName
   })
+}
+
+export function modifyCategoryName(categoryId,categoryName){
+  return request({
+    url:API_URL_modifyCategoryName,
+    method:'POST',
+    data:{
+      categoryId,
+      categoryName
+    }
+  },'application/x-www-form-urlencoded')
 }
 
 

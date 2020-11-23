@@ -2,9 +2,20 @@
 import {
   getGoodsCategoryInfo,
   deleteCategory,
-  addCategory
+  addCategory,
+  modifyCategoryName,
 } from '../../../services/work';
 
+import {
+  loading,
+  hideLoading,
+  totast,
+  STATUS_CODE_SUCCESSE,
+  STATUS_CODE_getGoodsCategoryInfo,
+  STATUS_CODE_modifyCategoryName_SUCCESS,
+  STATUS_CODE_deleteCategory_SUCCESS,
+  STATUS_CODE_addCategory_SUCCESS
+} from '../../../services/config'
 Page({
   data: {
     activeNames: 0,
@@ -25,38 +36,46 @@ Page({
         modalShow: false,
         inputValue: ''
       }
-    }
+    },
+    noticeContent: '系统错误'
   },
   onLoad() {
-    wx.showLoading({
-      title: '加载中',
-    })
     this._getGoodsCategoryInfo()
   },
-  onReady(){
-    wx.hideLoading()
+  onReady() {
+    hideLoading()
   },
   _getGoodsCategoryInfo() {
     getGoodsCategoryInfo().then(res => {
-      let {category} = this.data
-      for (const [index, item] of res.data.data.entries()) {
-        const TempCategory = {
-          category: item.categoryName,
-          categoryId: item.categoryId,
-          shopId: item.shopId
+      hideLoading()
+      if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getGoodsCategoryInfo) {
+        let {
+          category
+        } = this.data
+        for (const [index, item] of res.data.data.entries()) {
+          const TempCategory = {
+            category: item.categoryName,
+            categoryId: item.categoryId,
+            shopId: item.shopId
+          }
+          category.push(TempCategory)
         }
-        category.push(TempCategory)
+        this.setData({
+          category: category
+        })
+      } else {
+        totast('系统错误,信息获取失败', 1500)
       }
-      this.setData({
-        category:category
-      })
     })
   },
-  _deleteCategory(ids){
+  _deleteCategory(ids) {
     return deleteCategory(ids)
   },
-  _addCategory(){
-    addCategory()
+  _addCategory(categoryName) {
+    return addCategory(categoryName)
+  },
+  _modifyCategoryName(categoryyId, categoryName) {
+    return modifyCategoryName(categoryyId, categoryName)
   },
   showModal(e, currentModalType) {
     const index = e.currentTarget.dataset.index
@@ -79,10 +98,21 @@ Page({
     })
   },
   //更改分类名
-  modifyCategory(e) {
-    this.data.category[this.data.currentIndex].category = this.data.modal[this.data.currentModalType].inputValue
-    this.setData({
-      category: this.data.category
+  async modifyCategory(e) {
+    const {
+      category,
+      currentIndex
+    } = this.data
+    await this._modifyCategoryName(category[currentIndex].categoryId,this.data.modal[this.data.currentModalType].inputValue).then(res => {
+      hideLoading()
+      if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyCategoryName_SUCCESS) {
+        category[currentIndex].category = this.data.modal[this.data.currentModalType].inputValue
+        this.setData({
+          category: this.data.category
+        })
+      } else {
+        totast('系统错误,更改失败', 1500)
+      }
     })
     this.hideModal(e)
   },
@@ -98,28 +128,37 @@ Page({
     const ids = []
     const categoryId = this.data.category[this.data.currentIndex].categoryId
     ids.push(categoryId)
-    this._deleteCategory(ids).then(res=>{
-      reslove(res)
-    }).then((res)=>{
-      if(res.code)
-      this.data.category.splice(this.data.currentIndex, 1)
-      this.setData({
-        category: this.data.category
-      })
+    this._deleteCategory(ids).then(res => {
+      hideLoading()
+      if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_deleteCategory_SUCCESS) {
+        this.data.category.splice(this.data.currentIndex, 1)
+        this.setData({
+          category: this.data.category
+        })
+      } else {
+        totast('系统错误,删除失败', 1500)
+      }
+      this.hideModal(e)
     })
-    this.hideModal(e)
   },
   addCategory(e) {
-    const data = {
-      category: this.data.modal[this.data.currentModalType].inputValue,
-      goods: []
-    }
-    this.data.category.push(data)
-    this.data.modal[this.data.currentModalType].inputValue = ''
-    this.setData({
-      category: this.data.category,
-      modal: this.data.modal
+    this._addCategory(this.data.modal[this.data.currentModalType].inputValue).then(res => {
+      hideLoading()
+      if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_addCategory_SUCCESS) {
+        const data = {
+          category: this.data.modal[this.data.currentModalType].inputValue,
+          goods: []
+        }
+        this.data.category.push(data)
+        this.data.modal[this.data.currentModalType].inputValue = ''
+        this.setData({
+          category: this.data.category,
+          modal: this.data.modal
+        })
+      } else {
+        totast('系统错误,添加失败', 1500)
+      }
+      this.hideModal(e)
     })
-    this.hideModal()
-  }
+  },
 })
