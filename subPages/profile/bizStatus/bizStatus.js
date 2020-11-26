@@ -19,7 +19,7 @@ Page({
     loading('加载中')
     const currentPage = getCurrentPages()
     this.setData({
-      currentStatus: currentPage[0].data.bizStatus
+      currentStatus: currentPage[0].data.bizStatus == 0?'停业中':currentPage[0].data.bizStatus == 1?'营业中':'打烊'
     })
   },
   onReady() {

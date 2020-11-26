@@ -28,7 +28,7 @@
     <!-- --- -->
     <view class="flex solids-bottom padding-bottom-sm">
       <view class="flex-sub">
-        <view class="text-black">{{item.shopName}}</view>
+        <!-- <view class="text-black">{{item.shopName}}</view> -->
         <view class="text-grey">{{item.time}}</view>
       </view>
       <view class="flex-sub text-right">

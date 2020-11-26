@@ -1,4 +1,18 @@
 // subPages/order/handleGoods/handleGoods.js
+import {
+  getCategoryAndGoodsInfo,
+  addGoods
+}from '../../../services/work'
+import {
+  BASE_URL,
+  API_URL_addGoods,
+  loading,
+  hideLoading,
+  totast,
+  STATUS_CODE_getCategoryAndGoodsInfo_SUCCESS,
+  STATUS_CODE_SUCCESSE,
+  STATUS_CODE_addGoods_SUCCESS, API_URL_modifyShopInfo
+}from '../../../services/config'
 Page({
   data: {
     tabContent: ['出售中', '售罄的'],
@@ -9,7 +23,7 @@ Page({
     MainCur1: 0,
     VerticalNavTop: 0,
     VerticalNavTop1: 0,
-    list: [{
+    /* list: [{
       name: '热销',
       id: 0,
       goods: [{
@@ -40,7 +54,8 @@ Page({
         },
 
       ]
-    }],
+    }], */
+    list:[],
     list1: [
       {
         name: '热销',
@@ -1156,16 +1171,68 @@ Page({
     showNoticeModal: '',
     noticeContent: ''
   },
-  onLoad() {
-    wx.showLoading({
-      title: '加载中...',
-      mask: true
-    })
+  async onLoad() {
+    const {list} = this.data
+    loading('加载中')
     //将list里的类名收集
-    this.pickerRanges()
+    await this._getGoodsInfo(1).then(res=>{
+      hideLoading()
+      if(res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getCategoryAndGoodsInfo_SUCCESS){
+        for (const item of res.data.data) {
+          const category = {
+            name:item.categoryName,
+            id:item.categoryId,
+            goods:[]
+          }
+          for (const goodItem of item.dates) {
+            const good = {
+              imageUrl:goodItem.commodityPhoto,
+              goodsName:goodItem.commodityName,
+              price:goodItem.commodityPrice,
+              iid:goodItem.commodityId,
+              introduce:goodItem.commodityDetail,
+              selling:goodItem.saleStatus == 1?true:false,
+              isChecked:false,
+              saled:0,
+              standard:[]
+            }
+            for (const specs of goodItem.specs) {
+              const standard = {
+                title:specs.specName,
+                standardId:specs.specId,
+                type:[]
+              }
+              for (const attributes of specs.attributes) {
+                const type = {
+                  typeId:attributes.attributeId,
+                  typeName:attributes.attributeName,
+                  typeSaledMoney:attributes.attributePrice || 0
+                }
+                standard.type.push(type)
+              }
+              good.standard.push(standard)
+            }
+            category.goods.push(good)
+          }
+          list.push(category)
+        }
+      }else{
+        totast('系统错误,商品信息获取事变',1500)
+      }
+    })
+    await this.pickerRanges()
+    this.setData({
+      list:this.data.list
+    })
   },
   onReady() {
     wx.hideLoading()
+  },
+  _getGoodsInfo(saleStatus){
+    return getCategoryAndGoodsInfo(saleStatus)
+  },
+  _addGoods(commodityInfoQuery,file){
+    return addGoods(commodityInfoQuery,file)
   },
   /**
    * 导航栏模块
@@ -1435,7 +1502,8 @@ Page({
       isChecked: false,
       iid: 0,
       standard: JSON.parse(JSON.stringify(this.data.addGood.standard)),
-      selling:true
+      selling:true,
+      imageUrl:this.data.addGood.addGoodImage[0]
     }
     this.getQueryInputValue('.addGoodName', addGood, "goodsName")
     this.getQueryInputValue('.addGoodIntroduce', addGood, "introduce")
@@ -1443,17 +1511,78 @@ Page({
     //给一个setTimeout 为了同上面一样进入微任务队列,防止异步操作,下面作为主线程任务先行执行
     setTimeout(() => {
       //判断是否为空
-      if (addGood.goodsName == '' || addGood.price == '' || addGoodIndex == null || addGoodIndex == '') {
-        this.showNoticeModal(e, '商品类型,名称及价格不允许为空')
+      if (addGood.goodsName == '' || addGood.price == '' || addGoodIndex == null || addGoodIndex == '' || addGood.imageUrl == '') {
+        this.showNoticeModal(e, '商品图片,类型,名称及价格不允许为空')
       } else {
-        //往分类添加新的商品
-        this.data.list[addGoodIndex].goods.push(addGood)
-        this.clearthisDataAddGood()
-        this.setData({
-          list: this.data.list,
-          addGood: this.data.addGood
+        const commodityInfoQuery = {
+          commodityDetail:addGood.introduce,
+          commodityName:addGood.goodsName,
+          price:addGood.price,
+          categoryId:this.data.list[addGoodIndex].id,
+          specs:[]
+        }
+        if(addGood.standard){
+          for (const item of addGood.standard) {
+            const standard = {
+              attributes:[],
+              specName:item.title
+            }
+            if(item.type){
+              for (const attribute of item.type) {
+                const attri = {
+                  attributeName:attribute.typeName,
+                  attributePrice:attribute.typeSaledMoney
+                }
+                standard.attributes.push(attri)
+              }
+            }
+            commodityInfoQuery.specs.push(standard)
+        }
+        }
+        console.log(commodityInfoQuery);
+        console.log(this.data.addGood.addGoodImage[0]);
+        wx.uploadFile({
+          filePath: this.data.addGood.addGoodImage[0],
+          name: 'file',
+          url: BASE_URL + API_URL_addGoods,
+          /* url: BASE_URL + '/test/uploadFile', */
+          header: {
+            'content-type': 'multipart/form-data'
+          },
+          formData:{
+            /* commodityDetail:commodityInfoQuery.introduce,
+            commodityName:commodityInfoQuery.goodsName,
+            price:commodityInfoQuery.price,
+            categoryId:commodityInfoQuery.id,
+            specs:commodityInfoQuery.commodityInfoQuery */
+            businessId:1,
+            name:1,
+            phone:1
+          },
+          success(res){
+            console.log(res);
+          },
+          fail(res){
+            console.log(res);
+          }
         })
-        this.hideModal()
+        /* this._addGoods(commodityInfoQuery,this.data.addGood.addGoodImage[0]).then(res=>{
+          hideLoading()
+          if(res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_addGoods_SUCCESS){
+            this._addGoods()
+            this.data.list[addGoodIndex].goods.push(addGood)
+            this.clearthisDataAddGood()
+            this.setData({
+              list: this.data.list,
+              addGood: this.data.addGood
+            })
+            this.hideModal()
+
+          }else{
+            totast('系统错误,增加商品失败',1500)
+          }
+        }) */
+        //往分类添加新的商品
       }
     }, 100)
 

@@ -19,7 +19,7 @@ Page({
     loading('加载中')
     const currentPage = getCurrentPages()
     this.setData({
-      currentStatus: currentPage[0].data.receiveStatus
+      currentStatus: currentPage[0].data.receiveStatus == 1?'自动接单':'手动接单'
     })
   },
   onReady(){

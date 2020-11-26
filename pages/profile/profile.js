@@ -18,7 +18,6 @@ Page({
     shopName:'默认店铺名字'
   },
   onLoad() {
-    this._getShopInfo()
   },
   _getShopInfo() {
     getShopProfileInfo().then(res => {
@@ -34,5 +33,8 @@ Page({
         totast('系统错误',1500)
       }
     })
+  },
+  onShow(){
+    this._getShopInfo()
   }
 })

@@ -17,16 +17,20 @@ export function modifyBizStatus(runStatus){
   return request({
     url:API_URL_modifyBizStatus,
     method:'POST',
-    data:runStatus
-  })
+    data:{
+      runStatus
+    }
+  },'application/x-www-form-urlencoded')
 }
 
 export function modifyReceiveStatu(autoStatus){
   return request({
     url:API_URL_modifyReceiveStatus,
     method:'POST',
-    data:autoStatus
-  })
+    data:{
+      autoStatus
+    }
+  },'application/x-www-form-urlencoded')
 }
 
 export function getShopReviewStatus(shopId){

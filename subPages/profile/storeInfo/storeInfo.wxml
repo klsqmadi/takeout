@@ -1,7 +1,7 @@
 <cu-custom bgColor="bg-blue-1" isBack="true">
   <view slot="backText">
   店铺信息
-  <text wx:if="{{shopReviewStatus == 0}}">(店铺信息已提交,正在审核中)</text>
+  <text wx:if="{{shopReviewStatus == 0}}">(提交信息审核中)</text>
   </view>
 </cu-custom>
 <view class="flex align-center padding bg-white" bindtap="getImage" data-inputType="storeImageUrl" data-title="店铺图片">

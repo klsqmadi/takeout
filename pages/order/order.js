@@ -1,3 +1,13 @@
+import {
+  getOrders
+}from '../../services/order'
+import {
+  loading,
+  hideLoading,
+  totast,
+  STATUS_CODE_getOrders_SUCCES,
+  STATUS_CODE_SUCCESSE
+}from '../../services/config'
 const app = getApp()
 // pages/order/order.js
 let bus = app.globalData.bus
@@ -124,39 +134,7 @@ Page({
       pendingOrders:{
         page:0,
         newsRedDot:true,
-        list:[
-          {
-            shopName:'CAT工作室',
-            time:'2020-01-09 21:45:11',
-            orderState:'待接单',
-            orderNumber:1,
-            image:'',
-            items:[
-              {itemName:'海贼王三兄弟奶茶',price:9.99},
-              {itemName:'超级汉堡王',price:19.99},
-              {itemName:'海贼王无敌薯条',price:29.99},
-            ],
-            itemsNumber:3,
-            money:0.01,
-            freight:0.01
-          },
-          {
-            shopName:'CAT00000工作室',
-            time:'2020-01-09 21:45:11',
-            orderState:'待接单',
-            orderNumber:4,
-            image:'',
-            items:[
-              {itemName:'海贼王三兄弟奶茶',price:9.99},
-              {itemName:'超级汉堡王',price:19.99},
-              {itemName:'海贼王无敌薯条',price:29.99}
-            ],
-            itemsNumber:7,
-            money:0.01,
-            freight:0.01
-          }
-          
-        ]
+        list:[]
       },
       pendingDelivered:{
         page:0,
@@ -207,9 +185,9 @@ Page({
     currentModalType:''
   },
   onLoad(){
-    wx.showLoading({
-      title: '加载中',
-    })
+    console.log(1);
+    
+    this._getOrders(1)
   },
   onReady(){
     wx.hideLoading()
@@ -255,6 +233,59 @@ Page({
     })
     this.setData({
       orders:orders
+    })
+  },
+  _getOrders(status){
+    const size = 10
+    const type = status == 1?'pendingOrders':status == 2?'pendingDelivered':'pendingArrive'
+    const goods = this.data.orders[type]
+    const pageNum = goods.page + 1
+    getOrders(pageNum,size,status).then(res=>{
+      if(res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getOrders_SUCCES){
+        goods.page +=1
+        for (const item of res.data.data.list) {
+          const good = {
+            id:item.id,
+            orderId:item.orderId,
+            itemsNumber:item.orderNumber,
+            money:item.totalAmount,
+            deliveryAddress:item.deliveryAddress,
+            userPhone:item.userPhone,
+            userName:item.userName,
+            totalQuantity:item.totalQuantity,
+            freight:item.deliveryFee,
+            time:item.date,
+            completeTime:item.completeTime,
+            orderStatus:item.orderStatus,
+            deliveryStatus:item.deliveryStatus,
+            status:item.status,
+            isReserved:item.isReserved,
+            reservedTime:item.reservedTime || '',
+            riderName:item.riderName,
+            riderPhone:item.riderPhone,
+            commodities:item.commodities,
+            items:[]
+          }
+          if(good.commodities.length > 4){
+            good.items.push(good.commodities[0])
+            good.items.push(good.commodities[1])
+            good.items.push(good.commodities[2])
+          }else if(good.commodities.length == 4){
+            good.items.push(good.commodities[0])
+            good.items.push(good.commodities[1])
+            good.items.push(good.commodities[2])
+            good.items.push(good.commodities[3])
+          }else {
+            good.items.push(...good.commodities)
+          }
+          goods.list.push(good)
+        }
+        const updateOldDate = this.data.orders[type]
+        const updateNewDate = `orders.${type}`
+        this.setData({
+          [updateNewDate]:updateOldDate
+        })
+      }
     })
   },
   /**

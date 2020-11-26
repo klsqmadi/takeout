@@ -59,7 +59,7 @@ Page({
         hideLoading()
         if(result.data.code == STATUS_CODE_SUCCESSE || result.data.code == STATUS_CODE_getShopReviewStatus_SUCCESS){
           this.setData({
-            shopReviewStatus:result.data.data.auditChecked
+            shopReviewStatus:result.data.data[0].auditChecked
           })
         }else{
           totast('系统错误,获取店铺信息失败',1500)
@@ -194,10 +194,18 @@ Page({
         },
         success(res){
           hideLoading()
-          console.log(res);
+          if(res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyShopInfo_SUCCESS){
+            totast('信息修改成功',1500,'success')
+              setTimeout(()=>{
+                wx.navigateBack({
+                  delta: 1,
+                })
+              },1700)
+          }else{
+            totast('系统错误,修改信息失败',1500)
+          }
         },
         fail(res){
-          console.log(res);
           hideLoading()
           totast('系统错误,修改失败',1500)
         }
@@ -205,12 +213,17 @@ Page({
     }else{
       this._modifyShopInfo(schoolAddress,storeInfo.phoneNumber,storeInfo.storeAddress,1,storeInfo.shopId,storeInfo.storeIntroduce,storeInfo.storeName).then(res=>{
         hideLoading()
-        console.log(res);
-        
+        if(res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyShopInfo_SUCCESS){
+          totast('信息修改成功',1500,'success')
+          setTimeout(()=>{
+            wx.navigateBack({
+              delta: 1,
+            })
+          },1700)
+        }else{
+          totast('系统错误,修改信息失败3',1500)
+        }
       })
     }
-    this.setData({
-      showChangeButton:false
-    })
   }
 })
