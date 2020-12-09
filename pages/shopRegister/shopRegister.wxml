@@ -1,0 +1,17 @@
+<cu-custom bgColor="bg-blue-1">
+  <view slot="content">店铺注册</view>
+</cu-custom>
+<view class="">
+  <view class="flex align-center padding bg-white margin-bottom"  data-type="{{item}}" wx:for="{{pictureNameArray}}">
+    <view style="margin-right:290rpx;width:200rpx">{{pictureArray[item].chineseName}}</view>
+    <image class="radius bg-black" style="width:140rpx;height:140rpx" catchtap="chooseImage" src="{{pictureArray[item].url}}" wx:if="{{pictureArray[item].url}}"></image>
+    <view class="solids" catchtap="chooseImage" data-type="{{item}}" wx:else style="width:140rpx;height:140rpx">
+      <view class="text-center margin-top">
+        <text class="cuIcon-cameraadd" style="font-size:68rpx"></text>
+      </view>
+    </view>
+    <view class="margin-left cuIcon-right" style="font-size:36rpx"></view>
+  </view>
+  
+  <view class="bg-green padding text-center margin-xl radius">提交</view>
+</view>

@@ -24,7 +24,11 @@
   </view>
 </view>
 <view>
-  <view class="bg-white padding-lr-lg padding-tb-sm margin-top-sm" wx:for="{{orders[currentType].list}}" wx:key="index">
+    <view class="padding-lr margin-top-sm flex justify-end ">
+      <view wx:if="{{orders[currentType].pleaseRefresh || orders[currentType].pleaseRefresh}}" class="margin-right-xl">有订单状态发送改变,请刷新获取...</view>
+      <view class="margin-left-xl cuIcon-refresh " style="font-size:40rpx" bindtap="refreshOrder" data-type='{{currentType}}'></view>
+    </view>
+  <view class="bg-white padding-lr-lg padding-tb-sm margin-top-sm" wx:for="{{orders[currentType].list}}" wx:key="index" wx:for-item="item">
     <!-- --- -->
     <view class="flex solids-bottom padding-bottom-sm">
       <view class="flex-sub">
@@ -44,12 +48,12 @@
     <view class="flex margin-top-sm solids-bottom padding-bottom-sm">
       <view class="bg-black margin-right-sm radius" style="width:150rpx;height:150rpx"></view>
       <view class="flex-sub of-hid text-sm" style="height:150rpx;font-weight:100rpx">
-        <view class="flex justify-between align-center" style="height:calc(150rpx / 4)" wx:for="{{item.items}}" wx:key="index">
-          <view class="text-darkGray text-cut" style="width:60%">{{item.itemName}}</view>
-          <view class="text-cut" style="width:10%">x {{item.number}}</view>
-          <view class="text-black-1 text-right text-cut" style="width:30%">${{item.price}}</view>
+        <view class="flex justify-between align-center" style="height:calc(150rpx / 4)" wx:for="{{item.items}}" wx:key="index" wx:for-item="iItem">
+          <view class="text-darkGray text-cut" style="width:60%">{{iItem.goodsName}}</view>
+          <view class="text-cut" style="width:10%">x {{iItem.quantity}}</view>
+          <view class="text-black-1 text-right text-cut" style="width:30%">${{iItem.totalPrice}}</view>
         </view>
-        <view class="text-center bg-gray shadow shadow-lg radius" style="height:calc(150rpx / 4);line-height:20.5px" wx:if="{{item.itemsNumber >= 5?true:false}}">
+        <view class="text-center bg-gray shadow shadow-lg radius" style="height:calc(150rpx / 4);line-height:20.5px" wx:if="{{item.commodities.length >= 5?true:false}}">
           <text class="cuIcon-more"></text>
         </view>
       </view>
@@ -62,9 +66,13 @@
       </view>
     <!-- --- -->
     <view class="flex justify-end margin-top-sm">
+      <view class="padding-lr padding-tb-xs " wx:if="{{item.remarks}}"><text class="cuIcon-warn text-yellow margin-right-sm" ></text><text class="text-yellow">预定</text></view>
       <view class="padding-lr padding-tb-xs border radius" bindtap="goToOrderDetail" data-item="{{item}}">查看详情</view>
       <view class="padding-lr padding-tb-xs border radius margin-left text-blue" wx:if="{{item.orderState == '待接单'}}" bindtap="acceptOrder" data-index="{{index}}">接单</view>
       <view class="padding-lr padding-tb-xs border radius margin-left text-red" wx:if="{{item.orderState == '待接单'}}" bindtap="refuseReceiveOrder" data-index="{{index}}">拒绝接单</view>
+      <view class="padding-lr padding-tb-xs border radius margin-left text-red" wx:if="{{item.orderState == '待发货'}}" bindtap="acceptOrder" data-index="{{index}}">退款</view>
+      <view class="padding-lr padding-tb-xs border radius margin-left text-green" wx:if="{{item.orderState == '待发货'}}" bindtap="completeOrder" data-index="{{index}}">订单完成</view>
+      
     </view>
   </view>
 </view>
@@ -78,6 +86,18 @@
     <view class="flex padding-tb-sm">
       <view class="flex-sub " bindtap="hideModal">取消</view>
       <view class="flex-sub text-red" bindtap="confirmRefuseOrder">确定</view>
+    </view>
+  </view>
+</view>
+<view class="cu-modal {{currentModalType == 'completeOrder'?'show':''}}">
+  <view class="cu-dialog">
+    <view class="padding margin-sm">
+      你确定订单
+      <text class="text-green">已送达</text>吗
+    </view>
+    <view class="flex padding-tb-sm">
+      <view class="flex-sub " bindtap="hideModal">取消</view>
+      <view class="flex-sub text-red" bindtap="confirmCompleteOrder">确定</view>
     </view>
   </view>
 </view>

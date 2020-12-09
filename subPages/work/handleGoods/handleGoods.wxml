@@ -27,7 +27,7 @@
           <view class="flex margin-bottom" wx:for="{{item.goods}}" wx:for-item="goods" wx:for-index="itemIndex"
             catchtap="showEditModal" data-currentModalType="{{modalName[0]}}" data-index="{{index}}"
             data-itemIndex="{{itemIndex}}">
-            <view class="cu-avatar xl bg-black margin-right-sm radius" style="width:160rpx;height:160rpx"></view>
+            <image src="{{goods.imageUrl}}" class="cu-avatar xl bg-black margin-right-sm radius" style="width:160rpx;height:160rpx"></image>
             <view class="flex-sub flex flex-direction justify-around">
               <view class="text-black text-cut" style="width:270rpx">{{goods.goodsName}}</view>
               <view class="text-grey text-cut text-sm" style="width:270rpx">{{goods.introduce}}</view>
@@ -46,7 +46,6 @@
             </view>
           </view>
         </view>
-
       </view>
     </scroll-view>
   </view>
@@ -112,7 +111,7 @@
     <view class="cu-form-group" style="width:140rpx;height:140rpx;background:#F8F8F8;margin:40rpx auto 0;padding:0">
       <view class="grid col-1 grid-square flex-sub">
         <view class="bg-img" wx:if="{{addGood.addGoodImage.length > 0}}">
-          <image src="{{addGood.addGoodImage[0]}}" mode='aspectFill' style="left:0;right:0;"></image>
+          <image src="{{addGood.addGoodImage}}" mode='aspectFill' style="left:0;right:0;"></image>
           <view class="cu-tag bg-red" bindtap="deleteImage" data-index="0">
             <text class="cuIcon-close"></text>
           </view>
@@ -186,7 +185,7 @@
     <view class="cu-form-group" style="width:140rpx;height:140rpx;background:#F8F8F8;margin:40rpx auto 0;padding:0">
       <view class="grid col-1 grid-square flex-sub">
         <view class="bg-img" wx:if="{{addGood.addGoodImage.length > 0}}">
-          <image src="{{addGood.addGoodImage[0]}}" mode='aspectFill' style="left:0;right:0;"></image>
+          <image src="{{addGood.addGoodImage}}" mode='aspectFill' style="left:0;right:0;"></image>
           <view class="cu-tag bg-red" catchtap="deleteImage" data-index="0">
             <text class="cuIcon-close"></text>
           </view>

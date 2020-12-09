@@ -3,11 +3,11 @@ import {
   hideLoading,
   totast,
   BASE_URL,
+  BASE_URL_3,
   USER_TOKEN,
   STATUS_CODE_TOKEN_OVERDUE,
   STATUS_CODE_SUCCESSE
 } from './config'
-/* import config from './config'
 
 /* export default function(option){
 
@@ -61,23 +61,56 @@ import {
     })
   })
 } */
-
-export default function(option,headerContentType){
-  return new Promise((reslove,reject)=>{
-    loading('加载中')
-    wx.request({
-      url: `${BASE_URL}${option.url}`,
-      method:option.method||'get',
-      header:{
-        'content-type':headerContentType || 'application/json'
-      },
-      data:option.data||{},
-      timeout:10000,
-      success:reslove,
-      fail:reject
+const arr_BASE_URL = [BASE_URL, '', BASE_URL_3]
+export default function (option, headerContentType, BASE_URL_Index = 1) {
+  let TOKEN = wx.getStorageSync('token') || null
+  let id = wx.getStorageSync('id') || null
+  const BASE_url = arr_BASE_URL[BASE_URL_Index - 1]
+  const tempData = option.data || {}
+  tempData.businessId = id
+  if (TOKEN && id) {
+    return new Promise((reslove, reject) => {
+      loading('加载中')
+      wx.request({
+        url: `${BASE_url}${option.url}`,
+        method: option.method || 'get',
+        header: {
+          'content-type': headerContentType || 'application/json',
+          // 'Authorization':TOKEN
+          'businessToken': TOKEN
+        },
+        data: tempData,
+        // data:option.data||{},
+        timeout: option.timeout || 100000,
+        success: res => {
+          if (res.data.code == STATUS_CODE_TOKEN_OVERDUE) {
+            wx.showModal({
+              title: '提示',
+              content: '登录已过期,请重新登录!',
+              confirmText: '登录',
+              success: (result) => {
+                if (result.confirm) {
+                  wx.navigateTo({
+                    url: '/pages/login/login',
+                  })
+                }
+              },
+              fail: () => {
+                wx.navigateTo({
+                  url: '/pages/wxLogin/wxLogin',
+                })
+              }
+            })
+          } else {
+            return reslove(res)
+          }
+        },
+        // success:reslove,
+        fail: reject
+      })
+    }).catch(() => {
+      hideLoading()
+      totast('系统错误', 1500)
     })
-  }).catch(()=>{
-    hideLoading()
-    totast('系统错误',1500)
-  })
+  }
 }

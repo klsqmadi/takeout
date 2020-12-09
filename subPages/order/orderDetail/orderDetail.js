@@ -1,3 +1,7 @@
+import {
+   loading 
+  } from '../../../services/config'
+
 const app = getApp()
 //获取app.js的eventBus
 let bus = app.globalData.bus
@@ -25,19 +29,16 @@ Page({
     },
     currentModalType:'',
     telephoneNumber:10000000000,
+    name:'',
     currentTelephone:'customer',
     ring:null
   },
   onLoad(options){
-    wx.showLoading({
-      title: '加载中',
-      mask:true
-    })
+    loading('加载中')
     //拿到由父页面传过来的对象参数item,通过url传输过来
     if(options.item){
       const item = JSON.parse(options.item)
-      item.ringCustomer = item.telephoneNumber || 12345678900
-      item.ringExpressman = item.telephoneNumber || 98765432100
+      console.log(item);
       this.setData({
         item:item
       })
@@ -94,7 +95,8 @@ Page({
   ringCustomer(e){
     const {item} = this.data
     this.setData({
-      telephoneNumber:item.ringCustomer,
+      telephoneNumber:item.userPhone,
+      name:item.userName,
       currentTelephone:'customer'
     })
     this.showModal(e,'bottomModal')
@@ -102,7 +104,8 @@ Page({
   ringExpressman(e){
     const {item} = this.data
     this.setData({
-      telephoneNumber:item.ringExpressman,
+      telephoneNumber:item.riderPhone,
+      name:item.riderName,
       currentTelephone:'expressman'
     })
     this.showModal(e,'bottomModal')
@@ -111,11 +114,13 @@ Page({
     if(this.data.currentTelephone == 'customer'){
       this.setData({
         telephoneNumber:null,
+        name:'',
         ring:'呼叫客户'
       })
     }else if(this.data.currentTelephone == 'expressman'){
       this.setData({
         telephoneNumber:null,
+        name:'',
         ring:'呼叫骑手'
       })
     }

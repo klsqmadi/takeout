@@ -4,7 +4,8 @@ import {
   API_URL_modifyBizStatus,
   API_URL_modifyReceiveStatus,
   API_URL_getShopReviewStatus,
-  API_URL_modifyShopInfo
+  API_URL_modifyShopInfo,
+  API_URL_getAllSchool
 } from './config'
 
 export function getShopProfileInfo(){
@@ -41,4 +42,10 @@ export function getShopReviewStatus(shopId){
       shopId:shopId
     }
   },'application/x-www-form-urlencoded')
+}
+
+export function getAllSchool() {
+  return request({
+    url:API_URL_getAllSchool
+  },'',3)
 }

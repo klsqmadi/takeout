@@ -18,7 +18,7 @@
   <view class="text-bold text-lg text-black-1 solids-bottom padding-bottom margin-bottom">订单信息</view>
   <view class="flex align-center margin-bottom solids-bottom padding-bottom">
     <view class="margin-right text-lg" style="width:140rpx">订单状态</view>
-    <view class="flex-sub text-right text-df  text-blue" wx:if="{{item.orderState == '交易成功'}}">{{item.orderState}}
+    <view class="flex-sub text-right text-df  text-blue" wx:if="{{item.orderState == '订单完成'}}">{{item.orderState}}
     </view>
     <view class="flex-sub text-right text-df  " wx:elif="{{item.orderState == '待接单'}}">
       <text class="text-red">{{item.orderState}}</text>
@@ -42,8 +42,8 @@
     </view>
   </view>
   <view class="flex margin-bottom solids-bottom padding-bottom">
-    <view class="margin-right text-lg" style="width:140rpx">备注</view>
-    <view class="flex-sub text-df text-grey">{{item.remarks}}</view>
+    <view class="margin-right  text-lg" style="width:140rpx">备注</view>
+    <view class="flex-sub text-df text-grey text-right">{{item.remarks}}</view>
   </view>
   <view class="flex align-center">
     <view class="margin-right text-lg" style="width:140rpx">下单时间</view>
@@ -53,15 +53,15 @@
 <!-- --- -->
 <view class="padding margin-bottom margin-lr bg-white" style="border-radius: 20rpx;">
   <view>
-    <view class="margin-bottom flex" wx:for="{{item.items}}" wx:for-item="items">
+    <view class="margin-bottom flex" wx:for="{{item.commodities}}" wx:for-item="items">
       <view class="bg-black radius margin-right-sm" style="width:100rpx;height:100rpx"></view>
       <view class="flex-sub margin-right-sm">
-        <view class="text-black-1 text-lg text-bold" style="margin-bottom:8rpx">{{items.itemName}}</view>
-        <view class="text-grey" style="margin-bottom:8rpx">{{items.specification}}</view>
-        <view class="text-grey">x{{items.number}}</view>
+        <view class="text-black-1 text-lg text-bold" style="margin-bottom:8rpx">{{items.goodsName}}</view>
+        <view class="text-grey" style="margin-bottom:8rpx">{{items.specification || ''}}</view>
+        <view class="text-grey">x{{items.quantity}}</view>
       </view>
       <view class="text-red text-right text-sm text-bold" style="width:20%;height:46rpx;line-height:46rpx">￥<text
-          class="text-lg">{{items.price}}</text></view>
+          class="text-lg">{{items.totalPrice}}</text></view>
     </view>
   </view>
   <view class="flex justify-between padding-bottom solids-bottom margin-bottom-sm">
@@ -90,7 +90,7 @@
   </view>
   <view class="flex margin-bottom solids-bottom padding-bottom">
     <view class="margin-right text-lg" style="width:140rpx">收获地址</view>
-    <view class="flex-sub text-df text-grey">{{item.address}}
+    <view class="flex-sub text-df text-grey text-right">{{item.deliveryAddress}}
     </view>
   </view>
   <view class="flex align-center">
@@ -114,7 +114,7 @@
 </view>
 <view class="cu-modal bottom-modal {{currentModalType == 'bottomModal'?'show':''}} ">
   <view class="cu-dialog text-center">
-    <view class="padding-xl bg-white margin-bottom" bindtap="confirmRing" wx:if="{{telephoneNumber}}">{{telephoneNumber}}</view>
+    <view class="padding-xl bg-white margin-bottom" bindtap="confirmRing" wx:if="{{telephoneNumber}}">{{name}}{{telephoneNumber || ''}}</view>
     <view class="padding-xl bg-white margin-bottom" wx:else><text class="{{ring == '呼叫客户'?'cuIcon-dianhua':'cuIcon-expressman'}} text-blue margin-right-sm"></text>{{ring}}</view>
     <view class="padding-xl bg-white" bindtap="hideModal">取消</view>
   </view>

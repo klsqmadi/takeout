@@ -1,18 +1,25 @@
 // subPages/order/handleGoods/handleGoods.js
 import {
   getCategoryAndGoodsInfo,
-  addGoods
-}from '../../../services/work'
+  addGood,
+  deleteGoods,
+  modifyGoodSaleStatus,
+  modifyGoodInfo
+} from '../../../services/work'
 import {
   BASE_URL,
-  API_URL_addGoods,
+  API_URL_addOrModifyGoodPicture,
   loading,
   hideLoading,
   totast,
   STATUS_CODE_getCategoryAndGoodsInfo_SUCCESS,
   STATUS_CODE_SUCCESSE,
-  STATUS_CODE_addGoods_SUCCESS, API_URL_modifyShopInfo
-}from '../../../services/config'
+  STATUS_CODE_addGood_SUCCESS,
+  STATUS_CODE_addOrModifyGoodPicture_SUCCESS,
+  STATUS_CODE_deleteGoods_SUCCESS,
+  STATUS_CODE_modifyGoodSaleStatus_SUCCESS,
+  STATUS_CODE_modifyGoodInfo_SUCCESS
+} from '../../../services/config'
 Page({
   data: {
     tabContent: ['出售中', '售罄的'],
@@ -55,13 +62,11 @@ Page({
 
       ]
     }], */
-    list:[],
-    list1: [
-      {
+    list: [],
+    list1: [{
         name: '热销',
         id: 0,
-        goods: [
-          {
+        goods: [{
             goodsName: '1香酥小鸡腿1个',
             introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
             saled: 120,
@@ -119,8 +124,7 @@ Page({
       {
         name: '11特色炒饭',
         id: 1,
-        goods: [
-          {
+        goods: [{
             goodsName: '1香酥小鸡腿1个',
             introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
             saled: 120,
@@ -1162,7 +1166,7 @@ Page({
       standard: [],
       standardIndex: '',
       standardTypeIndex: 0,
-      isStandardType:true
+      isStandardType: true
     },
     pickerRanges: [],
     showInputModal: '',
@@ -1172,41 +1176,43 @@ Page({
     noticeContent: ''
   },
   async onLoad() {
-    const {list} = this.data
+    const {
+      list
+    } = this.data
     loading('加载中')
     //将list里的类名收集
-    await this._getGoodsInfo(1).then(res=>{
+    await this._getCategoryAndGoodsInfo(1).then(res => {
       hideLoading()
-      if(res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getCategoryAndGoodsInfo_SUCCESS){
+      if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getCategoryAndGoodsInfo_SUCCESS) {
         for (const item of res.data.data) {
           const category = {
-            name:item.categoryName,
-            id:item.categoryId,
-            goods:[]
+            name: item.categoryName,
+            id: item.categoryId,
+            goods: []
           }
           for (const goodItem of item.dates) {
             const good = {
-              imageUrl:goodItem.commodityPhoto,
-              goodsName:goodItem.commodityName,
-              price:goodItem.commodityPrice,
-              iid:goodItem.commodityId,
-              introduce:goodItem.commodityDetail,
-              selling:goodItem.saleStatus == 1?true:false,
-              isChecked:false,
-              saled:0,
-              standard:[]
+              imageUrl: BASE_URL + '/' + goodItem.commodityPhoto,
+              goodsName: goodItem.commodityName,
+              price: goodItem.commodityPrice,
+              iid: goodItem.commodityId,
+              introduce: goodItem.commodityDetail,
+              selling: goodItem.saleStatus == 1 ? true : false,
+              isChecked: false,
+              saled: 0,
+              standard: []
             }
             for (const specs of goodItem.specs) {
               const standard = {
-                title:specs.specName,
-                standardId:specs.specId,
-                type:[]
+                title: specs.specName,
+                standardId: specs.specId,
+                type: []
               }
               for (const attributes of specs.attributes) {
                 const type = {
-                  typeId:attributes.attributeId,
-                  typeName:attributes.attributeName,
-                  typeSaledMoney:attributes.attributePrice || 0
+                  typeId: attributes.attributeId,
+                  typeName: attributes.attributeName,
+                  typeSaledMoney: attributes.attributePrice || 0
                 }
                 standard.type.push(type)
               }
@@ -1216,23 +1222,32 @@ Page({
           }
           list.push(category)
         }
-      }else{
-        totast('系统错误,商品信息获取事变',1500)
+      } else {
+        totast('系统错误,商品信息获取事变', 1500)
       }
     })
     await this.pickerRanges()
     this.setData({
-      list:this.data.list
+      list: this.data.list
     })
   },
   onReady() {
     wx.hideLoading()
   },
-  _getGoodsInfo(saleStatus){
+  _getCategoryAndGoodsInfo(saleStatus) {
     return getCategoryAndGoodsInfo(saleStatus)
   },
-  _addGoods(commodityInfoQuery,file){
-    return addGoods(commodityInfoQuery,file)
+  _addGood(categoryId, commodityDetail, commodityName, commodityPhoto, price, specs) {
+    return addGood(categoryId, commodityDetail, commodityName, commodityPhoto, price, specs)
+  },
+  _deleteGoods(ids) {
+    return deleteGoods(ids)
+  },
+  _modifyGoodSaleStatus(commodityId, status) {
+    return modifyGoodSaleStatus(commodityId, status)
+  },
+  _modifyGoodInfo(commodityDetail, commodityId, commodityName, price, specs, commodityPhoto) {
+    return modifyGoodInfo(commodityDetail, commodityId, commodityName, price, specs, commodityPhoto)
   },
   /**
    * 导航栏模块
@@ -1413,7 +1428,9 @@ Page({
     addGood.standard = []
   },
   onTimeGetInputValue(e) {
-    const {type} = e.currentTarget.dataset
+    const {
+      type
+    } = e.currentTarget.dataset
     this.setData({
       [type]: e.detail.value
     })
@@ -1453,34 +1470,45 @@ Page({
     let flag1 = 0;
     let temp = 0;
     //对deleteGoods 进行多条件排序
-    this.data.deletedGoods.sort((a, b) => {
-      if (a["index"] == b["index"]) {
-        if (a["itemIndex"] > b["itemIndex"])
-          return 1
-        else if (a["itemIndex"] < b["itemIndex"])
-          return -1
-        else return 0
-      } else if (a["index"] > b["index"])
-        return 1
-      else return -1
-    })
+    const arr1 = []
     for (const item of this.data.deletedGoods) {
-      //temp用来判断是否index改变,是否切换了分类
-      if (temp != item.index) {
-        flag1 = 0
-      }
-      //判断itemIndex跟flag的大小,可能存在flag比itemIndex大的情况,
-      this.data.list[item.index].goods.splice(item.itemIndex - flag1, 1)
-      temp = item.index
-      flag1++
+      arr1.push(item.iid)
     }
-    this.setData({
-      list: this.data.list,
-      deletedGoodsLength: 0,
-      deletedGoods: []
+    this._deleteGoods(arr1).then(res => {
+      hideLoading()
+      if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_deleteGoods_SUCCESS) {
+        this.data.deletedGoods.sort((a, b) => {
+          if (a["index"] == b["index"]) {
+            if (a["itemIndex"] > b["itemIndex"])
+              return 1
+            else if (a["itemIndex"] < b["itemIndex"])
+              return -1
+            else return 0
+          } else if (a["index"] > b["index"])
+            return 1
+          else return -1
+        })
+        for (const item of this.data.deletedGoods) {
+          //temp用来判断是否index改变,是否切换了分类
+          if (temp != item.index) {
+            flag1 = 0
+          }
+          //判断itemIndex跟flag的大小,可能存在flag比itemIndex大的情况,
+          this.data.list[item.index].goods.splice(item.itemIndex - flag1, 1)
+          temp = item.index
+          flag1++
+        }
+        this.setData({
+          list: this.data.list,
+          deletedGoodsLength: 0,
+          deletedGoods: []
+        })
+        this.controlCheckBoxShowOrHide(e, false)
+        this.hideModal()
+      } else {
+        totast('系统错误,删除商品失败,请重试', 1500)
+      }
     })
-    this.controlCheckBoxShowOrHide(e, false)
-    this.hideModal()
   },
   /**
    * 增加商品模块 相关函数
@@ -1492,7 +1520,9 @@ Page({
      * 在api中传输,在success中清空addGood
      * 获取 新增商品名字,介绍,价格 input框内的值
      */
-    const {addGoodIndex} = this.data.addGood
+    const {
+      addGoodIndex
+    } = this.data.addGood
     //创建一个新的对象,因为addGood的属性与要添加商品的对象属性不一样
     let addGood = {
       goodsName: '',
@@ -1502,8 +1532,8 @@ Page({
       isChecked: false,
       iid: 0,
       standard: JSON.parse(JSON.stringify(this.data.addGood.standard)),
-      selling:true,
-      imageUrl:this.data.addGood.addGoodImage[0]
+      selling: true,
+      imageUrl: this.data.addGood.addGoodImage
     }
     this.getQueryInputValue('.addGoodName', addGood, "goodsName")
     this.getQueryInputValue('.addGoodIntroduce', addGood, "introduce")
@@ -1515,73 +1545,63 @@ Page({
         this.showNoticeModal(e, '商品图片,类型,名称及价格不允许为空')
       } else {
         const commodityInfoQuery = {
-          commodityDetail:addGood.introduce,
-          commodityName:addGood.goodsName,
-          price:addGood.price,
-          categoryId:this.data.list[addGoodIndex].id,
-          specs:[]
+          commodityDetail: addGood.introduce,
+          commodityName: addGood.goodsName,
+          price: addGood.price,
+          categoryId: this.data.list[addGoodIndex].id,
+          specs: []
         }
-        if(addGood.standard){
+        if (addGood.standard) {
           for (const item of addGood.standard) {
             const standard = {
-              attributes:[],
-              specName:item.title
+              attributes: [],
+              specName: item.title
             }
-            if(item.type){
+            if (item.type) {
               for (const attribute of item.type) {
                 const attri = {
-                  attributeName:attribute.typeName,
-                  attributePrice:attribute.typeSaledMoney
+                  attributeName: attribute.typeName,
+                  attributePrice: attribute.typeSaledMoney
                 }
                 standard.attributes.push(attri)
               }
             }
             commodityInfoQuery.specs.push(standard)
+          }
         }
-        }
-        console.log(commodityInfoQuery);
-        console.log(this.data.addGood.addGoodImage[0]);
+        loading('加载中')
         wx.uploadFile({
-          filePath: this.data.addGood.addGoodImage[0],
+          filePath: addGood.imageUrl,
           name: 'file',
-          url: BASE_URL + API_URL_addGoods,
-          /* url: BASE_URL + '/test/uploadFile', */
-          header: {
-            'content-type': 'multipart/form-data'
-          },
-          formData:{
-            /* commodityDetail:commodityInfoQuery.introduce,
-            commodityName:commodityInfoQuery.goodsName,
-            price:commodityInfoQuery.price,
-            categoryId:commodityInfoQuery.id,
-            specs:commodityInfoQuery.commodityInfoQuery */
-            businessId:1,
-            name:1,
-            phone:1
-          },
-          success(res){
+          url: BASE_URL + API_URL_addOrModifyGoodPicture,
+          success: res => {
             console.log(res);
+            
+            hideLoading()
+            if (JSON.parse(res.data).code == STATUS_CODE_SUCCESSE || JSON.parse(res.data).code == STATUS_CODE_addOrModifyGoodPicture_SUCCESS) {
+              this._addGood(commodityInfoQuery.categoryId, commodityInfoQuery.commodityDetail, commodityInfoQuery.commodityName, JSON.parse(res.data).data, commodityInfoQuery.price, commodityInfoQuery.specs).then(result => {
+                hideLoading()
+                if (result.data.code == STATUS_CODE_SUCCESSE || result.data.code == STATUS_CODE_addGood_SUCCESS) {
+                  this.data.list[addGoodIndex].goods.push(addGood)
+                  this.clearthisDataAddGood()
+                  this.setData({
+                    list: this.data.list,
+                    addGood: this.data.addGood
+                  })
+                  this.hideModal()
+                } else {
+                  totast('系统错误,新增商品失败,请重试', 1500)
+                }
+              })
+            } else {
+              totast('系统错误,新增商品失败,请重试', 1500)
+            }
           },
-          fail(res){
-            console.log(res);
+          fail(res) {
+            hideLoading()
+            totast('系统错误,新增商品失败,请重试', 1500)
           }
         })
-        /* this._addGoods(commodityInfoQuery,this.data.addGood.addGoodImage[0]).then(res=>{
-          hideLoading()
-          if(res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_addGoods_SUCCESS){
-            this._addGoods()
-            this.data.list[addGoodIndex].goods.push(addGood)
-            this.clearthisDataAddGood()
-            this.setData({
-              list: this.data.list,
-              addGood: this.data.addGood
-            })
-            this.hideModal()
-
-          }else{
-            totast('系统错误,增加商品失败',1500)
-          }
-        }) */
         //往分类添加新的商品
       }
     }, 100)
@@ -1609,7 +1629,7 @@ Page({
       sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
       sourceType: ['album'], //从相册选择
       success: (res) => {
-        this.data.addGood.addGoodImage = res.tempFilePaths
+        this.data.addGood.addGoodImage = res.tempFilePaths[0]
         this.setData({
           ["addGood.addGoodImage"]: this.data.addGood.addGoodImage
         })
@@ -1618,9 +1638,9 @@ Page({
   },
   deleteImage(e) {
     //图片删除
-    this.data.addGood.addGoodImage.splice(e.currentTarget.dataset.index, 1)
+    /* this.data.addGood.addGoodImage.splice(e.currentTarget.dataset.index, 1) */
     this.setData({
-      ["addGood.addGoodImage"]: this.data.addGood.addGoodImage
+      ["addGood.addGoodImage"]: ''
     })
   },
   /**
@@ -1637,15 +1657,22 @@ Page({
      * 利用index和itemindex拿到当前点击的商品的信息,赋值给addGood
      */
     if (!this.data.isCheckBoxShow) {
-      let {addGood} = this.data
-      const {index,itemindex} = e.currentTarget.dataset
+      let {
+        addGood
+      } = this.data
+      const {
+        index,
+        itemindex
+      } = e.currentTarget.dataset
       const {
         goodsName,
         introduce,
         price,
         saled,
         standard,
-        selling
+        selling,
+        imageUrl,
+        iid
       } = this.data.list[index].goods[itemindex]
       addGood.addGoodName = goodsName
       addGood.addGoodIntroduce = introduce
@@ -1655,6 +1682,8 @@ Page({
       addGood.addGoodItemIndex = itemindex
       addGood.standard = JSON.parse(JSON.stringify(standard))
       addGood.selling = selling
+      addGood.addGoodImage = imageUrl
+      addGood.iid = iid
       //JSON.parse(JSON.stringify) 因为standard是引用类型数据,担心会修改addGood影响到原数据
       this.setData({
         addGood: addGood
@@ -1672,7 +1701,7 @@ Page({
       addGood
     } = this.data
     addGood.addGoodIndex = addGood.addGoodItemIndex = addGood.addGoodIndex2 = null
-    addGood.addGoodImage = []
+    addGood.addGoodImage = ''
     addGood.addGoodName = addGood.addGoodIntroduce = addGood.addGoodIntroduce = ''
     addGood.saled = addGood.price = 0
     addGood.selling = true
@@ -1696,9 +1725,26 @@ Page({
       saled: this.data.addGood.saled,
       price: '',
       isChecked: false,
-      iid: 0,
+      iid: this.data.addGood.iid,
       standard: JSON.parse(JSON.stringify(this.data.addGood.standard)),
-      selling: this.data.selling
+      selling: this.data.addGood.selling,
+      imageUrl: this.data.addGood.addGoodImage
+    }
+    const standard = []
+    for (const item of addGood.standard) {
+      const obj = {
+        "attributes":[],
+        "specName":item.title
+      }
+      for (const item1 of item.type) {
+        const attr = {
+          "attributeId":item1.typeId,
+          "attributeName":item1.typeName,
+          "attributePrice":item1.typeSaledMoney,
+        }
+        obj["attributes"].push(attr)
+      }
+      standard.push(obj)
     }
     //获取input内的值
     this.getQueryInputValue('.editGoodName', addGood, "goodsName")
@@ -1711,47 +1757,181 @@ Page({
       } else {
         //判断是在出售中还是售罄中,true在出售中
         if (addGood.selling) {
-          //在出售中
-          //判断是否从原本所在的类切换到其他分类,相等即说明index相对第一次获取到的index2没有改变,即没有切换分类
-          if (index == index2) {
-            //没有切换分类,拿到itemIndex,将对应的商品直接用addGood覆盖
-            this.data.list[index].goods[itemIndex] = addGood
+          //判断是否更改了图片,是否需要调上传图片接口
+          if (this.data.list[index2].goods[itemIndex].imageUrl == addGood.imageUrl) {
+            this._modifyGoodInfo(addGood.introduce, addGood.iid, addGood.goodsName, addGood.price, standard).then(res => {
+              hideLoading()
+              if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyGoodInfo_SUCCESS) {
+                //在出售中
+                //判断是否从原本所在的类切换到其他分类,相等即说明index相对第一次获取到的index2没有改变,即没有切换分类
+                if (index == index2) {
+                  //没有切换分类,拿到itemIndex,将对应的商品直接用addGood覆盖
+                  this.data.list[index].goods[itemIndex] = addGood
+                } else {
+                  //切换分类,需要将之前分类里的商品删除,再在新的分类里添加新的商品
+                  this.data.list[index].goods.push(addGood)
+                  this.data.list[index2].goods.splice(itemIndex, 1)
+                }
+                this.clearthisDataAddGood()
+                this.setData({
+                  list: this.data.list,
+                  list1: this.data.list1,
+                  addGood: this.data.addGood
+                })
+                this.hideModal()
+              } else {
+                totast('系统错误,商品信息修改失败,请重试', 1500)
+              }
+            })
           } else {
-            //切换分类,需要将之前分类里的商品删除,再在新的分类里添加新的商品
-            this.data.list[index].goods.push(addGood)
-            this.data.list[index2].goods.splice(itemIndex, 1)
+            loading('加载中')
+            wx.uploadFile({
+              filePath: addGood.imageUrl,
+              name: 'file',
+              url: BASE_URL + API_URL_addOrModifyGoodPicture,
+              success: res => {
+                hideLoading()
+                if (JSON.parse(res.data).code == STATUS_CODE_SUCCESSE || JSON.parse(res.data).code == STATUS_CODE_addOrModifyGoodPicture_SUCCESS) {
+                  this._modifyGoodInfo(addGood.introduce, addGood.iid, addGood.goodsName, addGood.price, standard, JSON.parse(res.data).data).then(result => {
+                    if (result.data.code == STATUS_CODE_SUCCESSE || result.data.code == STATUS_CODE_modifyGoodInfo_SUCCESS) {
+                      if (index == index2) {
+                        //没有切换分类,拿到itemIndex,将对应的商品直接用addGood覆盖
+                        this.data.list[index].goods[itemIndex] = addGood
+                      } else {
+                        //切换分类,需要将之前分类里的商品删除,再在新的分类里添加新的商品
+                        this.data.list[index].goods.push(addGood)
+                        this.data.list[index2].goods.splice(itemIndex, 1)
+                      }
+                      this.clearthisDataAddGood()
+                      this.setData({
+                        list: this.data.list,
+                        list1: this.data.list1,
+                        addGood: this.data.addGood
+                      })
+                      this.hideModal()
+                    } else {
+                      totast('系统错误,商品信息修改失败,请重试', 1500)
+                    }
+                  })
+                } else {
+                  totast('系统错误,商品信息修改失败,请重试', 1500)
+                }
+              },
+              fail: res => {
+                hideLoading()
+                totast('系统错误,商品信息修改失败,请重试', 1500)
+              }
+
+            })
           }
         } else {
-          //售罄中
-          //拿到当前所在的分类的名字
-          const categoryName = this.data.list[index].name
-          //去售罄中查询是否有这个分类的名字
-          let flag = this.data.list1.findIndex(item => item.name == categoryName)
-          //flag == -1说明售罄中不存在这个分类
-          if (flag == -1) {
-            //需要新建一个分类
-            const newList = {
-              name: categoryName,
-              id: this.data.list[index].id,
-              goods: []
-            }
-            //往售罄中添加新的分类,再在新的分类(售罄中)添加编辑好的商品,然后将编辑好的商品从原来的所在分类(出售中)删除
-            this.data.list1.push(newList)
-            this.data.list1[this.data.list1.length-1].goods.push(addGood)
-            this.data.list[index2].goods.splice(itemIndex, 1)
+          if (this.data.list[index2].goods[itemIndex].imageUrl == addGood.imageUrl) {
+            this._modifyGoodInfo(addGood.introduce, addGood.iid, addGood.goodsName, addGood.price, standard).then(res => {
+              hideLoading()
+              if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyGoodInfo_SUCCESS) {
+                this._modifyGoodSaleStatus(addGood.iid, 1).then(result => {
+                  hideLoading()
+                  if (result.data.code == STATUS_CODE_SUCCESSE || result.data.code == STATUS_CODE_modifyGoodSaleStatus_SUCCESS) {
+                    //售罄中
+                    //拿到当前所在的分类的名字
+                    const categoryName = this.data.list[index].name
+                    //去售罄中查询是否有这个分类的名字
+                    let flag = this.data.list1.findIndex(item => item.name == categoryName)
+                    //flag == -1说明售罄中不存在这个分类
+                    if (flag == -1) {
+                      //需要新建一个分类
+                      const newList = {
+                        name: categoryName,
+                        id: this.data.list[index].id,
+                        goods: []
+                      }
+                      //往售罄中添加新的分类,再在新的分类(售罄中)添加编辑好的商品,然后将编辑好的商品从原来的所在分类(出售中)删除
+                      this.data.list1.push(newList)
+                      this.data.list1[this.data.list1.length - 1].goods.push(addGood)
+                      this.data.list[index2].goods.splice(itemIndex, 1)
+                    } else {
+                      //flag != -1 说明售罄中存在这个分离,往这个分类(售罄中)添加编辑好的商品,然后将编辑好的商品从原来的所在分类(出售中)删除
+                      this.data.list1[flag].goods.push(addGood)
+                      this.data.list[index2].goods.splice(itemIndex, 1)
+                    }
+                    this.clearthisDataAddGood()
+                    this.setData({
+                      list: this.data.list,
+                      list1: this.data.list1,
+                      addGood: this.data.addGood
+                    })
+                    this.hideModal()
+                  } else {
+                    totast('系统错误,商品信息修改失败,请重试', 1500)
+                  }
+                })
+              } else {
+                totast('系统错误,商品信息修改失败,请重试', 1500)
+              }
+            })
           } else {
-            //flag != -1 说明售罄中存在这个分离,往这个分类(售罄中)添加编辑好的商品,然后将编辑好的商品从原来的所在分类(出售中)删除
-            this.data.list1[flag].goods.push(addGood)
-            this.data.list[index2].goods.splice(itemIndex, 1)
+            loading('加载中')
+            wx.uploadFile({
+              filePath: addGood.imageUrl,
+              name: 'file',
+              url: BASE_URL + API_URL_addOrModifyGoodPicture,
+              success: res => {
+                hideLoading()
+                if (JSON.parse(res.data).code == STATUS_CODE_SUCCESSE || JSON.parse(res.data).code == STATUS_CODE_addOrModifyGoodPicture_SUCCESS) {
+                  this._modifyGoodInfo(addGood.introduce, addGood.iid, addGood.goodsName, addGood.price,standard, JSON.parse(res.data).data).then(res1 => {
+                    hideLoading()
+                    if (res1.data.code == STATUS_CODE_SUCCESSE || res1.data.code == STATUS_CODE_modifyGoodInfo_SUCCESS) {
+                      this._modifyGoodSaleStatus(addGood.iid, 0).then(res2 => {
+                        if (res2.data.code == STATUS_CODE_SUCCESSE || res2.data.code == STATUS_CODE_modifyGoodSaleStatus_SUCCESS) {
+                          //售罄中
+                          //拿到当前所在的分类的名字
+                          const categoryName = this.data.list[index].name
+                          //去售罄中查询是否有这个分类的名字
+                          let flag = this.data.list1.findIndex(item => item.name == categoryName)
+                          //flag == -1说明售罄中不存在这个分类
+                          if (flag == -1) {
+                            //需要新建一个分类
+                            const newList = {
+                              name: categoryName,
+                              id: this.data.list[index].id,
+                              goods: []
+                            }
+                            //往售罄中添加新的分类,再在新的分类(售罄中)添加编辑好的商品,然后将编辑好的商品从原来的所在分类(出售中)删除
+                            this.data.list1.push(newList)
+                            this.data.list1[this.data.list1.length - 1].goods.push(addGood)
+                            this.data.list[index2].goods.splice(itemIndex, 1)
+                          } else {
+                            //flag != -1 说明售罄中存在这个分离,往这个分类(售罄中)添加编辑好的商品,然后将编辑好的商品从原来的所在分类(出售中)删除
+                            this.data.list1[flag].goods.push(addGood)
+                            this.data.list[index2].goods.splice(itemIndex, 1)
+                          }
+                          this.clearthisDataAddGood()
+                          this.setData({
+                            list: this.data.list,
+                            list1: this.data.list1,
+                            addGood: this.data.addGood
+                          })
+                          this.hideModal()
+                        } else {
+                          totast('系统错误,商品信息修改失败,请重试', 1500)
+                        }
+                      })
+                    } else {
+                      totast('系统错误,商品信息修改失败,请重试', 1500)
+                    }
+                  })
+                } else {
+                  totast('系统错误,商品信息修改失败,请重试', 1500)
+                }
+              },
+              fail: res => {
+                hideLoading()
+                totast('系统错误,商品信息修改失败,请重试', 1500)
+              }
+            })
           }
+          
         }
-        this.clearthisDataAddGood()
-        this.setData({
-          list: this.data.list,
-          list1: this.data.list1,
-          addGood: this.data.addGood
-        })
-        this.hideModal()
       }
     }, 100)
     //时间毫米数不够 ，坑
@@ -1774,7 +1954,8 @@ Page({
       price,
       saled,
       standard,
-      selling
+      selling,
+      imageUrl
     } = this.data.list1[index].goods[itemindex]
     addGood.addGoodName = goodsName
     addGood.addGoodIntroduce = introduce
@@ -1784,6 +1965,7 @@ Page({
     addGood.addGoodItemIndex = itemindex
     addGood.standard = JSON.parse(JSON.stringify(standard))
     addGood.selling = selling
+    addGood.addGoodImage = imageUrl
     this.setData({
       addGood: this.data.addGood,
       list1CurrentModalType: 'list1'
@@ -1812,34 +1994,42 @@ Page({
       saled: this.data.addGood.saled,
       price: this.data.addGood.addGoodPrice,
       isChecked: false,
-      iid: 0,
+      iid: this.data.addGood.iid,
       standard: JSON.parse(JSON.stringify(this.data.addGood.standard)),
-      selling: this.data.addGood.selling
+      selling: this.data.addGood.selling,
+      imageUrl: this.data.addGood.addGoodImage
     }
-    if (addGood.selling) {
-      const categoryName = this.data.list1[index].name
-      let flag = this.data.list.findIndex(item => item.name == categoryName)
-      if (flag == -1) {
-        const newList = {
-          name: categoryName,
-          id: this.data.list1[index].id,
-          goods: []
+    if (!addGood.selling) {
+      this._modifyGoodSaleStatus(addGood.iid,0).then(res=>{
+        hideLoading()
+        if(res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyGoodSaleStatus_SUCCESS){
+          const categoryName = this.data.list1[index].name
+          let flag = this.data.list.findIndex(item => item.name == categoryName)
+          if (flag == -1) {
+            const newList = {
+              name: categoryName,
+              id: this.data.list1[index].id,
+              goods: []
+            }
+            this.data.list.push(newList)
+            this.data.list[this.data.list.length - 1].goods.push(addGood)
+            this.data.list1[index].goods.splice(itemIndex, 1)
+          } else {
+            this.data.list[flag].goods.push(addGood)
+            this.data.list1[index].goods.splice(itemIndex, 1)
+          }
+          this.clearthisDataAddGood()
+          this.setData({
+            list: this.data.list,
+            list1: this.data.list1,
+            addGood: this.data.addGood,
+            list1CurrentModalType: ''
+          })
+        }else{
+          totast('系统错误,修正商品状态失败,请重试',1500)
         }
-        this.data.list.push(newList)
-        this.data.list[this.data.list.length-1].goods.push(addGood)
-        this.data.list1[index].goods.splice(itemIndex, 1)
-      } else {
-        this.data.list[flag].goods.push(addGood)
-        this.data.list1[index].goods.splice(itemIndex, 1)
-      }
+      })
     }
-    this.clearthisDataAddGood()
-    this.setData({
-      list: this.data.list,
-      list1: this.data.list1,
-      addGood: this.data.addGood,
-      list1CurrentModalType: ''
-    })
   },
   /**
    * 新增商品和编辑商品公用模块--规格增删查改
@@ -1848,7 +2038,9 @@ Page({
     /**
      * 函数用于切换 出售中和售罄的位置
      */
-    let {addGood} = this.data
+    let {
+      addGood
+    } = this.data
     addGood.selling = !addGood.selling
     const temp = `addGood.selling`
     this.setData({
@@ -1865,7 +2057,7 @@ Page({
     this.setData({
       showInputModal: '',
       [temp]: this.data.addGood.standardTypeIndex,
-      [temp1]:this.data.addGood.standard
+      [temp1]: this.data.addGood.standard
     })
   },
   deleteStandard(e) {
@@ -1874,8 +2066,13 @@ Page({
      * @param (typeindex) 与类型索引有关,用于知道类型在当前规格的位置,如果typeindex == undefined 说明当前点击的是编辑类型
      * @param (index) 与规格索引有关,用于知道当前的规格位置
      */
-    let {addGood} = this.data
-    const {index,typeindex} = e.currentTarget.dataset
+    let {
+      addGood
+    } = this.data
+    const {
+      index,
+      typeindex
+    } = e.currentTarget.dataset
     if (typeindex === undefined) {
       addGood.standard.splice(index, 1)
     } else {
@@ -1891,21 +2088,26 @@ Page({
      * @param (typeindex) 与类型索引有关,用于知道类型在当前规格的位置,如果typeindex == undefined 说明当前点击的是编辑类型
      * @param (index) 与规格索引有关,用于知道当前的规格位置
      */
-    const {addGood} = this.data
-    const {index,typeindex} = e.currentTarget.dataset
+    const {
+      addGood
+    } = this.data
+    const {
+      index,
+      typeindex
+    } = e.currentTarget.dataset
     let temp = `addGood.isStandardType`
     addGood.standardIndex = index
     addGood.standardTypeIndex = typeindex
     if (typeindex === undefined) {
       this.setData({
         inputValue: addGood.standard[index].title,
-        [temp]:false
+        [temp]: false
       })
     } else {
       this.setData({
         inputValue: addGood.standard[index].type[typeindex].typeName,
-        inputValue1:addGood.standard[index].type[typeindex].typeSaledMoney,
-        [temp]:true
+        inputValue1: addGood.standard[index].type[typeindex].typeSaledMoney,
+        [temp]: true
       })
     }
     this.setData({
@@ -1918,8 +2120,15 @@ Page({
      * @param (typeindex) 与类型索引有关,用于知道类型在当前规格的位置,如果typeindex == undefined 说明当前点击的是编辑类型
      * @param (standardIndex) 与规格索引有关,用于知道当前的规格位置
      */
-    let {addGood,inputValue,inputValue1} = this.data
-    let {standardIndex,standardTypeIndex} = addGood
+    let {
+      addGood,
+      inputValue,
+      inputValue1
+    } = this.data
+    let {
+      standardIndex,
+      standardTypeIndex
+    } = addGood
     if (standardTypeIndex === undefined) {
       addGood.standard[standardIndex].title = inputValue
     } else {
@@ -1933,7 +2142,9 @@ Page({
      * 函数用于添加规格
      * 新增规格
      */
-    let {addGood} = this.data
+    let {
+      addGood
+    } = this.data
     const standard = {
       title: '请填写规格名称',
       type: []
@@ -1949,11 +2160,15 @@ Page({
      * 函数用于添加类型
      * @param (index) 用于知道当前的规格位置
      */
-    let {addGood} = this.data
-    const {index} = e.currentTarget.dataset
+    let {
+      addGood
+    } = this.data
+    const {
+      index
+    } = e.currentTarget.dataset
     const type = {
-      typeName:'请添加类型名称',
-      typeSaledMoney:0
+      typeName: '请添加类型名称',
+      typeSaledMoney: 0
     }
     addGood.standard[index].type.push(type)
     const temp = `addGood.standard`

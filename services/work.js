@@ -6,7 +6,10 @@ import {
   API_URL_addCategory,
   API_URL_modifyCategoryName,
   API_URL_getCategoryAndGoodsInfo,
-  API_URL_addGoods,
+  API_URL_addGood,
+  API_URL_deleteGoods,  
+  API_URL_modifyGoodSaleStatus,
+  API_URL_modifyGoodInfo,
   /*凯悦的接口 */
   API_URL_getShopWorkInfo1,
 } from './config'
@@ -14,8 +17,9 @@ import {
 /*泽强的接口 */
 export function getGoodsCategoryInfo(){
   return request({
-    url:API_URL_getGoodsCategoryInfo
-  })
+    url:API_URL_getGoodsCategoryInfo,
+    method:'POST'
+  },'application/x-www-form-urlencoded')
 }
 
 export function deleteCategory(ids){
@@ -55,15 +59,44 @@ export function getCategoryAndGoodsInfo(saleStatus){
   },'application/x-www-form-urlencoded')
 }
 
-export function addGoods(commodityInfoQuery,file){
+export function addGood(categoryId,commodityDetail,commodityName,commodityPhoto,price,specs){
   return request({
-    url:API_URL_addGoods,
+    url:API_URL_addGood,
     method:'POST',
     data:{
-      commodityInfoQuery,
-      file
+      categoryId,commodityDetail,commodityName,commodityPhoto,price,specs
     }
-  },'multipart/form-data')
+  })
+}
+
+export function deleteGoods(ids){
+  return request({
+    url:API_URL_deleteGoods,
+    method:'POST',
+    data:{
+      ids
+    }
+  },'application/x-www-form-urlencoded')
+}
+
+export function modifyGoodSaleStatus(commodityId,status){
+  return request({
+    url:API_URL_modifyGoodSaleStatus,
+    method:'POST',
+    data:{
+      commodityId,status
+    }
+  },'application/x-www-form-urlencoded')
+}
+
+export function modifyGoodInfo(commodityDetail,commodityId,commodityName,price,specs,commodityPhoto){
+  return request({
+    url:API_URL_modifyGoodInfo,
+    method:'POST',
+    data:{
+      commodityDetail,commodityId,commodityName,price,specs,commodityPhoto
+    }
+  })
 }
 /**
  * 凯悦的接口

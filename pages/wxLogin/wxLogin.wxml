@@ -1,0 +1,9 @@
+<cu-custom bgColor="bg-blue-1">
+  <view slot="content">手机号登录</view>
+</cu-custom>
+<button class="bg-green margin" style="margin-top:500rpx" open-type="getPhoneNumber" bindgetphonenumber="getPhone">授权登录</button>
+<view class="text-sm text-grey padding">
+    已阅读并同意
+    <a href="" class="text-blue">《用户服务协议》、</a>
+    <a href="" class="text-blue">《隐私权政策》</a>
+</view>

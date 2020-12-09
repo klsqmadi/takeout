@@ -4,6 +4,8 @@
     "pages/order/order",
     "pages/profile/profile",
     "pages/login/login",
+    "pages/wxLogin/wxLogin",
+    "pages/shopRegister/shopRegister",
     "subPages/work/handleGoods/handleGoods",
     "subPages/work/handleCategory/handleCategory",
     "subPages/work/takeCash/takeCash",

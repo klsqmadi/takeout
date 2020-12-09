@@ -37,7 +37,7 @@
   },
   "compileType": "miniprogram",
   "libVersion": "2.13.1",
-  "appid": "wx6cd9c3de753e135b",
+  "appid": "wxb2dfbd203ddd200f",
   "projectname": "takeout",
   "debugOptions": {
     "hidedInDevtools": []
@@ -121,6 +121,18 @@
         {
           "name": "pages/login/login",
           "pathName": "pages/login/login",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/wxlogin/wxlogin",
+          "pathName": "pages/wxLogin/wxLogin",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/shopRegister/shopRegister",
+          "pathName": "pages/shopRegister/shopRegister",
           "scene": null
         }
       ]

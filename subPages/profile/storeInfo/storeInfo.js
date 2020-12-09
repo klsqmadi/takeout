@@ -8,11 +8,13 @@ import{
   STATUS_CODE_getShopInfo_SUCCESS,
   STATUS_CODE_SUCCESSE,
   STATUS_CODE_modifyShopInfo_SUCCESS,
-  STATUS_CODE_getShopReviewStatus_SUCCESS
+  STATUS_CODE_getShopReviewStatus_SUCCESS,
+  STATUS_CODE_getAllSchool_SUCCESS
 }from '../../../services/config'
 import{
   getShopProfileInfo,
   getShopReviewStatus,
+  getAllSchool
 }from '../../../services/profile'
 Page({
   data: {
@@ -23,7 +25,7 @@ Page({
       storeAddress: '',
       storeIntroduce: '',
       phoneNumber: 1,
-      schoolAddress: ['1']
+      schoolAddress: []
     },
     shopReviewStatus:1,
     currentModalType: '',
@@ -46,7 +48,7 @@ Page({
         storeInfo.shopId = result.shopId
         storeInfo.storeAddress = result.detailAddress
         storeInfo.storeName = result.shopName
-        storeInfo.schoolAddress = result.campusAddress.split('，')
+        storeInfo.schoolAddress = result.campusAddress
         this.setData({
           storeInfo:this.data.storeInfo
         })
@@ -55,7 +57,7 @@ Page({
         totast('系统错误,获取店铺信息失败',1500)
       }      
     })
-    this._getShopReviewStatus(1).then(result=>{
+    await this._getShopReviewStatus(1).then(result=>{
         hideLoading()
         if(result.data.code == STATUS_CODE_SUCCESSE || result.data.code == STATUS_CODE_getShopReviewStatus_SUCCESS){
           this.setData({
@@ -65,6 +67,7 @@ Page({
           totast('系统错误,获取店铺信息失败',1500)
         }
       })
+    this._getAllSchool()
   },
   _getShopInfo(){
     return getShopProfileInfo()
@@ -92,6 +95,18 @@ Page({
     }).catch(()=>{
       hideLoading()
       totast('系统错误',1500)
+    })
+  },
+  _getAllSchool(){
+    getAllSchool().then(res=>{
+      hideLoading()
+      if(res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getAllSchool_SUCCESS){
+        this.setData({
+          schoolPickerRange:res.data.data
+        })
+      }else{
+        totast('系统错误,校区获取失败',1500)
+      }
     })
   },
   showModal(e, currentModalType) {
