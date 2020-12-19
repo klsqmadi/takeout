@@ -34,8 +34,10 @@ export function addCategory(categoryName){
   return request({
     url:API_URL_addCategory,
     method:'POST',
-    data:categoryName
-  })
+    data:{
+      categoryName
+    }
+  },'application/x-www-form-urlencoded')
 }
 
 export function modifyCategoryName(categoryId,categoryName){
@@ -101,9 +103,12 @@ export function modifyGoodInfo(commodityDetail,commodityId,commodityName,price,s
 /**
  * 凯悦的接口
  */
-export function getShopWorkInfo1(){
+export function getShopWorkInfo1(shopId){
   return request({
-    url:API_URL_getShopWorkInfo1
+    url:API_URL_getShopWorkInfo1,
+    data:{
+      shopId
+    }
   })
 }
 

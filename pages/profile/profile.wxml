@@ -21,7 +21,9 @@
     <view class=" flex align-center text-left margin-top-xs padding-tb-sm bg-white padding-lr-lg">
       <view class="cuIcon-explore text-blue margin-right-lg " style="font-size:50rpx;"></view>
       <view class="text-lg text-black-1">营业状态</view>
-      <view class="text-right flex-sub text-gray" style="height:46rpx;line-height:46rpx">{{bizStatus}}</view>
+      <view class="text-right flex-sub text-gray" style="height:46rpx;line-height:46rpx" wx:if="{{bizStatus == 2}}">停业中</view>
+      <view class="text-right flex-sub text-gray" style="height:46rpx;line-height:46rpx" wx:elif="{{bizStatus == 0}}">营业中</view>
+      <view class="text-right flex-sub text-gray" style="height:46rpx;line-height:46rpx" wx:elif="{{bizStatus == 1}}">打烊中</view>
       <view class="text-right cuIcon-right text-gray" style="font-size:50rpx;"></view>
     </view>
   </navigator>
@@ -29,7 +31,8 @@
     <view class=" flex align-center text-left margin-top-xs padding-tb-sm bg-white padding-lr-lg">
       <view class="cuIcon-notice text-cyan margin-right-lg " style="font-size:50rpx;"></view>
       <view class="text-lg text-black-1">接单状态</view>
-      <view class="text-right flex-sub text-gray" style="height:46rpx;line-height:46rpx">{{receiveStatus}}</view>
+      <view class="text-right flex-sub text-gray" style="height:46rpx;line-height:46rpx" wx:if="{{receiveStatus == 0}}">手动接单</view>
+      <view class="text-right flex-sub text-gray" style="height:46rpx;line-height:46rpx" wx:else>自动接单</view>
       <view class="text-right cuIcon-right text-gray" style="font-size:50rpx;"></view>
     </view>
   </navigator>

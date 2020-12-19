@@ -9,7 +9,9 @@ import{
   STATUS_CODE_SUCCESSE,
   STATUS_CODE_modifyShopInfo_SUCCESS,
   STATUS_CODE_getShopReviewStatus_SUCCESS,
-  STATUS_CODE_getAllSchool_SUCCESS
+  STATUS_CODE_getAllSchool_SUCCESS,
+  API_URL_getShopType,
+  STATUS_CODE_getShopType_SUCCESS
 }from '../../../services/config'
 import{
   getShopProfileInfo,
@@ -25,7 +27,8 @@ Page({
       storeAddress: '',
       storeIntroduce: '',
       phoneNumber: 1,
-      schoolAddress: []
+      schoolAddress: [],
+      shopType:[]
     },
     shopReviewStatus:1,
     currentModalType: '',
@@ -34,7 +37,8 @@ Page({
     inputValue: '',
     showChangeButton: false,
     havedChooseImage:0,
-    schoolPickerRange: ['好大学', '啊实打实的撒', '的风格DVD发', '上的分歧日期', '陈晓旭插线板v插线板v出现', 'i我却日哦权威哦', ]
+    schoolPickerRange: ['好大学', '啊实打实的撒', '的风格DVD发', '上的分歧日期', '陈晓旭插线板v插线板v出现', 'i我却日哦权威哦', ],
+    shopTypePickerRange:[]
   },
   async onLoad(){
     const {storeInfo} = this.data
@@ -48,16 +52,30 @@ Page({
         storeInfo.shopId = result.shopId
         storeInfo.storeAddress = result.detailAddress
         storeInfo.storeName = result.shopName
-        storeInfo.schoolAddress = result.campusAddress
+        const tempCategory = {
+          categoryName:result.shopCategory.slice(0,2)
+        }
+        storeInfo.shopType.push(tempCategory)
+        const tempCategory1 = {
+          categoryName:result.shopCategory.slice(2)
+        }
+        storeInfo.shopType.push(tempCategory1)
+        for (const item of result.campusAddress) {
+          const obj = {
+            campusName:item
+          }
+          storeInfo.schoolAddress.push(obj)
+        }
         this.setData({
-          storeInfo:this.data.storeInfo
+          storeInfo:this.data.storeInfo/* ,
+          shopReviewStatus:result.auditStatus */
         })
       }
       else{
         totast('系统错误,获取店铺信息失败',1500)
       }      
     })
-    await this._getShopReviewStatus(1).then(result=>{
+    await this._getShopReviewStatus(this.data.storeInfo.shopId).then(result=>{
         hideLoading()
         if(result.data.code == STATUS_CODE_SUCCESSE || result.data.code == STATUS_CODE_getShopReviewStatus_SUCCESS){
           this.setData({
@@ -67,7 +85,8 @@ Page({
           totast('系统错误,获取店铺信息失败',1500)
         }
       })
-    this._getAllSchool()
+    await this._getAllSchool()
+    await this._getShopType()
   },
   _getShopInfo(){
     return getShopProfileInfo()
@@ -106,6 +125,26 @@ Page({
         })
       }else{
         totast('系统错误,校区获取失败',1500)
+      }
+    })
+  },
+  _getShopType(){
+    loading('加载中')
+    wx.request({
+      url: BASE_URL + API_URL_getShopType,
+      success:res=>{
+        if(res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getShopType_SUCCESS){
+          this.setData({
+            shopTypePickerRange:res.data.data
+          })
+        }else{
+          totast('加载失败,请重试',1500)
+        }
+        hideLoading()
+      },
+      fail:res=>{
+        hideLoading()
+        totast('加载失败,请重试',1500)
       }
     })
   },
@@ -188,7 +227,16 @@ Page({
   },
   finallyConfirmAndupLoadFile(){
     const {storeInfo} = this.data
-    let schoolAddress = storeInfo.schoolAddress.join(',')
+    let campusArray = []
+    let shopTypeArray = []
+    for (const [key,item] of storeInfo.shopType.entries()) {
+      shopTypeArray.push(item.categoryName)
+    }
+    for (const [key,item] of storeInfo.schoolAddress.entries()) {
+      campusArray.push(item.campusName)
+    }
+    let shopType = shopTypeArray.join('')
+    let schoolAddress = campusArray.join(',')
     loading('上传中')
     if(this.data.havedChooseImage){
       wx.uploadFile({
@@ -205,7 +253,7 @@ Page({
           shopName:storeInfo.storeName,
           shopIntroduce:storeInfo.storeIntroduce,
           shopId:storeInfo.shopId,
-          shopCategory:1
+          shopCategory:shopType
         },
         success(res){
           hideLoading()
@@ -226,7 +274,7 @@ Page({
         }
       })
     }else{
-      this._modifyShopInfo(schoolAddress,storeInfo.phoneNumber,storeInfo.storeAddress,1,storeInfo.shopId,storeInfo.storeIntroduce,storeInfo.storeName).then(res=>{
+      this._modifyShopInfo(schoolAddress,storeInfo.phoneNumber,storeInfo.storeAddress,shopType,storeInfo.shopId,storeInfo.storeIntroduce,storeInfo.storeName).then(res=>{
         hideLoading()
         if(res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyShopInfo_SUCCESS){
           totast('信息修改成功',1500,'success')
@@ -240,5 +288,44 @@ Page({
         }
       })
     }
+  },
+  showShopType(e){
+    this.setData({
+      currentModalType: 'shopType'
+    })
+  },
+  addShopType(e){
+    const {
+      index
+    } = e.currentTarget.dataset
+    const {
+      storeInfo,
+      shopTypePickerRange
+    } = this.data
+    if(storeInfo.shopType.length >= 2){
+      totast('最多选择2个分类',1000)
+    }else{
+      storeInfo.shopType.push(shopTypePickerRange[index])
+      shopTypePickerRange.splice(index, 1)
+      this.setData({
+        storeInfo: this.data.storeInfo,
+        shopTypePickerRange: this.data.shopTypePickerRange,
+      })
+    }
+  },
+  deleteShopType(e){
+    const {
+      index
+    } = e.currentTarget.dataset
+    const {
+      storeInfo,
+      shopTypePickerRange
+    } = this.data
+    shopTypePickerRange.push(storeInfo.shopType[index])
+    storeInfo.shopType.splice(index, 1)
+    this.setData({
+      storeInfo: this.data.storeInfo,
+      shopTypePickerRange: this.data.shopTypePickerRange,
+    })
   }
 })

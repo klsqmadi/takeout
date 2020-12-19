@@ -17,23 +17,34 @@ import {
   STATUS_CODE_getShopOrdersPaymentNumber_SUCCESS,
   STATUS_CODE_getShopOrderNumber_SUCCESS */
 } from '../../services/config'
-let token = wx.getStorageSync('token') || null
-let id = wx.getStorageSync('id') || null
+let shopId = wx.getStorageSync('shopId') || null
 Page({
   data: {
-    todayMoney: 123.45,
-    visitors: 999,
-    ordersPaymentNumber: 123.45,
-    totalPayment: 123.45,
-    pendingOrders: 123.45,
-    pendingDelivered: 123.45,
-    pendingArrive: 123.45,
-    historicalOrdersNumber: 999,
-    monthViews: 123.45,
-    monthSales: 999,
+    todayMoney: 0,
+    visitors: 0,
+    ordersPaymentNumber: 0,
+    totalPayment: 0,
+    pendingOrders: 0,
+    pendingDelivered: 0,
+    pendingArrive: 0,
+    historicalOrdersNumber: 0,
+    monthViews: 0,
+    monthSales: 0,
   },
-  onload() {},
+  onload() {
+   
+  },
   onShow() {
+    let token = wx.getStorageSync('token') || null
+let id = wx.getStorageSync('id') || null
+    if (!token && !id) {
+      wx.redirectTo({
+        url: '/pages/wxLogin/wxLogin',
+        success: res => {
+          console.log(res);
+        }
+      })
+    }
     if(token && id){
       this._getShopWorkInfo1().then(res => {
         hideLoading()
@@ -51,10 +62,10 @@ Page({
           totast('系统错误,信息获取失败,请重新刷新', 1500)
         }
       })
+
     }
-    
   },
   _getShopWorkInfo1() {
-    return getShopWorkInfo1()
+    return getShopWorkInfo1(shopId)
   }
 })

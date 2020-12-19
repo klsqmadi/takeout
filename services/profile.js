@@ -5,13 +5,14 @@ import {
   API_URL_modifyReceiveStatus,
   API_URL_getShopReviewStatus,
   API_URL_modifyShopInfo,
-  API_URL_getAllSchool
+  API_URL_getAllSchool,
 } from './config'
 
 export function getShopProfileInfo(){
   return request({
-    url:API_URL_getShopProfileInfo
-  })
+    url:API_URL_getShopProfileInfo,
+    method:'POST'
+  },'application/x-www-form-urlencoded')
 }
 
 export function modifyBizStatus(runStatus){
@@ -47,5 +48,5 @@ export function getShopReviewStatus(shopId){
 export function getAllSchool() {
   return request({
     url:API_URL_getAllSchool
-  },'',3)
+  })
 }

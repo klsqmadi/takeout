@@ -8,6 +8,7 @@ import {
   STATUS_CODE_loginShop_SUCCESS,
   API_URL_loginShop
 } from '../../services/config'
+const app = getApp()
 Page({
 
   /**
@@ -42,7 +43,6 @@ Page({
               },
               data: {
                 code: this.data.code,
-                // code: '0535Ugll2UuM664WhIml2qqPZD35Ugl1',
                 encryptedData: res.detail.encryptedData,
                 iv: res.detail.iv
               },
@@ -50,9 +50,16 @@ Page({
                 if (apiRes.data.code == STATUS_CODE_SUCCESSE || apiRes.data.code == STATUS_CODE_loginShop_SUCCESS) {
                   wx.setStorageSync('id',apiRes.data.data.businessId)
                   wx.setStorageSync('token',apiRes.data.data.businessToken)
-                  wx.navigateBack({
-                    delta: 1,
-                  })
+                  wx.setStorageSync('shopId',apiRes.data.data.shopId)
+                  if(apiRes.data.data.isRegister == 1){
+                    wx.switchTab({
+                      url:'/pages/work/work'
+                    })
+                  }else{
+                    wx.navigateTo({
+                      url: '/pages/shopRegister/shopRegister',
+                    })
+                  }
                 } else if(apiRes.data.code == 1544 || apiRes.data.code == 1504){
                   totast('登录超时,请重试',1500)
                   this.login()

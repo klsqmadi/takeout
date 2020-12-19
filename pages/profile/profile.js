@@ -10,6 +10,8 @@ import {
   STATUS_CODE_getShopInfo_SUCCESS,
   STATUS_CODE_SUCCESSE
 } from '../../services/config'
+let token = wx.getStorageSync('token') || null
+let id = wx.getStorageSync('id') || null
 Page({
   data: {
     bizStatus: '停业中',
@@ -18,6 +20,14 @@ Page({
     shopName:'默认店铺名字'
   },
   onLoad() {
+    if (!token && !id) {
+      wx.redirectTo({
+        url: '/pages/wxLogin/wxLogin',
+        success: res => {
+          console.log(res);
+        }
+      })
+    }
   },
   _getShopInfo() {
     getShopProfileInfo().then(res => {

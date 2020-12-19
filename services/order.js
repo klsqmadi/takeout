@@ -6,14 +6,15 @@ import {
   API_URL_modifyOrderStatus
 }from './config'
 
-export function getOrders(pageNum,size,status){
+export function getOrders(pageNum,size,status,shopId){
   return request({
     url:API_URL_getOrders,
     method:'POST',
     data:{
       pageNum,
       size,
-      status
+      status,
+      shopId
     }
   })
 }
@@ -28,22 +29,22 @@ export function getHadNewShopOrder(orderNumber,status){
   })
 }
 
-export function getShopAllOrder(pageNumber,pageSize){
+export function getShopAllOrder(pageNum,size,shopId){
   return request({
     url:API_URL_getShopAllOrder,
     method:'POST',
     data:{
-      pageNumber,pageSize
+      pageNum,size,shopId
     }
   })
 }
 
-export function modifyOrderStatus(id,orderId,userId,status){
+export function modifyOrderStatus(id,orderNumber,orderId,userId,status){
   return request({
     url:API_URL_modifyOrderStatus,
     method:'POST',
     data:{
-      id,orderId,userId,status
+      id,orderNumber,orderId,userId,status
     }
   })
 }

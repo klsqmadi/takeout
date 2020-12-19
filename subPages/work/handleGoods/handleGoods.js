@@ -63,1078 +63,7 @@ Page({
       ]
     }], */
     list: [],
-    list1: [{
-        name: '热销',
-        id: 0,
-        goods: [{
-            goodsName: '1香酥小鸡腿1个',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 12.00,
-            isChecked: false,
-            iid: 0,
-            standard: [{
-              title: '杯型',
-              type: ['大杯', '中杯', '小杯']
-            }],
-            selling: false
-          },
-          {
-            goodsName: '2劲爆双层牛肉堡+鸡块+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 4,
-            price: 16.9,
-            isChecked: false,
-            iid: 1
-          },
-          {
-            goodsName: '3鸡肉卷+自选小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 17.9,
-            isChecked: false,
-            iid: 2
-          },
-          {
-            goodsName: '4半只烤鸡+自选汉堡+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 48.9,
-            isChecked: false,
-            iid: 3
-          },
-          {
-            goodsName: '5香辣鸡腿堡+小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 57.9,
-            isChecked: false,
-            iid: 4
-          },
-          {
-            goodsName: '6香辣双层牛肉堡+墨西哥鸡肉卷+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 50.9,
-            isChecked: false,
-            iid: 5
-          },
-        ]
-      },
-      {
-        name: '11特色炒饭',
-        id: 1,
-        goods: [{
-            goodsName: '1香酥小鸡腿1个',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 12.00,
-            isChecked: false,
-            iid: 0,
-            standard: [{
-              title: '杯型',
-              type: ['大杯', '中杯', '小杯']
-            }],
-            selling: false
-          },
-          {
-            goodsName: '8劲爆双层牛肉堡+鸡块+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 4,
-            price: 16.9,
-            isChecked: false,
-            iid: 7
-          },
-          {
-            goodsName: '9鸡肉卷+自选小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 17.9,
-            isChecked: false,
-            iid: 8
-          },
-          {
-            goodsName: '10半只烤鸡+自选汉堡+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 48.9,
-            isChecked: false,
-            iid: 9
-          },
-          {
-            goodsName: '11香辣鸡腿堡+小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 57.9,
-            isChecked: false,
-            iid: 10
-          },
-          {
-            goodsName: '12香辣双层牛肉堡+墨西哥鸡肉卷+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 50.9,
-            isChecked: false,
-            iid: 11
-          },
-        ]
-      },
-      {
-        name: '查奥恩',
-        id: 2,
-        goods: [{
-            goodsName: '香酥小鸡腿1个',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 12.00,
-            isChecked: false,
-            iid: 12
-          },
-          {
-            goodsName: '劲爆双层牛肉堡+鸡块+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 4,
-            price: 16.9,
-            isChecked: false,
-            iid: 13
-          },
-          {
-            goodsName: '鸡肉卷+自选小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 17.9,
-            isChecked: false,
-            iid: 14
-          },
-          {
-            goodsName: '半只烤鸡+自选汉堡+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 48.9,
-            isChecked: false,
-            iid: 15
-          },
-          {
-            goodsName: '香辣鸡腿堡+小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 57.9,
-            isChecked: false,
-            iid: 16
-          },
-          {
-            goodsName: '香辣双层牛肉堡+墨西哥鸡肉卷+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 50.9,
-            isChecked: false,
-            iid: 17
-          },
-        ]
-      },
-      {
-        name: '汉堡',
-        id: 3,
-        goods: [{
-            goodsName: '香酥小鸡腿1个',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 12.00,
-            isChecked: false,
-            iid: 18
-          },
-          {
-            goodsName: '劲爆双层牛肉堡+鸡块+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 4,
-            price: 16.9,
-            isChecked: false,
-            iid: 19
-          },
-          {
-            goodsName: '鸡肉卷+自选小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 17.9,
-            isChecked: false,
-            iid: 20
-          },
-          {
-            goodsName: '半只烤鸡+自选汉堡+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 48.9,
-            isChecked: false,
-            iid: 21
-          },
-          {
-            goodsName: '香辣鸡腿堡+小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 57.9,
-            isChecked: false,
-            iid: 22
-          },
-          {
-            goodsName: '香辣双层牛肉堡+墨西哥鸡肉卷+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 50.9,
-            isChecked: false,
-            iid: 23
-          },
-        ]
-      },
-      {
-        name: '炸鸡',
-        id: 4,
-        goods: [{
-            goodsName: '香酥小鸡腿1个',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 12.00,
-            isChecked: false,
-            iid: 24
-          },
-          {
-            goodsName: '劲爆双层牛肉堡+鸡块+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 4,
-            price: 16.9,
-            isChecked: false,
-            iid: 25
-          },
-          {
-            goodsName: '鸡肉卷+自选小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 17.9,
-            isChecked: false,
-            iid: 26
-          },
-          {
-            goodsName: '半只烤鸡+自选汉堡+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 48.9,
-            isChecked: false,
-            iid: 27
-          },
-          {
-            goodsName: '香辣鸡腿堡+小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 57.9,
-            isChecked: false,
-            iid: 28
-          },
-          {
-            goodsName: '香辣双层牛肉堡+墨西哥鸡肉卷+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 50.9,
-            isChecked: false,
-            iid: 29
-          },
-        ]
-      },
-      {
-        name: '热销',
-        id: 5,
-        goods: [{
-            goodsName: '香酥小鸡腿1个',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 12.00,
-            isChecked: false,
-            iid: 0
-          },
-          {
-            goodsName: '劲爆双层牛肉堡+鸡块+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 4,
-            price: 16.9,
-            isChecked: false,
-            iid: 1
-          },
-          {
-            goodsName: '鸡肉卷+自选小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 17.9,
-            isChecked: false,
-            iid: 2
-          },
-          {
-            goodsName: '半只烤鸡+自选汉堡+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 48.9,
-            isChecked: false,
-            iid: 3
-          },
-          {
-            goodsName: '香辣鸡腿堡+小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 57.9,
-            isChecked: false,
-            iid: 4
-          },
-          {
-            goodsName: '香辣双层牛肉堡+墨西哥鸡肉卷+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 50.9,
-            isChecked: false,
-            iid: 5
-          },
-        ]
-      },
-      {
-        name: '特色炒饭',
-        id: 6,
-        goods: [{
-            goodsName: '香酥小鸡腿1个',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 12.00,
-            isChecked: false,
-            iid: 6
-          },
-          {
-            goodsName: '劲爆双层牛肉堡+鸡块+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 4,
-            price: 16.9,
-            isChecked: false,
-            iid: 7
-          },
-          {
-            goodsName: '鸡肉卷+自选小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 17.9,
-            isChecked: false,
-            iid: 8
-          },
-          {
-            goodsName: '半只烤鸡+自选汉堡+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 48.9,
-            isChecked: false,
-            iid: 9
-          },
-          {
-            goodsName: '香辣鸡腿堡+小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 57.9,
-            isChecked: false,
-            iid: 10
-          },
-          {
-            goodsName: '香辣双层牛肉堡+墨西哥鸡肉卷+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 50.9,
-            isChecked: false,
-            iid: 11
-          },
-        ]
-      },
-      {
-        name: '查奥恩',
-        id: 7,
-        goods: [{
-            goodsName: '香酥小鸡腿1个',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 12.00,
-            isChecked: false,
-            iid: 12
-          },
-          {
-            goodsName: '劲爆双层牛肉堡+鸡块+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 4,
-            price: 16.9,
-            isChecked: false,
-            iid: 13
-          },
-          {
-            goodsName: '鸡肉卷+自选小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 17.9,
-            isChecked: false,
-            iid: 14
-          },
-          {
-            goodsName: '半只烤鸡+自选汉堡+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 48.9,
-            isChecked: false,
-            iid: 15
-          },
-          {
-            goodsName: '香辣鸡腿堡+小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 57.9,
-            isChecked: false,
-            iid: 16
-          },
-          {
-            goodsName: '香辣双层牛肉堡+墨西哥鸡肉卷+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 50.9,
-            isChecked: false,
-            iid: 17
-          },
-        ]
-      },
-      {
-        name: '汉堡',
-        id: 8,
-        goods: [{
-            goodsName: '香酥小鸡腿1个',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 12.00,
-            isChecked: false,
-            iid: 18
-          },
-          {
-            goodsName: '劲爆双层牛肉堡+鸡块+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 4,
-            price: 16.9,
-            isChecked: false,
-            iid: 19
-          },
-          {
-            goodsName: '鸡肉卷+自选小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 17.9,
-            isChecked: false,
-            iid: 20
-          },
-          {
-            goodsName: '半只烤鸡+自选汉堡+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 48.9,
-            isChecked: false,
-            iid: 21
-          },
-          {
-            goodsName: '香辣鸡腿堡+小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 57.9,
-            isChecked: false,
-            iid: 22
-          },
-          {
-            goodsName: '香辣双层牛肉堡+墨西哥鸡肉卷+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 50.9,
-            isChecked: false,
-            iid: 23
-          },
-        ]
-      },
-      {
-        name: '炸鸡',
-        id: 9,
-        goods: [{
-            goodsName: '香酥小鸡腿1个',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 12.00,
-            isChecked: false,
-            iid: 24
-          },
-          {
-            goodsName: '劲爆双层牛肉堡+鸡块+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 4,
-            price: 16.9,
-            isChecked: false,
-            iid: 25
-          },
-          {
-            goodsName: '鸡肉卷+自选小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 17.9,
-            isChecked: false,
-            iid: 26
-          },
-          {
-            goodsName: '半只烤鸡+自选汉堡+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 48.9,
-            isChecked: false,
-            iid: 27
-          },
-          {
-            goodsName: '香辣鸡腿堡+小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 57.9,
-            isChecked: false,
-            iid: 28
-          },
-          {
-            goodsName: '香辣双层牛肉堡+墨西哥鸡肉卷+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 50.9,
-            isChecked: false,
-            iid: 29
-          },
-        ]
-      },
-      {
-        name: '热销',
-        id: 10,
-        goods: [{
-            goodsName: '香酥小鸡腿1个',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 12.00,
-            isChecked: false,
-            iid: 0
-          },
-          {
-            goodsName: '劲爆双层牛肉堡+鸡块+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 4,
-            price: 16.9,
-            isChecked: false,
-            iid: 1
-          },
-          {
-            goodsName: '鸡肉卷+自选小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 17.9,
-            isChecked: false,
-            iid: 2
-          },
-          {
-            goodsName: '半只烤鸡+自选汉堡+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 48.9,
-            isChecked: false,
-            iid: 3
-          },
-          {
-            goodsName: '香辣鸡腿堡+小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 57.9,
-            isChecked: false,
-            iid: 4
-          },
-          {
-            goodsName: '香辣双层牛肉堡+墨西哥鸡肉卷+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 50.9,
-            isChecked: false,
-            iid: 5
-          },
-        ]
-      },
-      {
-        name: '特色炒饭',
-        id: 11,
-        goods: [{
-            goodsName: '香酥小鸡腿1个',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 12.00,
-            isChecked: false,
-            iid: 6
-          },
-          {
-            goodsName: '劲爆双层牛肉堡+鸡块+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 4,
-            price: 16.9,
-            isChecked: false,
-            iid: 7
-          },
-          {
-            goodsName: '鸡肉卷+自选小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 17.9,
-            isChecked: false,
-            iid: 8
-          },
-          {
-            goodsName: '半只烤鸡+自选汉堡+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 48.9,
-            isChecked: false,
-            iid: 9
-          },
-          {
-            goodsName: '香辣鸡腿堡+小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 57.9,
-            isChecked: false,
-            iid: 10
-          },
-          {
-            goodsName: '香辣双层牛肉堡+墨西哥鸡肉卷+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 50.9,
-            isChecked: false,
-            iid: 11
-          },
-        ]
-      },
-      {
-        name: '查奥恩',
-        id: 12,
-        goods: [{
-            goodsName: '香酥小鸡腿1个',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 12.00,
-            isChecked: false,
-            iid: 12
-          },
-          {
-            goodsName: '劲爆双层牛肉堡+鸡块+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 4,
-            price: 16.9,
-            isChecked: false,
-            iid: 13
-          },
-          {
-            goodsName: '鸡肉卷+自选小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 17.9,
-            isChecked: false,
-            iid: 14
-          },
-          {
-            goodsName: '半只烤鸡+自选汉堡+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 48.9,
-            isChecked: false,
-            iid: 15
-          },
-          {
-            goodsName: '香辣鸡腿堡+小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 57.9,
-            isChecked: false,
-            iid: 16
-          },
-          {
-            goodsName: '香辣双层牛肉堡+墨西哥鸡肉卷+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 50.9,
-            isChecked: false,
-            iid: 17
-          },
-        ]
-      },
-      {
-        name: '汉堡',
-        id: 13,
-        goods: [{
-            goodsName: '香酥小鸡腿1个',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 12.00,
-            isChecked: false,
-            iid: 18
-          },
-          {
-            goodsName: '劲爆双层牛肉堡+鸡块+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 4,
-            price: 16.9,
-            isChecked: false,
-            iid: 19
-          },
-          {
-            goodsName: '鸡肉卷+自选小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 17.9,
-            isChecked: false,
-            iid: 20
-          },
-          {
-            goodsName: '半只烤鸡+自选汉堡+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 48.9,
-            isChecked: false,
-            iid: 21
-          },
-          {
-            goodsName: '香辣鸡腿堡+小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 57.9,
-            isChecked: false,
-            iid: 22
-          },
-          {
-            goodsName: '香辣双层牛肉堡+墨西哥鸡肉卷+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 50.9,
-            isChecked: false,
-            iid: 23
-          },
-        ]
-      },
-      {
-        name: '炸鸡',
-        id: 14,
-        goods: [{
-            goodsName: '香酥小鸡腿1个',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 12.00,
-            isChecked: false,
-            iid: 24
-          },
-          {
-            goodsName: '劲爆双层牛肉堡+鸡块+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 4,
-            price: 16.9,
-            isChecked: false,
-            iid: 25
-          },
-          {
-            goodsName: '鸡肉卷+自选小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 17.9,
-            isChecked: false,
-            iid: 26
-          },
-          {
-            goodsName: '半只烤鸡+自选汉堡+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 48.9,
-            isChecked: false,
-            iid: 27
-          },
-          {
-            goodsName: '香辣鸡腿堡+小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 57.9,
-            isChecked: false,
-            iid: 28
-          },
-          {
-            goodsName: '香辣双层牛肉堡+墨西哥鸡肉卷+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 50.9,
-            isChecked: false,
-            iid: 29
-          },
-        ]
-      },
-      {
-        name: '热销',
-        id: 15,
-        goods: [{
-            goodsName: '香酥小鸡腿1个',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 12.00,
-            isChecked: false,
-            iid: 0
-          },
-          {
-            goodsName: '劲爆双层牛肉堡+鸡块+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 4,
-            price: 16.9,
-            isChecked: false,
-            iid: 1
-          },
-          {
-            goodsName: '鸡肉卷+自选小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 17.9,
-            isChecked: false,
-            iid: 2
-          },
-          {
-            goodsName: '半只烤鸡+自选汉堡+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 48.9,
-            isChecked: false,
-            iid: 3
-          },
-          {
-            goodsName: '香辣鸡腿堡+小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 57.9,
-            isChecked: false,
-            iid: 4
-          },
-          {
-            goodsName: '香辣双层牛肉堡+墨西哥鸡肉卷+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 50.9,
-            isChecked: false,
-            iid: 5
-          },
-        ]
-      },
-      {
-        name: '特色炒饭',
-        id: 16,
-        goods: [{
-            goodsName: '香酥小鸡腿1个',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 12.00,
-            isChecked: false,
-            iid: 6
-          },
-          {
-            goodsName: '劲爆双层牛肉堡+鸡块+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 4,
-            price: 16.9,
-            isChecked: false,
-            iid: 7
-          },
-          {
-            goodsName: '鸡肉卷+自选小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 17.9,
-            isChecked: false,
-            iid: 8
-          },
-          {
-            goodsName: '半只烤鸡+自选汉堡+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 48.9,
-            isChecked: false,
-            iid: 9
-          },
-          {
-            goodsName: '香辣鸡腿堡+小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 57.9,
-            isChecked: false,
-            iid: 10
-          },
-          {
-            goodsName: '香辣双层牛肉堡+墨西哥鸡肉卷+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 50.9,
-            isChecked: false,
-            iid: 11
-          },
-        ]
-      },
-      {
-        name: '查奥恩',
-        id: 17,
-        goods: [{
-            goodsName: '香酥小鸡腿1个',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 12.00,
-            isChecked: false,
-            iid: 12
-          },
-          {
-            goodsName: '劲爆双层牛肉堡+鸡块+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 4,
-            price: 16.9,
-            isChecked: false,
-            iid: 13
-          },
-          {
-            goodsName: '鸡肉卷+自选小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 17.9,
-            isChecked: false,
-            iid: 14
-          },
-          {
-            goodsName: '半只烤鸡+自选汉堡+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 48.9,
-            isChecked: false,
-            iid: 15
-          },
-          {
-            goodsName: '香辣鸡腿堡+小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 57.9,
-            isChecked: false,
-            iid: 16
-          },
-          {
-            goodsName: '香辣双层牛肉堡+墨西哥鸡肉卷+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 50.9,
-            isChecked: false,
-            iid: 17
-          },
-        ]
-      },
-      {
-        name: '汉堡',
-        id: 18,
-        goods: [{
-            goodsName: '香酥小鸡腿1个',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 12.00,
-            isChecked: false,
-            iid: 18
-          },
-          {
-            goodsName: '劲爆双层牛肉堡+鸡块+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 4,
-            price: 16.9,
-            isChecked: false,
-            iid: 19
-          },
-          {
-            goodsName: '鸡肉卷+自选小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 17.9,
-            isChecked: false,
-            iid: 20
-          },
-          {
-            goodsName: '半只烤鸡+自选汉堡+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 48.9,
-            isChecked: false,
-            iid: 21
-          },
-          {
-            goodsName: '香辣鸡腿堡+小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 57.9,
-            isChecked: false,
-            iid: 22
-          },
-          {
-            goodsName: '香辣双层牛肉堡+墨西哥鸡肉卷+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 50.9,
-            isChecked: false,
-            iid: 23
-          },
-        ]
-      },
-      {
-        name: '炸鸡',
-        id: 19,
-        goods: [{
-            goodsName: '香酥小鸡腿1个',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 12.00,
-            isChecked: false,
-            iid: 24
-          },
-          {
-            goodsName: '劲爆双层牛肉堡+鸡块+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 4,
-            price: 16.9,
-            isChecked: false,
-            iid: 25
-          },
-          {
-            goodsName: '鸡肉卷+自选小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 17.9,
-            isChecked: false,
-            iid: 26
-          },
-          {
-            goodsName: '半只烤鸡+自选汉堡+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 48.9,
-            isChecked: false,
-            iid: 27
-          },
-          {
-            goodsName: '香辣鸡腿堡+小吃+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 57.9,
-            isChecked: false,
-            iid: 28
-          },
-          {
-            goodsName: '香辣双层牛肉堡+墨西哥鸡肉卷+饮料',
-            introduce: '主要原料:酱油,盐,水,米饭,香精,我也不知道',
-            saled: 120,
-            price: 50.9,
-            isChecked: false,
-            iid: 29
-          },
-        ]
-      },
-
-    ],
+    list1: [],
     load: true,
     isCheckBoxShow: false,
     deletedGoods: [],
@@ -1177,12 +106,13 @@ Page({
   },
   async onLoad() {
     const {
-      list
+      list,
+      list1
     } = this.data
     loading('加载中')
     //将list里的类名收集
     await this._getCategoryAndGoodsInfo(1).then(res => {
-      hideLoading()
+      
       if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getCategoryAndGoodsInfo_SUCCESS) {
         for (const item of res.data.data) {
           const category = {
@@ -1225,10 +155,58 @@ Page({
       } else {
         totast('系统错误,商品信息获取事变', 1500)
       }
+      hideLoading()
+    })
+    await this._getCategoryAndGoodsInfo(0).then(res => {
+      
+      if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getCategoryAndGoodsInfo_SUCCESS) {
+        for (const item of res.data.data) {
+          const category = {
+            name: item.categoryName,
+            id: item.categoryId,
+            goods: []
+          }
+          for (const goodItem of item.dates) {
+            const good = {
+              imageUrl: BASE_URL + '/' + goodItem.commodityPhoto,
+              goodsName: goodItem.commodityName,
+              price: goodItem.commodityPrice,
+              iid: goodItem.commodityId,
+              introduce: goodItem.commodityDetail,
+              selling: goodItem.saleStatus == 1 ? true : false,
+              isChecked: false,
+              saled: 0,
+              standard: []
+            }
+            for (const specs of goodItem.specs) {
+              const standard = {
+                title: specs.specName,
+                standardId: specs.specId,
+                type: []
+              }
+              for (const attributes of specs.attributes) {
+                const type = {
+                  typeId: attributes.attributeId,
+                  typeName: attributes.attributeName,
+                  typeSaledMoney: attributes.attributePrice || 0
+                }
+                standard.type.push(type)
+              }
+              good.standard.push(standard)
+            }
+            category.goods.push(good)
+          }
+          list1.push(category)
+        }
+      } else {
+        totast('系统错误,商品信息获取事变', 1500)
+      }
+      hideLoading()
     })
     await this.pickerRanges()
     this.setData({
-      list: this.data.list
+      list: this.data.list,
+      list1:this.data.list1
     })
   },
   onReady() {
@@ -1530,7 +508,7 @@ Page({
       saled: 0,
       price: '',
       isChecked: false,
-      iid: 0,
+      iid: 10086,
       standard: JSON.parse(JSON.stringify(this.data.addGood.standard)),
       selling: true,
       imageUrl: this.data.addGood.addGoodImage
@@ -1575,13 +553,11 @@ Page({
           name: 'file',
           url: BASE_URL + API_URL_addOrModifyGoodPicture,
           success: res => {
-            console.log(res);
-            
-            hideLoading()
             if (JSON.parse(res.data).code == STATUS_CODE_SUCCESSE || JSON.parse(res.data).code == STATUS_CODE_addOrModifyGoodPicture_SUCCESS) {
               this._addGood(commodityInfoQuery.categoryId, commodityInfoQuery.commodityDetail, commodityInfoQuery.commodityName, JSON.parse(res.data).data, commodityInfoQuery.price, commodityInfoQuery.specs).then(result => {
                 hideLoading()
                 if (result.data.code == STATUS_CODE_SUCCESSE || result.data.code == STATUS_CODE_addGood_SUCCESS) {
+                  addGood.iid = result.data.data
                   this.data.list[addGoodIndex].goods.push(addGood)
                   this.clearthisDataAddGood()
                   this.setData({
@@ -1596,6 +572,7 @@ Page({
             } else {
               totast('系统错误,新增商品失败,请重试', 1500)
             }
+            hideLoading()
           },
           fail(res) {
             hideLoading()
@@ -1829,7 +806,7 @@ Page({
             this._modifyGoodInfo(addGood.introduce, addGood.iid, addGood.goodsName, addGood.price, standard).then(res => {
               hideLoading()
               if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyGoodInfo_SUCCESS) {
-                this._modifyGoodSaleStatus(addGood.iid, 1).then(result => {
+                this._modifyGoodSaleStatus(addGood.iid, 0).then(result => {
                   hideLoading()
                   if (result.data.code == STATUS_CODE_SUCCESSE || result.data.code == STATUS_CODE_modifyGoodSaleStatus_SUCCESS) {
                     //售罄中
@@ -1950,22 +927,24 @@ Page({
     } = e.currentTarget.dataset
     const {
       goodsName,
-      introduce,
-      price,
-      saled,
-      standard,
-      selling,
-      imageUrl
+        introduce,
+        price,
+        saled,
+        standard,
+        selling,
+        imageUrl,
+        iid
     } = this.data.list1[index].goods[itemindex]
-    addGood.addGoodName = goodsName
-    addGood.addGoodIntroduce = introduce
-    addGood.addGoodPrice = price
-    addGood.saled = saled
-    addGood.addGoodIndex2 = addGood.addGoodIndex = index
-    addGood.addGoodItemIndex = itemindex
-    addGood.standard = JSON.parse(JSON.stringify(standard))
-    addGood.selling = selling
-    addGood.addGoodImage = imageUrl
+      addGood.addGoodName = goodsName
+      addGood.addGoodIntroduce = introduce
+      addGood.addGoodPrice = price
+      addGood.saled = saled
+      addGood.addGoodIndex2 = addGood.addGoodIndex = index
+      addGood.addGoodItemIndex = itemindex
+      addGood.standard = JSON.parse(JSON.stringify(standard))
+      addGood.selling = selling
+      addGood.addGoodImage = imageUrl
+      addGood.iid = iid
     this.setData({
       addGood: this.data.addGood,
       list1CurrentModalType: 'list1'
@@ -1999,8 +978,8 @@ Page({
       selling: this.data.addGood.selling,
       imageUrl: this.data.addGood.addGoodImage
     }
-    if (!addGood.selling) {
-      this._modifyGoodSaleStatus(addGood.iid,0).then(res=>{
+    if (addGood.selling) {
+      this._modifyGoodSaleStatus(addGood.iid,1).then(res=>{
         hideLoading()
         if(res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyGoodSaleStatus_SUCCESS){
           const categoryName = this.data.list1[index].name

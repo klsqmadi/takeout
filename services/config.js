@@ -23,7 +23,7 @@ export function totast(text,timeout=1500,icon='none'){
 
 /* export const BASE_URL = 'http://175.24.113.119:8081' */ //泽强的服务器
 /* export const BASE_URL = 'http://121.41.229.2:8081' */
-export const BASE_URL = 'http://192.168.1.100:8080'
+export const BASE_URL = 'http://192.168.1.111:8080'
 
 // export const BASE_URL = 'http://192.168.1.111:8080'  //凯悦的服务器
 // export const BASE_URL = 'http://175.24.113.119:8080'
@@ -49,7 +49,8 @@ export const STATUS_CODE_deleteGoods_SUCCESS = 1203
 export const STATUS_CODE_modifyGoodSaleStatus_SUCCESS = 1202
 export const STATUS_CODE_modifyGoodInfo_SUCCESS = 1202
 export const STATUS_CODE_loginShop_SUCCESS = 1209
-
+export const STATUS_CODE_modifyShopLicense_SUCCESS = 1204
+export const STATUS_CODE_getShopType_SUCCESS = 1200
 
 //凯悦的状态
 export const STATUS_CODE_getShopWorkInfo1_SUCCESS = 3208
@@ -69,6 +70,7 @@ export const API_URL_getShopProfileInfo = '/getShopInfo/businessGetShop'
 export const API_URL_getShopReviewStatus = '/getShopInfo/shopIdGetShopUpdate'
 export const API_URL_getGoodsCategoryInfo = '/getCommodityInfo/businessGetCategory'
 export const API_URL_getCategoryAndGoodsInfo = '/getCommodityInfo/businessGetCommodity'
+export const API_URL_getShopType = '/getShopInfo/getShopCategory'
 
 export const API_URL_addGood = '/modifyCommodity/insertCommodity'
 export const API_URL_addCategory = '/modifyCategory/insertCategory'
@@ -80,6 +82,9 @@ export const API_URL_modifyCategoryName = '/modifyCategory/updateCategory'
 export const API_URL_modifyReceiveStatus = '/modifyShopInfo/updateAutoOrder'
 export const API_URL_modifyGoodSaleStatus = '/modifyCommodity/updateSaleStatus'
 export const API_URL_modifyGoodInfo = '/modifyCommodity/updateCommodity'
+export const API_URL_modifyPicture = '/modifyShopInfo/updatePhoto'
+export const API_URL_modifyShopLicense = '/modifyShopInfo/initShopLicense'
+
 
 export const API_URL_deleteCategory = '/modifyCategory/deleteCategory'
 export const API_URL_deleteGoods = '/modifyCommodity/deleteCommodity'
@@ -90,7 +95,7 @@ export const API_URL_getShopWorkInfo1 = '/data/getStatisticalData'
 export const API_URL_getOrders = '/order/getShopOrderByStatus'
 export const API_URL_getHadNewShopOrder = '/order/hadNewShopOrder'
 // export const API_URL_getShopAllOrder = '/order/selectTotalShopOrder'
-export const API_URL_getShopAllOrder = '/order/selectShopOrderHistory'
+export const API_URL_getShopAllOrder = '/order/selectTotalShopOrder'
 export const API_URL_modifyOrderStatus = '/order/updateOrderStatus'
 
 // 东龙的接口

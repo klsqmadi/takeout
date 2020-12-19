@@ -2,6 +2,7 @@
   <view slot="backText">
   店铺信息
   <text wx:if="{{shopReviewStatus == 0}}">(提交信息审核中)</text>
+  <text wx:if="{{shopReviewStatus == 2}}">(审核失败)</text>
   </view>
 </cu-custom>
 <view class="flex align-center padding bg-white" bindtap="getImage" data-inputType="storeImageUrl" data-title="店铺图片">
@@ -39,6 +40,18 @@
     <view class="bg-blue-1 padding-sm text-center" bindtap="showSchoolAddress">新增校区</view>
   </view>
 </view>
+<view class="flex padding margin-top-sm bg-white justify-between">
+      <view>店铺分类</view>
+      <view>
+        <view class="flex justify-between bg-gray margin-bottom padding-sm align-center"
+          wx:for="{{storeInfo.shopType}}">
+          <view class="padding-lr text-cut" style="max-width:450rpx">{{item.categoryName}}</view>
+          <view class="cuIcon-close round margin-lr-sm text-red" bindtap="deleteShopType" data-index="{{index}}">
+          </view>
+        </view>
+        <view class="bg-blue-1 padding-sm text-center" bindtap="showShopType">新增分类</view>
+      </view>
+    </view>
 <!-- --- -->
 <view class="margin-top margin-lr-xl text-center padding bg-green radius margin-bottom-xl" wx:if="{{showChangeButton}}" bindtap="finallyConfirmAndupLoadFile">确定修改</view>
 <view class="cu-modal {{currentModalType == 'show'?'show':''}}">
@@ -68,3 +81,18 @@
     </view>
   </view>
 </view>
+<view class="cu-modal {{currentModalType == 'shopType'?'show':''}}" style="top:152rpx">
+      <view class="cu-dialog">
+        <view class="padding">
+          <view>
+            <view class="flex bg-gray padding justify-between margin-bottom-sm align-center"
+              wx:for="{{shopTypePickerRange}}">
+              <view class="text-lg text-cut">{{item.categoryName}}</view>
+              <view class="cuIcon-roundadd margin-left text-blue" style="font-size:32rpx" bindtap="addShopType"
+                data-index="{{index}}"></view>
+            </view>
+          </view>
+          <view class="margin-top text-red" bindtap="hideModal">关闭</view>
+        </view>
+      </view>
+    </view>

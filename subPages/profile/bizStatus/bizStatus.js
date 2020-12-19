@@ -19,7 +19,7 @@ Page({
     loading('加载中')
     const currentPage = getCurrentPages()
     this.setData({
-      currentStatus: currentPage[0].data.bizStatus == 0?'停业中':currentPage[0].data.bizStatus == 1?'营业中':'打烊'
+      currentStatus: currentPage[0].data.bizStatus == 2?'停业中':currentPage[0].data.bizStatus == 0?'营业中':'打烊'
     })
   },
   onReady() {
@@ -53,7 +53,7 @@ Page({
   },
   changeStatus() {
     const {changeStatus} = this.data
-    const runStatus = changeStatus == '营业'?1:0
+    const runStatus = changeStatus == '营业'?0:1
     this._modifyBizStatus(runStatus).then(res => {
       hideLoading()
       if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyBizStatus_SUCCESS) {

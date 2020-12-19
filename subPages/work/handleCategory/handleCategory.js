@@ -149,6 +149,7 @@ Page({
           category: this.data.modal[this.data.currentModalType].inputValue,
           goods: []
         }
+        data.categoryId = res.data.data
         this.data.category.push(data)
         this.data.modal[this.data.currentModalType].inputValue = ''
         this.setData({
