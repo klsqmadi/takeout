@@ -32,20 +32,20 @@ Page({
     monthSales: 0,
   },
   onload() {
-   
+
   },
   onShow() {
     let token = wx.getStorageSync('token') || null
-let id = wx.getStorageSync('id') || null
-    if (!token && !id) {
+    let id = wx.getStorageSync('id') || null
+    /* if (!token && !id) {
       wx.redirectTo({
         url: '/pages/wxLogin/wxLogin',
         success: res => {
           console.log(res);
         }
       })
-    }
-    if(token && id){
+    } */
+    if (token && id) {
       this._getShopWorkInfo1().then(res => {
         hideLoading()
         if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getShopWorkInfo1_SUCCESS) {
