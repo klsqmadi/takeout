@@ -5,14 +5,19 @@
   <view class="flex justify-center border-bottom margin-lr-xl" style="margin-top:200rpx;padding-bottom:100rpx">
     <view class="cuIcon-weixin bg-green" style="font-size:150rpx"></view>
   </view>
-  <view class=" margin-lr-xl text-lg">
-    <view class="text-black margin-tb">申请获取以下权限</view>
-    <view class="text-gray">获得你的公开信息(手机号码等)</view>
+  <view wx:if="{{registerStatus == 5}}">
+    <view class=" margin-lr-xl text-lg">
+      <view class="text-black margin-tb">申请获取以下权限</view>
+      <view class="text-gray">获得你的公开信息(手机号码等)</view>
+    </view>
+    <button class="bg-green margin-lr-xl margin-top-xl" style="margin-top:50rpx" open-type="getPhoneNumber"
+      bindgetphonenumber="getPhone">授权登录</button>
   </view>
-</view>
-<button class="bg-green margin-lr-xl margin-top-xl" style="margin-top:50rpx" open-type="getPhoneNumber" bindgetphonenumber="getPhone">授权登录</button>
-<view class="text-sm text-grey padding-xl">
+  <button class="bg-green margin-lr-xl margin-top-xl" style="margin-top:50rpx"
+    wx:if="{{registerStatus == 0}}" catchtap="goToRegister">登录成功,点击前往注册店铺</button>
+  <view class="text-sm text-grey padding-xl">
     已阅读并同意
     <a href="" class="text-blue">《用户服务协议》、</a>
     <a href="" class="text-blue">《隐私权政策》</a>
+  </view>
 </view>

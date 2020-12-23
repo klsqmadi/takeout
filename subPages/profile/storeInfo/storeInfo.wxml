@@ -78,6 +78,7 @@
         </view>
       </view>
       <view class="margin-top text-red" bindtap="hideModal">关闭</view>
+      <view class="margin-top text-sm">(提示:商家所能配送的校区范围)</view>
     </view>
   </view>
 </view>
@@ -93,6 +94,7 @@
             </view>
           </view>
           <view class="margin-top text-red" bindtap="hideModal">关闭</view>
+          <view class="margin-top text-sm">(提示:商家店铺经营类型)</view>
         </view>
       </view>
     </view>

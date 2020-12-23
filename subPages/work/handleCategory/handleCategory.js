@@ -45,9 +45,20 @@ Page({
   onReady() {
     hideLoading()
   },
+  onShow() {
+    let token = wx.getStorageSync('token') || null
+    let id = wx.getStorageSync('id') || null
+    if (!token && !id) {
+      wx.redirectTo({
+        url: '/pages/wxLogin/wxLogin',
+        success: res => {
+          console.log(res);
+        }
+      })
+    }
+  },
   _getGoodsCategoryInfo() {
     getGoodsCategoryInfo().then(res => {
-      hideLoading()
       if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getGoodsCategoryInfo) {
         let {
           category
@@ -66,6 +77,7 @@ Page({
       } else {
         totast('系统错误,信息获取失败', 1500)
       }
+      hideLoading()
     })
   },
   _deleteCategory(ids) {
@@ -103,8 +115,7 @@ Page({
       category,
       currentIndex
     } = this.data
-    await this._modifyCategoryName(category[currentIndex].categoryId,this.data.modal[this.data.currentModalType].inputValue).then(res => {
-      hideLoading()
+    await this._modifyCategoryName(category[currentIndex].categoryId, this.data.modal[this.data.currentModalType].inputValue).then(res => {
       if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyCategoryName_SUCCESS) {
         category[currentIndex].category = this.data.modal[this.data.currentModalType].inputValue
         this.setData({
@@ -114,6 +125,7 @@ Page({
         totast('系统错误,更改失败', 1500)
       }
     })
+    hideLoading()
     this.hideModal(e)
   },
   //监听input  实时响应value
@@ -129,21 +141,20 @@ Page({
     const categoryId = this.data.category[this.data.currentIndex].categoryId
     ids.push(categoryId)
     this._deleteCategory(ids).then(res => {
-      hideLoading()
       if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_deleteCategory_SUCCESS) {
         this.data.category.splice(this.data.currentIndex, 1)
         this.setData({
           category: this.data.category
         })
       } else {
-        totast('系统错误,删除失败', 1500)
+        totast('系统错误,删除失败', 2000)
       }
+      hideLoading()
       this.hideModal(e)
     })
   },
   addCategory(e) {
     this._addCategory(this.data.modal[this.data.currentModalType].inputValue).then(res => {
-      hideLoading()
       if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_addCategory_SUCCESS) {
         const data = {
           category: this.data.modal[this.data.currentModalType].inputValue,
@@ -159,6 +170,7 @@ Page({
       } else {
         totast('系统错误,添加失败', 1500)
       }
+      hideLoading()
       this.hideModal(e)
     })
   },

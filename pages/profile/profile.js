@@ -14,20 +14,13 @@ let token = wx.getStorageSync('token') || null
 let id = wx.getStorageSync('id') || null
 Page({
   data: {
-    bizStatus: '停业中',
-    receiveStatus: '自动接单',
+    bizStatus: 3,
+    receiveStatus: 2,
     headImage:'',
-    shopName:'默认店铺名字'
+    shopName:'未设置'
   },
   onLoad() {
-    if (!token && !id) {
-      wx.redirectTo({
-        url: '/pages/wxLogin/wxLogin',
-        success: res => {
-          console.log(res);
-        }
-      })
-    }
+   
   },
   _getShopInfo() {
     getShopProfileInfo().then(res => {
@@ -45,6 +38,16 @@ Page({
     })
   },
   onShow(){
+    token = wx.getStorageSync('token') || null
+    id = wx.getStorageSync('id') || null
+    if (!token && !id) {
+      wx.redirectTo({
+        url: '/pages/wxLogin/wxLogin',
+        success: res => {
+          console.log(res);
+        }
+      })
+    }
     this._getShopInfo()
   }
 })

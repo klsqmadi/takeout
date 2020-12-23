@@ -5,6 +5,7 @@
     "pages/profile/profile",
     "pages/login/login",
     "pages/wxLogin/wxLogin",
+    "pages/registerFail/registerFail",
     "pages/shopRegister/shopRegister",
     "subPages/work/handleGoods/handleGoods",
     "subPages/work/handleCategory/handleCategory",

@@ -23,11 +23,15 @@ export function totast(text,timeout=1500,icon='none'){
 
 /* export const BASE_URL = 'http://175.24.113.119:8081' */ //泽强的服务器
 /* export const BASE_URL = 'http://121.41.229.2:8081' */
-export const BASE_URL = 'http://192.168.1.111:8080'
+// export const BASE_URL = 'https://192.168.1.107:8888'
+export const BASE_URL = 'https://www.lizeqiang.top:8888'
+// export const BASE_URL = 'https://192.168.1.103:8888'
 
 // export const BASE_URL = 'http://192.168.1.111:8080'  //凯悦的服务器
 // export const BASE_URL = 'http://175.24.113.119:8080'
-export const WEB_SOCKET_URL = 'ws://192.168.1.111:58080/ws'
+// export const WS_BASE_URL = 'wss://192.168.1.102:58080'
+export const WS_BASE_URL = 'wss://www.lizeqiang.top:58080'
+export const WEB_SOCKET_URL = `${WS_BASE_URL}/ws`
 
 export const BASE_URL_3 = 'http://47.93.19.109:18080' //东龙服务器
 export const USER_TOKEN = 'USER_TOKEN'
@@ -51,6 +55,8 @@ export const STATUS_CODE_modifyGoodInfo_SUCCESS = 1202
 export const STATUS_CODE_loginShop_SUCCESS = 1209
 export const STATUS_CODE_modifyShopLicense_SUCCESS = 1204
 export const STATUS_CODE_getShopType_SUCCESS = 1200
+export const STATUS_CODE_getShopRegisterInfo_SUCCES = 1200
+
 
 //凯悦的状态
 export const STATUS_CODE_getShopWorkInfo1_SUCCESS = 3208
@@ -60,7 +66,7 @@ export const STATUS_CODE_getShopAllOrder_SUCCESS = 3203
 export const STATUS_CODE_modifyOrderStatus_SUCCES = 3255
 
 // 东龙的状态
-export const STATUS_CODE_getAllSchool_SUCCESS = 2213
+export const STATUS_CODE_getAllSchool_SUCCESS = 3200
 /**
  * api 名称
  */
@@ -71,6 +77,7 @@ export const API_URL_getShopReviewStatus = '/getShopInfo/shopIdGetShopUpdate'
 export const API_URL_getGoodsCategoryInfo = '/getCommodityInfo/businessGetCategory'
 export const API_URL_getCategoryAndGoodsInfo = '/getCommodityInfo/businessGetCommodity'
 export const API_URL_getShopType = '/getShopInfo/getShopCategory'
+export const API_URL_getShopRegisterInfo = '/modifyShopInfo/judgeIsAccept'
 
 export const API_URL_addGood = '/modifyCommodity/insertCommodity'
 export const API_URL_addCategory = '/modifyCategory/insertCategory'
@@ -99,4 +106,4 @@ export const API_URL_getShopAllOrder = '/order/selectTotalShopOrder'
 export const API_URL_modifyOrderStatus = '/order/updateOrderStatus'
 
 // 东龙的接口
-export const API_URL_getAllSchool = '/campus/selectAll'
+export const API_URL_getAllSchool = '/campus/selectAllCampusName'

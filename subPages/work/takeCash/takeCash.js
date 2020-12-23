@@ -6,5 +6,17 @@ Page({
    */
   data: {
     
+  },
+  onShow(){
+    let token = wx.getStorageSync('token') || null
+    let id = wx.getStorageSync('id') || null
+    if (!token && !id) {
+      wx.redirectTo({
+        url: '/pages/wxLogin/wxLogin',
+        success: res => {
+          console.log(res);
+        }
+      })
+    }
   }
 })

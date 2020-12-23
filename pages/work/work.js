@@ -4,20 +4,19 @@ import {
   getShopTotalPayment,
   getShopOrdersPaymentNumber,
   getShopOrdersNumber */
-  getShopWorkInfo1
+  getShopWorkInfo1,
+  getShopRegisterInfo
 } from '../../services/work'
 import {
+  API_URL_getShopWorkInfo1,
+  BASE_URL,
   loading,
   hideLoading,
   totast,
   STATUS_CODE_SUCCESSE,
   STATUS_CODE_getShopWorkInfo1_SUCCESS
-  /* STATUS_CODE_getShopTodayMoney_SUCCESS,
-  STATUS_CODE_getShopTotalPayment_SUCCESS,
-  STATUS_CODE_getShopOrdersPaymentNumber_SUCCESS,
-  STATUS_CODE_getShopOrderNumber_SUCCESS */
 } from '../../services/config'
-let shopId = wx.getStorageSync('shopId') || null
+const app = getApp()
 Page({
   data: {
     todayMoney: 0,
@@ -34,38 +33,38 @@ Page({
   onload() {
 
   },
-  onShow() {
+  async onShow() {
     let token = wx.getStorageSync('token') || null
     let id = wx.getStorageSync('id') || null
-    /* if (!token && !id) {
-      wx.redirectTo({
-        url: '/pages/wxLogin/wxLogin',
-        success: res => {
-          console.log(res);
-        }
-      })
-    } */
+    await app.flagHadSuccessRegisterShop()
     if (token && id) {
-      this._getShopWorkInfo1().then(res => {
-        hideLoading()
-        if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getShopWorkInfo1_SUCCESS) {
-          this.setData({
-            todayMoney: res.data.data.todayIncome,
-            ordersPaymentNumber: res.data.data.todayOrderQuantity,
-            totalPayment: res.data.data.todaySalesVolume,
-            pendingOrders: res.data.data.waitToReceive,
-            pendingDelivered: res.data.data.waitToDeliver,
-            pendingArrive: res.data.data.waitToComplete,
-            historicalOrdersNumber: res.data.data.monthlyOrderQuantity
-          })
-        } else {
+      loading('加载中')
+      wx.request({
+        url: BASE_URL + API_URL_getShopWorkInfo1,
+        data:{
+          shopId:wx.getStorageSync('shopId')
+        },
+        success:res=>{
+          if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getShopWorkInfo1_SUCCESS) {
+            this.setData({
+              todayMoney: res.data.data.todayIncome,
+              ordersPaymentNumber: res.data.data.todayOrderQuantity,
+              totalPayment: res.data.data.todaySalesVolume,
+              pendingOrders: res.data.data.waitToReceive,
+              pendingDelivered: res.data.data.waitToDeliver,
+              pendingArrive: res.data.data.waitToComplete,
+              historicalOrdersNumber: res.data.data.monthlyOrderQuantity
+            })
+          } else {
+            totast('系统错误,信息获取失败,请重新刷新', 1500)
+          }
+          hideLoading()
+        },
+        fail:res=>{
+          hideLoading()
           totast('系统错误,信息获取失败,请重新刷新', 1500)
         }
       })
-
     }
   },
-  _getShopWorkInfo1() {
-    return getShopWorkInfo1(shopId)
-  }
 })

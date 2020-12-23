@@ -1,5 +1,8 @@
 // subPages/order/handleGoods/handleGoods.js
 import {
+  RegExp
+}from '../../../utils/RE'
+import {
   getCategoryAndGoodsInfo,
   addGood,
   deleteGoods,
@@ -97,6 +100,9 @@ Page({
       standardTypeIndex: 0,
       isStandardType: true
     },
+    goodInputType:'',
+    goodAttributeTitle:'',
+    goodInputValue:'',
     pickerRanges: [],
     showInputModal: '',
     inputValue: '',
@@ -105,14 +111,14 @@ Page({
     noticeContent: ''
   },
   async onLoad() {
+    this.data.RE = new RegExp()
     const {
       list,
       list1
     } = this.data
-    loading('加载中')
     //将list里的类名收集
     await this._getCategoryAndGoodsInfo(1).then(res => {
-      
+      loading('加载中')
       if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getCategoryAndGoodsInfo_SUCCESS) {
         for (const item of res.data.data) {
           const category = {
@@ -158,7 +164,7 @@ Page({
       hideLoading()
     })
     await this._getCategoryAndGoodsInfo(0).then(res => {
-      
+      loading('加载中')
       if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getCategoryAndGoodsInfo_SUCCESS) {
         for (const item of res.data.data) {
           const category = {
@@ -206,13 +212,25 @@ Page({
     await this.pickerRanges()
     this.setData({
       list: this.data.list,
-      list1:this.data.list1
+      list1: this.data.list1
     })
   },
   onReady() {
-    wx.hideLoading()
+  },
+  onShow() {
+    let token = wx.getStorageSync('token') || null
+    let id = wx.getStorageSync('id') || null
+    if (!token && !id) {
+      wx.redirectTo({
+        url: '/pages/wxLogin/wxLogin',
+        success: res => {
+          console.log(res);
+        }
+      })
+    }
   },
   _getCategoryAndGoodsInfo(saleStatus) {
+    loading('加载中')
     return getCategoryAndGoodsInfo(saleStatus)
   },
   _addGood(categoryId, commodityDetail, commodityName, commodityPhoto, price, specs) {
@@ -425,6 +443,57 @@ Page({
       noticeContent: ''
     })
   },
+  showGoodAttributeModal(e){
+    const {type} = e.currentTarget.dataset
+    const name = ['名称','介绍','价格']
+    const goodType = ['addGoodName','addGoodIntroduce','addGoodPrice']
+    this.setData({
+      goodInputValue:this.data.addGood[type],
+      goodInputType:type,
+      goodAttributeTitle:name[goodType.indexOf(type)],
+      showInputModal:'goodAttribute'
+    })
+  },
+  hideGoodAttributeModal(){
+    this.setData({
+      showInputModal:''
+    })
+  },
+  eventInput(e){
+    this.setData({
+      goodInputValue:e.detail.value
+    })
+  },
+  confirmGoodAttribute(){
+    const {goodInputValue,goodInputType} = this.data
+    const testValue = goodInputValue
+    for (const item of testValue.split('')) {
+      if(item == ' '){
+        totast('输入存在空格,请检查',2000)
+        return
+      }
+    }
+    const temp = `addGood.${goodInputType}`
+    if(goodInputType == 'addGoodPrice'){
+      if(this.data.RE.isPositiveNumber(goodInputValue.trim())){
+        this.setData({
+          [temp]:goodInputValue,
+        })
+        this.hideGoodAttributeModal()
+      }else{
+        totast('请输入正确的数字(正数及小数点后两位)',2000)
+      }
+    }else{
+      if(this.data.RE.isMinToMaxLength(goodInputValue.trim(),4,20)){
+        this.setData({
+          [temp]:goodInputValue,
+        })
+        this.hideGoodAttributeModal()
+      }else{
+        totast('请输入4~20位中文或数字',2000)
+      }
+    }
+  },
   /**
    * 删除商品模块 相关函数
    */
@@ -503,24 +572,25 @@ Page({
     } = this.data.addGood
     //创建一个新的对象,因为addGood的属性与要添加商品的对象属性不一样
     let addGood = {
-      goodsName: '',
-      introduce: '',
+      goodsName: this.data.addGood.addGoodName,
+      introduce: this.data.addGood.addGoodIntroduce,
       saled: 0,
-      price: '',
+      price: this.data.addGood.addGoodPrice,
       isChecked: false,
       iid: 10086,
       standard: JSON.parse(JSON.stringify(this.data.addGood.standard)),
       selling: true,
       imageUrl: this.data.addGood.addGoodImage
     }
-    this.getQueryInputValue('.addGoodName', addGood, "goodsName")
+    /* this.getQueryInputValue('.addGoodName', addGood, "goodsName")
     this.getQueryInputValue('.addGoodIntroduce', addGood, "introduce")
-    this.getQueryInputValue('.addGoodPrice', addGood, "price")
+    this.getQueryInputValue('.addGoodPrice', addGood, "price") */
     //给一个setTimeout 为了同上面一样进入微任务队列,防止异步操作,下面作为主线程任务先行执行
     setTimeout(() => {
       //判断是否为空
       if (addGood.goodsName == '' || addGood.price == '' || addGoodIndex == null || addGoodIndex == '' || addGood.imageUrl == '') {
-        this.showNoticeModal(e, '商品图片,类型,名称及价格不允许为空')
+        totast('商品图片,类型,名称及价格不允许为空',2000)
+        // this.showNoticeModal(e, '商品图片,类型,名称及价格不允许为空')
       } else {
         const commodityInfoQuery = {
           commodityDetail: addGood.introduce,
@@ -531,12 +601,20 @@ Page({
         }
         if (addGood.standard) {
           for (const item of addGood.standard) {
+            if(item.title == '请填写规格名称'){
+              totast('当前规格存在默认名称,请及时更改',2000)
+              return
+            }
             const standard = {
               attributes: [],
               specName: item.title
             }
             if (item.type) {
               for (const attribute of item.type) {
+                if(attribute.typeName == '请添加类型名称'){
+                  totast('当前类型存在默认名称,请及时更改',2000)
+                return
+                }
                 const attri = {
                   attributeName: attribute.typeName,
                   attributePrice: attribute.typeSaledMoney
@@ -555,7 +633,6 @@ Page({
           success: res => {
             if (JSON.parse(res.data).code == STATUS_CODE_SUCCESSE || JSON.parse(res.data).code == STATUS_CODE_addOrModifyGoodPicture_SUCCESS) {
               this._addGood(commodityInfoQuery.categoryId, commodityInfoQuery.commodityDetail, commodityInfoQuery.commodityName, JSON.parse(res.data).data, commodityInfoQuery.price, commodityInfoQuery.specs).then(result => {
-                hideLoading()
                 if (result.data.code == STATUS_CODE_SUCCESSE || result.data.code == STATUS_CODE_addGood_SUCCESS) {
                   addGood.iid = result.data.data
                   this.data.list[addGoodIndex].goods.push(addGood)
@@ -697,10 +774,10 @@ Page({
     const index = this.data.addGood.addGoodIndex
     const itemIndex = this.data.addGood.addGoodItemIndex
     const addGood = {
-      goodsName: '',
-      introduce: '',
+      goodsName: this.data.addGood.addGoodName,
+      introduce: this.data.addGood.addGoodIntroduce,
       saled: this.data.addGood.saled,
-      price: '',
+      price: this.data.addGood.addGoodPrice,
       isChecked: false,
       iid: this.data.addGood.iid,
       standard: JSON.parse(JSON.stringify(this.data.addGood.standard)),
@@ -709,35 +786,42 @@ Page({
     }
     const standard = []
     for (const item of addGood.standard) {
+      if(item.title == '请填写规格名称'){
+        totast('当前规格存在默认名称,请及时更改',2000)
+        return
+      }
       const obj = {
-        "attributes":[],
-        "specName":item.title
+        "attributes": [],
+        "specName": item.title
       }
       for (const item1 of item.type) {
+        if(item1.typeName == '请添加类型名称'){
+          totast('当前类型存在默认名称,请及时更改',2000)
+        return
+        }
         const attr = {
-          "attributeId":item1.typeId,
-          "attributeName":item1.typeName,
-          "attributePrice":item1.typeSaledMoney,
+          "attributeId": item1.typeId,
+          "attributeName": item1.typeName,
+          "attributePrice": item1.typeSaledMoney,
         }
         obj["attributes"].push(attr)
       }
       standard.push(obj)
     }
     //获取input内的值
-    this.getQueryInputValue('.editGoodName', addGood, "goodsName")
-    this.getQueryInputValue('.editGoodIntroduce', addGood, "introduce")
-    this.getQueryInputValue('.editGoodPrice', addGood, "price")
+    // this.getQueryInputValue('.editGoodName', addGood, "goodsName")
+    // this.getQueryInputValue('.editGoodIntroduce', addGood, "introduce")
+    // this.getQueryInputValue('.editGoodPrice', addGood, "price")
     setTimeout(() => {
       //判断是否为空
       if (addGood.goodsName == '' || addGood.price == '') {
-        this.showNoticeModal(e, '名称及价格不允许为空')
+        totast('存在输入为空,请检查后重试',2000)
       } else {
         //判断是在出售中还是售罄中,true在出售中
         if (addGood.selling) {
           //判断是否更改了图片,是否需要调上传图片接口
           if (this.data.list[index2].goods[itemIndex].imageUrl == addGood.imageUrl) {
             this._modifyGoodInfo(addGood.introduce, addGood.iid, addGood.goodsName, addGood.price, standard).then(res => {
-              hideLoading()
               if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyGoodInfo_SUCCESS) {
                 //在出售中
                 //判断是否从原本所在的类切换到其他分类,相等即说明index相对第一次获取到的index2没有改变,即没有切换分类
@@ -759,6 +843,7 @@ Page({
               } else {
                 totast('系统错误,商品信息修改失败,请重试', 1500)
               }
+              hideLoading()
             })
           } else {
             loading('加载中')
@@ -767,7 +852,6 @@ Page({
               name: 'file',
               url: BASE_URL + API_URL_addOrModifyGoodPicture,
               success: res => {
-                hideLoading()
                 if (JSON.parse(res.data).code == STATUS_CODE_SUCCESSE || JSON.parse(res.data).code == STATUS_CODE_addOrModifyGoodPicture_SUCCESS) {
                   this._modifyGoodInfo(addGood.introduce, addGood.iid, addGood.goodsName, addGood.price, standard, JSON.parse(res.data).data).then(result => {
                     if (result.data.code == STATUS_CODE_SUCCESSE || result.data.code == STATUS_CODE_modifyGoodInfo_SUCCESS) {
@@ -793,6 +877,7 @@ Page({
                 } else {
                   totast('系统错误,商品信息修改失败,请重试', 1500)
                 }
+                hideLoading()
               },
               fail: res => {
                 hideLoading()
@@ -804,10 +889,8 @@ Page({
         } else {
           if (this.data.list[index2].goods[itemIndex].imageUrl == addGood.imageUrl) {
             this._modifyGoodInfo(addGood.introduce, addGood.iid, addGood.goodsName, addGood.price, standard).then(res => {
-              hideLoading()
               if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyGoodInfo_SUCCESS) {
                 this._modifyGoodSaleStatus(addGood.iid, 0).then(result => {
-                  hideLoading()
                   if (result.data.code == STATUS_CODE_SUCCESSE || result.data.code == STATUS_CODE_modifyGoodSaleStatus_SUCCESS) {
                     //售罄中
                     //拿到当前所在的分类的名字
@@ -841,10 +924,12 @@ Page({
                   } else {
                     totast('系统错误,商品信息修改失败,请重试', 1500)
                   }
+                  hideLoading()
                 })
               } else {
                 totast('系统错误,商品信息修改失败,请重试', 1500)
               }
+              hideLoading()
             })
           } else {
             loading('加载中')
@@ -853,9 +938,8 @@ Page({
               name: 'file',
               url: BASE_URL + API_URL_addOrModifyGoodPicture,
               success: res => {
-                hideLoading()
                 if (JSON.parse(res.data).code == STATUS_CODE_SUCCESSE || JSON.parse(res.data).code == STATUS_CODE_addOrModifyGoodPicture_SUCCESS) {
-                  this._modifyGoodInfo(addGood.introduce, addGood.iid, addGood.goodsName, addGood.price,standard, JSON.parse(res.data).data).then(res1 => {
+                  this._modifyGoodInfo(addGood.introduce, addGood.iid, addGood.goodsName, addGood.price, standard, JSON.parse(res.data).data).then(res1 => {
                     hideLoading()
                     if (res1.data.code == STATUS_CODE_SUCCESSE || res1.data.code == STATUS_CODE_modifyGoodInfo_SUCCESS) {
                       this._modifyGoodSaleStatus(addGood.iid, 0).then(res2 => {
@@ -900,6 +984,7 @@ Page({
                 } else {
                   totast('系统错误,商品信息修改失败,请重试', 1500)
                 }
+                hideLoading()
               },
               fail: res => {
                 hideLoading()
@@ -907,7 +992,7 @@ Page({
               }
             })
           }
-          
+
         }
       }
     }, 100)
@@ -927,24 +1012,24 @@ Page({
     } = e.currentTarget.dataset
     const {
       goodsName,
-        introduce,
-        price,
-        saled,
-        standard,
-        selling,
-        imageUrl,
-        iid
+      introduce,
+      price,
+      saled,
+      standard,
+      selling,
+      imageUrl,
+      iid
     } = this.data.list1[index].goods[itemindex]
-      addGood.addGoodName = goodsName
-      addGood.addGoodIntroduce = introduce
-      addGood.addGoodPrice = price
-      addGood.saled = saled
-      addGood.addGoodIndex2 = addGood.addGoodIndex = index
-      addGood.addGoodItemIndex = itemindex
-      addGood.standard = JSON.parse(JSON.stringify(standard))
-      addGood.selling = selling
-      addGood.addGoodImage = imageUrl
-      addGood.iid = iid
+    addGood.addGoodName = goodsName
+    addGood.addGoodIntroduce = introduce
+    addGood.addGoodPrice = price
+    addGood.saled = saled
+    addGood.addGoodIndex2 = addGood.addGoodIndex = index
+    addGood.addGoodItemIndex = itemindex
+    addGood.standard = JSON.parse(JSON.stringify(standard))
+    addGood.selling = selling
+    addGood.addGoodImage = imageUrl
+    addGood.iid = iid
     this.setData({
       addGood: this.data.addGood,
       list1CurrentModalType: 'list1'
@@ -979,9 +1064,9 @@ Page({
       imageUrl: this.data.addGood.addGoodImage
     }
     if (addGood.selling) {
-      this._modifyGoodSaleStatus(addGood.iid,1).then(res=>{
+      this._modifyGoodSaleStatus(addGood.iid, 1).then(res => {
         hideLoading()
-        if(res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyGoodSaleStatus_SUCCESS){
+        if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyGoodSaleStatus_SUCCESS) {
           const categoryName = this.data.list1[index].name
           let flag = this.data.list.findIndex(item => item.name == categoryName)
           if (flag == -1) {
@@ -1004,8 +1089,8 @@ Page({
             addGood: this.data.addGood,
             list1CurrentModalType: ''
           })
-        }else{
-          totast('系统错误,修正商品状态失败,请重试',1500)
+        } else {
+          totast('系统错误,修正商品状态失败,请重试', 1500)
         }
       })
     }
@@ -1057,8 +1142,9 @@ Page({
     } else {
       addGood.standard[index].type.splice(typeindex, 1)
     }
+    const temp = `addGood.standard`
     this.setData({
-      addGood: this.data.addGood
+      [temp]: this.data.addGood.standard
     })
   },
   editStandard(e) {
@@ -1077,6 +1163,7 @@ Page({
     let temp = `addGood.isStandardType`
     addGood.standardIndex = index
     addGood.standardTypeIndex = typeindex
+
     if (typeindex === undefined) {
       this.setData({
         inputValue: addGood.standard[index].title,
@@ -1108,13 +1195,41 @@ Page({
       standardIndex,
       standardTypeIndex
     } = addGood
-    if (standardTypeIndex === undefined) {
-      addGood.standard[standardIndex].title = inputValue
-    } else {
-      addGood.standard[standardIndex].type[standardTypeIndex].typeSaledMoney = inputValue1
-      addGood.standard[standardIndex].type[standardTypeIndex].typeName = inputValue
+    const testValue = inputValue
+    const testValue1 = inputValue1 + ''
+    for (const item of testValue.split('')) {
+      if(item == ' '){
+        totast('输入存在空格,请检查',2000)
+        return
+      }
     }
-    this.hideInputModal()
+    if(standardTypeIndex !== undefined){
+      for (const item of testValue1.split('')) {
+        if(item == ' '){
+          totast('输入存在空格,请检查',2000)
+          return
+        }
+      }
+    }
+    if (standardTypeIndex === undefined) {
+      if(this.data.RE.isMinToMaxLength(inputValue.trim(),1,10)){
+        addGood.standard[standardIndex].title = inputValue
+        this.hideInputModal()
+      }else{
+        totast('请输入1~10位中文或数字',2000)
+      }
+    } else {
+      if(this.data.RE.isMinToMaxLength(inputValue.trim(),1,10)){
+        addGood.standard[standardIndex].type[standardTypeIndex].typeName = inputValue
+        if(this.data.RE.isPositiveNumber(inputValue1.trim())){
+          addGood.standard[standardIndex].type[standardTypeIndex].typeSaledMoney = inputValue1
+          this.hideInputModal()
+        }
+      }else{
+        totast('请输入1~10位中文或数字',2000)
+      }
+      
+    }
   },
   addStandard() {
     /**
@@ -1147,7 +1262,7 @@ Page({
     } = e.currentTarget.dataset
     const type = {
       typeName: '请添加类型名称',
-      typeSaledMoney: 0
+      typeSaledMoney: '0'
     }
     addGood.standard[index].type.push(type)
     const temp = `addGood.standard`

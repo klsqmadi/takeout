@@ -121,16 +121,6 @@
         </view>
       </view>
     </view>
-    <!-- <view class="padding text-center margin-auto margin-top" style="width:140rpx;height:140rpx" wx:if="{{addGood.addGoodImage.length > 0}}">
-      <image src="{{addGood.addGoodImage[0]}}"></image>
-      <view class="cu-tag bg-red" bindtap="deleteImage" data-index="0">
-        <text class="cuIcon-close"></text>
-      </view>
-    </view>
-    <view class="solids padding text-center margin-auto margin-top" style="width:140rpx;height:140rpx" wx:if="{{addGood.addGoodImage.length == 0}}" bindtap="chooseImage">
-      <view class="cuIcon-cameraadd padding-top-xs" style="font-size:60rpx"></view>
-    </view> -->
-
     <view class="padding-xl" style="padding-top:0">
       <view class="cu-form-group" style="background:#f8f8f8;padding:0;font-size:26rpx">
         <view class="title">类型</view>
@@ -138,21 +128,20 @@
           <view class="picker">{{addGood.addGoodIndex?pickerRanges[addGood.addGoodIndex]:'选择商品类型'}}</view>
         </picker>
       </view>
-      <view class="flex">
+      <view class="flex padding-bottom-sm margin-bottom-sm align-center justify-between border-bottom" catchtap="showGoodAttributeModal" data-type="addGoodName">
         <view class="title margin-right-sm">名称</view>
-        <input type="text" class="flex-sub margin-right border-bottom padding-bottom-sm margin-bottom addGoodName"
-          value="{{addGood.addGoodName}}" style="height:1.6rem"></input>
+        <view class="flex-sub text-right">{{addGood.addGoodName}}</view>
+        <view class="text-grey text-right"><text class="cuIcon-right " style="font-size:34rpx"></text></view>
       </view>
-      <view class="flex">
+      <view class="flex padding-bottom-sm margin-bottom-sm align-center justify-between border-bottom" catchtap="showGoodAttributeModal" data-type="addGoodIntroduce">
         <view class="title margin-right-sm">介绍</view>
-        <input type="text" class="flex-sub margin-right border-bottom padding-bottom-sm margin-bottom addGoodIntroduce"
-          value="{{addGood.addGoodIntroduce}}" style="height:1.6rem"></input>
+        <view class="flex-sub text-right">{{addGood.addGoodIntroduce}}</view>
+        <view class="text-grey text-right"><text class="cuIcon-right " style="font-size:34rpx"></text></view>
       </view>
-      <view class="flex">
+      <view class="flex padding-bottom-sm margin-bottom-sm align-center justify-between border-bottom" catchtap="showGoodAttributeModal" data-type="addGoodPrice">
         <view class="title margin-right-sm">价格</view>
-        <input type="number" class="flex-sub margin-right border-bottom padding-bottom-sm addGoodPrice"
-          value="{{addGood.addGoodName}}" style="height:1.6rem;"></input>
-        <view class="text-grey">(均不超过15个字)</view>
+        <view class="flex-sub text-right">{{addGood.addGoodPrice}}</view>
+        <view class="text-grey text-right"><text class="cuIcon-right " style="font-size:34rpx"></text></view>
       </view>
     </view>
     <view class="padding-lr-xl padding-bottom">
@@ -209,21 +198,20 @@
           <view class="picker">{{addGood.addGoodIndex>= 0?pickerRanges[addGood.addGoodIndex]:'选择商品类型'}}</view>
         </picker>
       </view>
-      <view class="flex">
+      <view class="flex padding-bottom-sm margin-bottom-sm align-center justify-between border-bottom" catchtap="showGoodAttributeModal" data-type="addGoodName">
         <view class="title margin-right-sm">名称</view>
-        <input type="text" class="flex-sub margin-right border-bottom padding-bottom-sm margin-bottom editGoodName"
-          value="{{addGood.addGoodName}}" style="height:1.6rem"></input>
+        <view class="flex-sub text-right">{{addGood.addGoodName}}</view>
+        <view class="text-grey text-right"><text class="cuIcon-right " style="font-size:34rpx"></text></view>
       </view>
-      <view class="flex">
+      <view class="flex padding-bottom-sm margin-bottom-sm align-center justify-between border-bottom" catchtap="showGoodAttributeModal" data-type="addGoodIntroduce">
         <view class="title margin-right-sm">介绍</view>
-        <input type="text" class="flex-sub margin-right border-bottom padding-bottom-sm margin-bottom editGoodIntroduce"
-          value="{{addGood.addGoodIntroduce}}" style="height:1.6rem"></input>
+        <view class="flex-sub text-right">{{addGood.addGoodIntroduce}}</view>
+        <view class="text-grey text-right"><text class="cuIcon-right " style="font-size:34rpx"></text></view>
       </view>
-      <view class="flex">
+      <view class="flex padding-bottom-sm margin-bottom-sm align-center justify-between border-bottom" catchtap="showGoodAttributeModal" data-type="addGoodPrice">
         <view class="title margin-right-sm">价格</view>
-        <input type="number" class="flex-sub margin-right border-bottom padding-bottom-sm editGoodPrice"
-          value="{{addGood.addGoodPrice}}" style="height:1.6rem;"></input>
-        <view class="text-grey">(均不超过15个字)</view>
+        <view class="flex-sub text-right">{{addGood.addGoodPrice}}</view>
+        <view class="text-grey text-right"><text class="cuIcon-right " style="font-size:34rpx"></text></view>
       </view>
     </view>
     <view class="padding-lr-xl padding-bottom">
@@ -250,8 +238,23 @@
     </view>
   </view>
 </view>
-
-<view class="cu-modal {{showInputModal == 'inputModal'?'show':''}}" style="z-index:999999">
+<view class="cu-modal {{showInputModal == 'goodAttribute'?'show':''}}" style="z-index:99999">
+  <view class="cu-dialog">
+    <view class="padding">
+          <view class="margin-bottom text-center">{{goodAttributeTitle}}</view>
+          <view class="padding">
+            <input type="text" class="border-bottom padding-bottom-sm margin-bottom" value="{{goodInputValue}}"
+              style="height:1.6rem" bindinput="eventInput"></input>
+          </view>
+          <view class="flex">
+            <view class="flex-sub text-center text-grey" bindtap="hideGoodAttributeModal">取消</view>
+            <view class="flex-sub text-center text-blue" bindtap="confirmGoodAttribute">确定</view>
+          </view>
+        </view>
+  </view>
+</view>
+<!-- 规格编辑input模态框 -->
+<view class="cu-modal {{showInputModal == 'inputModal'?'show':''}}" style="z-index:99999">
   <view class="cu-dialog">
     <view class="padding text-center">
       <view class="margin-top solids-bottom padding-bottom-sm">
@@ -270,7 +273,7 @@
     </view>
   </view>
 </view>
-<view class="cu-modal {{showNoticeModal == 'noticeModal'?'show':''}}" style="z-index:999999">
+<view class="cu-modal {{showNoticeModal == 'noticeModal'?'show':''}}" style="z-index:99999">
   <view class="cu-dialog">
     <view class="padding margin-sm">
       {{noticeContent}}
@@ -280,6 +283,7 @@
     </view>
   </view>
 </view>
+<!-- 售罄编辑模态框 -->
 <view class="cu-modal {{list1CurrentModalType == 'list1'?'show':''}}">
   <view class="cu-dialog">
     <view class="padding">

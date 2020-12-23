@@ -17,5 +17,6 @@
   },
   "homepage": "https://github.com/klsqmadi/takeout#readme",
   "dependencies": {
+    "we-validator": "^2.1.14"
   }
 }

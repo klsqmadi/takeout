@@ -71,6 +71,14 @@ Page({
     currentModalType:''
   },
   async onLoad(){
+ 
+  },
+  onReady(){
+  },
+  async onShow(){
+    let token = wx.getStorageSync('token') || null
+    let id = wx.getStorageSync('id') || null
+    let shopId = wx.getStorageSync('shopId') || null
     if (!token && !id) {
       wx.redirectTo({
         url: '/pages/wxLogin/wxLogin',
@@ -79,53 +87,12 @@ Page({
         }
       })
     }
-  },
-  onReady(){
-  },
-  async onShow(){
     await this.initOrders()
     await this._getShopAllOrder()
     await this._getOrders('pendingOrders')
     await this._getOrders('pendingDelivered')
     await this._getOrders('pendingArrive')
     const {orders} = this.data
-    //eventBus  接受从orderDetail 在点击(接单或拒绝接单)按钮时的行为
-    //遍历order 找到与bus传过来的orderNumber匹配的item,更改item的orderState 同时删除在待接单的相同item
-    /* bus.on('acceptOrder',orderNumber=>{
-      for (const item of orders['all'].list) {
-        if(item.orderNumber == orderNumber){
-          item.orderState = '待发货'
-          orders['pendingDelivered'].list.unshift(JSON.parse(JSON.stringify(item)))
-          break
-        }
-      }
-      for (const [key,item] of orders['pendingOrders'].list.entries()) {
-        if(item.orderNumber == orderNumber){
-          orders['pendingOrders'].list.splice(key,1)
-          break
-        }
-      }
-      if(this.data.currentType != 'pendingDelivered'){
-        orders['pendingDelivered'].newsRedDot = true
-      }
-    })
-    bus.on('confirmRefuseOrder',orderNumber=>{
-      for (const item of orders['all'].list) {
-        if(item.orderNumber == orderNumber){
-          item.orderState = '拒绝接单'
-          break
-        }
-      }
-      for (const [key,item] of orders['pendingOrders'].list.entries()) {
-        if(item.orderNumber == orderNumber){
-          orders['pendingOrders'].list.splice(key,1)
-          break
-        }
-      }
-      if(this.data.currentType !== 'all'){
-        orders['all'].newsRedDot = true
-      }
-    }) */
     this.setData({
       orders:orders
     })
@@ -217,11 +184,14 @@ Page({
         })
     })
   },
+  onHide(){
+    bus.remove('orderDataChange')
+  },
   onReachBottom(){
     if(this.data.tabCurrentIndex == 0){
       const goods = this.data.orders['all']
       if(goods.totalPages > goods.page){
-        getShopAllOrder(goods.page + 1,10,shopId).then(res=>{
+        getShopAllOrder(goods.page + 1,10,wx.getStorageSync('shopId')).then(res=>{
           if(res.data.code == STATUS_CODE_getShopAllOrder_SUCCESS || res.data.code == STATUS_CODE_SUCCESSE){
             goods.page += 1;
             // this.data.orders['all'].list = []
@@ -295,6 +265,7 @@ Page({
 
   },
   _getOrders(type,size = 10){
+    let shopId = wx.getStorageSync('shopId')
     const arr = ['pendingOrders','pendingDelivered','pendingArrive'] 
     const goods = this.data.orders[type]
     const status = arr.indexOf(type)+1
@@ -364,7 +335,7 @@ Page({
   _getShopAllOrder(pageSize = 10){
     const goods = this.data.orders['all']
     const statusArray = ['待接单','待发货','待送达','交易完成','已退款']
-    getShopAllOrder(goods.page + 1,pageSize,shopId).then(res=>{
+    getShopAllOrder(goods.page + 1,pageSize,wx.getStorageSync('shopId')).then(res=>{
       if(res.data.code == STATUS_CODE_getShopAllOrder_SUCCESS || res.data.code == STATUS_CODE_SUCCESSE){
         goods.page += 1;
         goods.newsRedDot = false

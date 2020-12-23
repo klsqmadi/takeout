@@ -22,9 +22,6 @@
     </view>
     <view class="flex-sub text-right text-df  " wx:elif="{{item.orderState == '待接单'}}">
       <text class="text-red">{{item.orderState}}</text>
-      <text class="padding-lr-sm padding-tb-xs border radius margin-left-sm text-blue" bindtap="acceptOrder">接单</text>
-      <text class="padding-lr-sm padding-tb-xs border radius margin-left-sm text-red"
-        bindtap="refuseReceiveOrder">拒绝接单</text>
     </view>
     <view class="flex-sub text-right text-df  text-red" wx:elif="{{item.orderState == '拒绝接单'}}">{{item.orderState}}
     </view>
@@ -35,7 +32,7 @@
     <view class="flex-sub text-right text-df  text-red" wx:elif="{{item.orderState == '已退款'}}">{{item.orderState}}
     </view>
   </view>
-  <view class="flex margin-bottom solids-bottom padding-bottom justify-end">
+  <view class="flex margin-bottom solids-bottom padding-bottom justify-end" wx:if="{{item.orderState != '交易完成' || item.orderState == '订单异常'}}">
     <!-- <view class="margin-right text-lg" style="width:140rpx">操作</view> -->
     <view class="padding-lr padding-tb-xs border radius margin-left text-blue" wx:if="{{item.orderState == '待接单'}}" catchtap="acceptOrder" data-index="{{index}}">接单</view>
     <view class="padding-lr padding-tb-xs border radius margin-left text-red" wx:if="{{item.orderState == '待接单'}}" catchtap="refuseReceiveOrder" data-index="{{index}}">拒绝接单</view>
@@ -105,7 +102,7 @@
   </view>
   <view class="flex align-center">
     <view class="margin-right text-lg" style="width:140rpx">配送方式</view>
-    <view class="flex-sub text-right text-df text-grey">{{item.deliveredMethod}}</view>
+    <view class="flex-sub text-right text-df text-grey"><!-- {{item.deliveredMethod}} -->骑手配送</view>
   </view>
 </view>
 <view class="text-center text-grey padding-top-sm border-top text-sm margin-bottom">已经到底啦</view>

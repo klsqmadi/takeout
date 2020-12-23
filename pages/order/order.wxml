@@ -24,9 +24,9 @@
   </view>
 </view>
 <view>
-    <view class="padding-lr margin-top-sm flex justify-end ">
-      <view wx:if="{{orders[currentType].pleaseRefresh || orders[currentType].pleaseRefresh}}" class="margin-right-xl">有订单状态发送改变,请刷新获取...</view>
-      <view class="margin-left-xl cuIcon-refresh " style="font-size:40rpx" bindtap="refreshOrder" data-type='{{currentType}}'></view>
+    <view class="padding-lr margin-top-sm flex justify-center">
+      <view wx:if="{{orders[currentType].pleaseRefresh || orders[currentType].pleaseRefresh}}" class="text-center">有订单状态发送改变,请刷新获取...</view>
+      <view class="text-center pos-fix bg-gray" style="z-index:10;width:90rpx;height:90rpx;line-height:90rpx;right:40rpx;bottom:200rpx;border-radius:100%" bindtap="refreshOrder" data-type="{{currentType}}"><text class="cuIcon-refresh text-blue" style="font-size:40rpx;"></text></view>
     </view>
   <view class="bg-white padding-lr-lg padding-tb-sm margin-top-sm" wx:for="{{orders[currentType].list}}" wx:key="index" wx:for-item="item" catchtap="goToOrderDetail"  data-item="{{item}}">
     <!-- --- -->

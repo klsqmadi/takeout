@@ -16,11 +16,10 @@ import {
   API_URL_modifyShopInfo,
   STATUS_CODE_modifyShopInfo_SUCCESS
 } from '../../services/config'
+import {
+  RegExp
+} from '../../utils/RE'
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
     busLicense: '',
     pictureArray: [{
@@ -93,18 +92,19 @@ Page({
       storeIntroduce: '',
       phoneNumber: 1,
       schoolAddress: [],
-      shopType:[]
+      shopType: []
     },
     currentModalType: '',
     inputTitle: '',
     inputType: '',
     inputValue: '',
     showChangeButton: true,
-    schoolPickerRange: ['好大学', '啊实打实的撒', '的风格DVD发', '上的分歧日期', '陈晓旭插线板v插线板v出现', 'i我却日哦权威哦', ],
-    shopTypePickerRange:[],
-    path:''
+    schoolPickerRange: [],
+    shopTypePickerRange: [],
+    path: '',
   },
   onLoad() {
+    this.data.RE = new RegExp()
     this._getAllSchool()
     this._getShopType()
   },
@@ -114,68 +114,76 @@ Page({
     })
   },
   finallyConfirmAndupLoadFile() {
-    const {storeInfo} = this.data
+    const {
+      storeInfo
+    } = this.data
     let campusArray = []
     let shopTypeArray = []
-    for (const [key,item] of storeInfo.schoolAddress.entries()) {
-      campusArray.push(item.campusName)
-    }
-    for (const [key,item] of storeInfo.shopType.entries()) {
-      shopTypeArray.push(item.categoryName)
-    }
-    let schoolcampus = campusArray.join(',')
-    let shopType = shopTypeArray.join('')
-    loading('上传中')
-    wx.request({
-      url: BASE_URL + '/modifyShopInfo/initShopInfo',
-      method:'POST',
-      header:{
-        'Content-Type':'application/x-www-form-urlencoded'
-      },
-      data:{
-        campusAddress:schoolcampus,
-        contactPhone:storeInfo.phoneNumber,
-        detailAddress:storeInfo.storeAddress,
-        shopCategory:shopType,
-        shopHead:this.data.picturePath[5].url,
-        shopIntroduce:storeInfo.storeIntroduce,
-        shopName:storeInfo.storeName,
-        licenseUuid:this.data.path
-      },
-      success:res=>{
-        if(res.data.code == STATUS_CODE_SUCCESSE || res.data.code == 1204){
-          totast('提交成功,审核中',1500)
-          wx.switchTab({
-            url: '/pages/work/work',
-          })
-        }else{
-          totast('上传失败,请重试',1500)
-        }
-        hideLoading()
-      },
-      fail:res=>{
-        hideLoading()
-        totast('上传失败,请重试',1500)
+    if (storeInfo.storeName == '' || storeInfo.storeAddress == '' || storeInfo.storeIntroduce == '') {
+      totast('输入不许为空', 2000)
+    } else {
+      for (const [key, item] of storeInfo.schoolAddress.entries()) {
+        campusArray.push(item.campusName)
       }
-    })
+      for (const [key, item] of storeInfo.shopType.entries()) {
+        shopTypeArray.push(item.categoryName)
+      }
+      let schoolcampus = campusArray.join(',')
+      let shopType = shopTypeArray.join('')
+      loading('上传中')
+      wx.request({
+        url: BASE_URL + '/modifyShopInfo/initShopInfo',
+        method: 'POST',
+        header: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        data: {
+          campusAddress: schoolcampus,
+          contactPhone: storeInfo.phoneNumber,
+          detailAddress: storeInfo.storeAddress,
+          shopCategory: shopType,
+          shopHead: this.data.picturePath[5].url,
+          shopIntroduce: storeInfo.storeIntroduce,
+          shopName: storeInfo.storeName,
+          licenseUuid: this.data.path,
+          businessId: wx.getStorageSync('id')
+        },
+        success: res => {
+          if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == 1204) {
+            totast('提交成功', 1500)
+            wx.redirectTo({
+              url: '/pages/registerFail/registerFail?shopFlag=3',
+            })
+          } else {
+            totast('上传失败,请重试', 3000)
+          }
+          hideLoading()
+        },
+        fail: res => {
+          hideLoading()
+          totast('上传失败,请重试', 3000)
+        }
+      })
+
+    }
   },
-  _getShopType(){
+  _getShopType() {
     loading('加载中')
     wx.request({
       url: BASE_URL + API_URL_getShopType,
-      success:res=>{
-        if(res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getShopType_SUCCESS){
+      success: res => {
+        if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getShopType_SUCCESS) {
           this.setData({
-            shopTypePickerRange:res.data.data
+            shopTypePickerRange: res.data.data
           })
-        }else{
-          totast('加载失败,请重试',1500)
+        } else {
+          totast('加载失败,请重试', 1500)
         }
         hideLoading()
       },
-      fail:res=>{
+      fail: res => {
         hideLoading()
-        totast('加载失败,请重试',1500)
+        totast('加载失败,请重试', 1500)
       }
     })
   },
@@ -184,6 +192,7 @@ Page({
     wx.request({
       url: BASE_URL + API_URL_getAllSchool,
       success: res => {
+        console.log(res);
         if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getAllSchool_SUCCESS) {
           this.setData({
             schoolPickerRange: res.data.data
@@ -226,7 +235,7 @@ Page({
       }
     }
     if (t == this.data.pictureArray.length) {
-      this.firstNext(e,0)
+      this.firstNext(e, 0)
     }
   },
   firstNext(e, index1) {
@@ -254,32 +263,32 @@ Page({
             loading('加载中')
             wx.request({
               url: BASE_URL + API_URL_modifyShopLicense,
-              method:'POST',
-              header:{
-                'Content-Type':'application/x-www-form-urlencoded'
+              method: 'POST',
+              header: {
+                'Content-Type': 'application/x-www-form-urlencoded'
               },
-              data:{
-                busLicense:this.data.picturePath[0].url,
-                cardBack:this.data.picturePath[2].url,
-                cardFront:this.data.picturePath[1].url,
-                restLicense:this.data.picturePath[3].url,
-                shopIn:this.data.picturePath[4].url,
-                shopOut:this.data.picturePath[5].url,
+              data: {
+                busLicense: this.data.picturePath[0].url,
+                cardBack: this.data.picturePath[2].url,
+                cardFront: this.data.picturePath[1].url,
+                restLicense: this.data.picturePath[3].url,
+                shopIn: this.data.picturePath[4].url,
+                shopOut: this.data.picturePath[5].url,
               },
-              success:res=>{
-                if(res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyShopLicense_SUCCESS){
-                  hideLoading()
+              success: res => {
+                if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyShopLicense_SUCCESS) {
                   this.setData({
-                    path:res.data.data,
+                    path: res.data.data,
                     showPicture: false
                   })
-                }else{
-                  totast('上传图片失败,请重试',1500)
+                } else {
+                  totast('上传图片失败,请重试', 3000)
                 }
-              },
-              fail:res=>{
                 hideLoading()
-                totast('上传图片失败,请重试',1500)
+              },
+              fail: res => {
+                hideLoading()
+                totast('上传图片失败,请重试', 3000)
               }
             })
           } else {
@@ -287,16 +296,17 @@ Page({
           }
         } else {
           hideLoading()
-          totast('上传失败,请重试', 1000)
+          totast('上传失败,请重试', 3000)
         }
+        // hideLoading()
       },
       fail: res => {
         hideLoading()
-        totast('上传失败,请重试', 1000)
+        totast('上传失败,请重试', 3000)
       }
     })
   },
-  showModal(e, currentModalType){
+  showModal(e, currentModalType) {
     currentModalType = currentModalType || e.currentTarget.dataset.currentmodaltype
     this.setData({
       currentModalType: currentModalType,
@@ -328,11 +338,34 @@ Page({
       inputType,
       inputValue
     } = this.data
+    const testValue = inputValue
     const storeInfo = `storeInfo.${inputType}`
-    this.setData({
-      [storeInfo]: inputValue,
-    })
-    this.hideModal()
+    let flag = 0
+    for (const item of testValue.split('')) {
+      if(item == ' '){
+        totast('输入存在空格,请检查',2000)
+        return 
+      }
+    }
+    if (inputType == 'phoneNumber') {
+      if (this.data.RE.isMobile(inputValue.trim())) {
+        flag = 1
+      } else {
+        totast('请输入正确的手机号码', 1500)
+      }
+    } else {
+      if (this.data.RE.isMinToMaxLength(inputValue.trim(),2,30)) {
+        flag = 1
+      } else {
+        totast('请输入长度2~30的中文或数字', 2000)
+      }
+    }
+    if (flag) {
+      this.setData({
+        [storeInfo]: inputValue,
+      })
+      this.hideModal()
+    }
   },
   deleteSchoolAddress(e) {
     const {
@@ -369,12 +402,12 @@ Page({
       currentModalType: 'schoolAddress'
     })
   },
-  showShopType(e){
+  showShopType(e) {
     this.setData({
       currentModalType: 'shopType'
     })
   },
-  addShopType(e){
+  addShopType(e) {
     const {
       index
     } = e.currentTarget.dataset
@@ -382,9 +415,9 @@ Page({
       storeInfo,
       shopTypePickerRange
     } = this.data
-    if(storeInfo.shopType.length >= 2){
-      totast('最多选择2个分类',1000)
-    }else{
+    if (storeInfo.shopType.length >= 2) {
+      totast('最多选择2个分类', 1000)
+    } else {
       storeInfo.shopType.push(shopTypePickerRange[index])
       shopTypePickerRange.splice(index, 1)
       this.setData({
@@ -393,7 +426,7 @@ Page({
       })
     }
   },
-  deleteShopType(e){
+  deleteShopType(e) {
     const {
       index
     } = e.currentTarget.dataset

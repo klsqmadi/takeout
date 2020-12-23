@@ -10,6 +10,7 @@ import {
   API_URL_deleteGoods,  
   API_URL_modifyGoodSaleStatus,
   API_URL_modifyGoodInfo,
+  API_URL_getShopRegisterInfo,
   /*凯悦的接口 */
   API_URL_getShopWorkInfo1,
 } from './config'
@@ -110,6 +111,13 @@ export function getShopWorkInfo1(shopId){
       shopId
     }
   })
+}
+
+export function getShopRegisterInfo(){
+  return request({
+    url:API_URL_getShopRegisterInfo,
+    method:'POST'
+  },'application/x-www-form-urlencoded')
 }
 
 
