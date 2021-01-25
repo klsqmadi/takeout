@@ -119,44 +119,46 @@ Page({
     //将list里的类名收集
     await this._getCategoryAndGoodsInfo(1).then(res => {
       loading('加载中')
-      if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getCategoryAndGoodsInfo_SUCCESS) {
-        for (const item of res.data.data) {
-          const category = {
-            name: item.categoryName,
-            id: item.categoryId,
-            goods: []
-          }
-          for (const goodItem of item.dates) {
-            const good = {
-              imageUrl: BASE_URL + '/' + goodItem.commodityPhoto,
-              goodsName: goodItem.commodityName,
-              price: goodItem.commodityPrice,
-              iid: goodItem.commodityId,
-              introduce: goodItem.commodityDetail,
-              selling: goodItem.saleStatus == 1 ? true : false,
-              isChecked: false,
-              saled: 0,
-              standard: []
+      if (res && (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getCategoryAndGoodsInfo_SUCCESS) ){
+        if(res.data.data){
+          for (const item of res.data.data) {
+            const category = {
+              name: item.categoryName,
+              id: item.categoryId,
+              goods: []
             }
-            for (const specs of goodItem.specs) {
-              const standard = {
-                title: specs.specName,
-                standardId: specs.specId,
-                type: []
+            for (const goodItem of item.dates) {
+              const good = {
+                imageUrl: BASE_URL + '/' + goodItem.commodityPhoto,
+                goodsName: goodItem.commodityName,
+                price: goodItem.commodityPrice,
+                iid: goodItem.commodityId,
+                introduce: goodItem.commodityDetail,
+                selling: goodItem.saleStatus == 1 ? true : false,
+                isChecked: false,
+                saled: 0,
+                standard: []
               }
-              for (const attributes of specs.attributes) {
-                const type = {
-                  typeId: attributes.attributeId,
-                  typeName: attributes.attributeName,
-                  typeSaledMoney: attributes.attributePrice || 0
+              for (const specs of goodItem.specs) {
+                const standard = {
+                  title: specs.specName,
+                  standardId: specs.specId,
+                  type: []
                 }
-                standard.type.push(type)
+                for (const attributes of specs.attributes) {
+                  const type = {
+                    typeId: attributes.attributeId,
+                    typeName: attributes.attributeName,
+                    typeSaledMoney: attributes.attributePrice || 0
+                  }
+                  standard.type.push(type)
+                }
+                good.standard.push(standard)
               }
-              good.standard.push(standard)
+              category.goods.push(good)
             }
-            category.goods.push(good)
+            list.push(category)
           }
-          list.push(category)
         }
       } else {
         totast('系统错误,商品信息获取事变', 1500)
@@ -165,44 +167,46 @@ Page({
     })
     await this._getCategoryAndGoodsInfo(0).then(res => {
       loading('加载中')
-      if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getCategoryAndGoodsInfo_SUCCESS) {
-        for (const item of res.data.data) {
-          const category = {
-            name: item.categoryName,
-            id: item.categoryId,
-            goods: []
-          }
-          for (const goodItem of item.dates) {
-            const good = {
-              imageUrl: BASE_URL + '/' + goodItem.commodityPhoto,
-              goodsName: goodItem.commodityName,
-              price: goodItem.commodityPrice,
-              iid: goodItem.commodityId,
-              introduce: goodItem.commodityDetail,
-              selling: goodItem.saleStatus == 1 ? true : false,
-              isChecked: false,
-              saled: 0,
-              standard: []
+      if (res && (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getCategoryAndGoodsInfo_SUCCESS) ){
+        if(res.data.data){
+          for (const item of res.data.data) {
+            const category = {
+              name: item.categoryName,
+              id: item.categoryId,
+              goods: []
             }
-            for (const specs of goodItem.specs) {
-              const standard = {
-                title: specs.specName,
-                standardId: specs.specId,
-                type: []
+            for (const goodItem of item.dates) {
+              const good = {
+                imageUrl: BASE_URL + '/' + goodItem.commodityPhoto,
+                goodsName: goodItem.commodityName,
+                price: goodItem.commodityPrice,
+                iid: goodItem.commodityId,
+                introduce: goodItem.commodityDetail,
+                selling: goodItem.saleStatus == 1 ? true : false,
+                isChecked: false,
+                saled: 0,
+                standard: []
               }
-              for (const attributes of specs.attributes) {
-                const type = {
-                  typeId: attributes.attributeId,
-                  typeName: attributes.attributeName,
-                  typeSaledMoney: attributes.attributePrice || 0
+              for (const specs of goodItem.specs) {
+                const standard = {
+                  title: specs.specName,
+                  standardId: specs.specId,
+                  type: []
                 }
-                standard.type.push(type)
+                for (const attributes of specs.attributes) {
+                  const type = {
+                    typeId: attributes.attributeId,
+                    typeName: attributes.attributeName,
+                    typeSaledMoney: attributes.attributePrice || 0
+                  }
+                  standard.type.push(type)
+                }
+                good.standard.push(standard)
               }
-              good.standard.push(standard)
+              category.goods.push(good)
             }
-            category.goods.push(good)
+            list1.push(category)
           }
-          list1.push(category)
         }
       } else {
         totast('系统错误,商品信息获取事变', 1500)
@@ -218,7 +222,7 @@ Page({
   onReady() {
   },
   onShow() {
-    let token = wx.getStorageSync('token') || null
+    /* let token = wx.getStorageSync('token') || null
     let id = wx.getStorageSync('id') || null
     if (!token && !id) {
       wx.redirectTo({
@@ -227,7 +231,7 @@ Page({
           console.log(res);
         }
       })
-    }
+    } */
   },
   _getCategoryAndGoodsInfo(saleStatus) {
     loading('加载中')
@@ -631,9 +635,9 @@ Page({
           name: 'file',
           url: BASE_URL + API_URL_addOrModifyGoodPicture,
           success: res => {
-            if (JSON.parse(res.data).code == STATUS_CODE_SUCCESSE || JSON.parse(res.data).code == STATUS_CODE_addOrModifyGoodPicture_SUCCESS) {
+            if (res && (JSON.parse(res.data).code == STATUS_CODE_SUCCESSE || JSON.parse(res.data).code == STATUS_CODE_addOrModifyGoodPicture_SUCCESS) ){
               this._addGood(commodityInfoQuery.categoryId, commodityInfoQuery.commodityDetail, commodityInfoQuery.commodityName, JSON.parse(res.data).data, commodityInfoQuery.price, commodityInfoQuery.specs).then(result => {
-                if (result.data.code == STATUS_CODE_SUCCESSE || result.data.code == STATUS_CODE_addGood_SUCCESS) {
+                if (result && (result.data.code == STATUS_CODE_SUCCESSE || result.data.code == STATUS_CODE_addGood_SUCCESS) ){
                   addGood.iid = result.data.data
                   this.data.list[addGoodIndex].goods.push(addGood)
                   this.clearthisDataAddGood()
@@ -822,7 +826,7 @@ Page({
           //判断是否更改了图片,是否需要调上传图片接口
           if (this.data.list[index2].goods[itemIndex].imageUrl == addGood.imageUrl) {
             this._modifyGoodInfo(addGood.introduce, addGood.iid, addGood.goodsName, addGood.price, standard).then(res => {
-              if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyGoodInfo_SUCCESS) {
+              if (res && (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyGoodInfo_SUCCESS) ){
                 //在出售中
                 //判断是否从原本所在的类切换到其他分类,相等即说明index相对第一次获取到的index2没有改变,即没有切换分类
                 if (index == index2) {
@@ -852,9 +856,9 @@ Page({
               name: 'file',
               url: BASE_URL + API_URL_addOrModifyGoodPicture,
               success: res => {
-                if (JSON.parse(res.data).code == STATUS_CODE_SUCCESSE || JSON.parse(res.data).code == STATUS_CODE_addOrModifyGoodPicture_SUCCESS) {
+                if (res && (JSON.parse(res.data).code == STATUS_CODE_SUCCESSE || JSON.parse(res.data).code == STATUS_CODE_addOrModifyGoodPicture_SUCCESS) ){
                   this._modifyGoodInfo(addGood.introduce, addGood.iid, addGood.goodsName, addGood.price, standard, JSON.parse(res.data).data).then(result => {
-                    if (result.data.code == STATUS_CODE_SUCCESSE || result.data.code == STATUS_CODE_modifyGoodInfo_SUCCESS) {
+                    if (result && (result.data.code == STATUS_CODE_SUCCESSE || result.data.code == STATUS_CODE_modifyGoodInfo_SUCCESS) ){
                       if (index == index2) {
                         //没有切换分类,拿到itemIndex,将对应的商品直接用addGood覆盖
                         this.data.list[index].goods[itemIndex] = addGood
@@ -889,9 +893,9 @@ Page({
         } else {
           if (this.data.list[index2].goods[itemIndex].imageUrl == addGood.imageUrl) {
             this._modifyGoodInfo(addGood.introduce, addGood.iid, addGood.goodsName, addGood.price, standard).then(res => {
-              if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyGoodInfo_SUCCESS) {
+              if (res && (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyGoodInfo_SUCCESS) ){
                 this._modifyGoodSaleStatus(addGood.iid, 0).then(result => {
-                  if (result.data.code == STATUS_CODE_SUCCESSE || result.data.code == STATUS_CODE_modifyGoodSaleStatus_SUCCESS) {
+                  if (result && (result.data.code == STATUS_CODE_SUCCESSE || result.data.code == STATUS_CODE_modifyGoodSaleStatus_SUCCESS) ){
                     //售罄中
                     //拿到当前所在的分类的名字
                     const categoryName = this.data.list[index].name
@@ -1065,8 +1069,8 @@ Page({
     }
     if (addGood.selling) {
       this._modifyGoodSaleStatus(addGood.iid, 1).then(res => {
-        hideLoading()
-        if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyGoodSaleStatus_SUCCESS) {
+        
+        if (res && (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyGoodSaleStatus_SUCCESS) ){
           const categoryName = this.data.list1[index].name
           let flag = this.data.list.findIndex(item => item.name == categoryName)
           if (flag == -1) {
@@ -1091,7 +1095,8 @@ Page({
           })
         } else {
           totast('系统错误,修正商品状态失败,请重试', 1500)
-        }
+        
+        }hideLoading()
       })
     }
   },
@@ -1224,6 +1229,8 @@ Page({
         if(this.data.RE.isPositiveNumber(inputValue1.trim())){
           addGood.standard[standardIndex].type[standardTypeIndex].typeSaledMoney = inputValue1
           this.hideInputModal()
+        }else{
+          totast('请输入正确且至多小数点后两位的数字',2000)
         }
       }else{
         totast('请输入1~10位中文或数字',2000)

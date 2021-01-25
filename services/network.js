@@ -13,6 +13,7 @@ export default function (option, headerContentType) {
       let TOKEN = wx.getStorageSync('token') || null
       let Bid = wx.getStorageSync('id') || null
       if (!TOKEN || !Bid) {
+        hideLoading()
         wx.redirectTo({
           url: '/pages/wxLogin/wxLogin',
         })

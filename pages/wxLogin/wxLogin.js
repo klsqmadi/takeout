@@ -26,9 +26,12 @@ Page({
     wx.login({
       timeout: 1000,
       success:wxloginRes=>{
-        this.setData({
-          code:wxloginRes.code
-        })
+        if(wxloginRes){
+          this.setData({
+            code:wxloginRes.code
+          })
+
+        }
       },
       fail:res=>{
         this.login()
@@ -52,10 +55,10 @@ Page({
                 iv: res.detail.iv
               },
               success: apiRes => {
-                if (apiRes.data.code == STATUS_CODE_SUCCESSE || apiRes.data.code == STATUS_CODE_loginShop_SUCCESS) {
+                if (apiRes && (apiRes.data.code == STATUS_CODE_SUCCESSE || apiRes.data.code == STATUS_CODE_loginShop_SUCCESS) ){
                   wx.setStorageSync('id',apiRes.data.data.businessId)
                   wx.setStorageSync('token',apiRes.data.data.businessToken)
-                  wx.setStorageSync('shopId',apiRes.data.data.shopId)
+                  if(apiRes.data.data.shopId) wx.setStorageSync('shopId',apiRes.data.data.shopId)
                   // wx.setStorageSync('isRegister', apiRes.data.data.isRegister)
                   if(apiRes.data.data.isRegister == 1){
                     app.wsConnect()

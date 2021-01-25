@@ -90,7 +90,7 @@ Page({
       storeName: '',
       storeAddress: '',
       storeIntroduce: '',
-      phoneNumber: 1,
+      phoneNumber: '',
       schoolAddress: [],
       shopType: []
     },
@@ -119,7 +119,7 @@ Page({
     } = this.data
     let campusArray = []
     let shopTypeArray = []
-    if (storeInfo.storeName == '' || storeInfo.storeAddress == '' || storeInfo.storeIntroduce == '') {
+    if (storeInfo.storeName == '' || storeInfo.storeAddress == '' || storeInfo.storeIntroduce == '' || storeInfo.phoneNumber == ''||storeInfo.schoolAddress[0] == undefined || storeInfo.shopType[0] == undefined) {
       totast('输入不许为空', 2000)
     } else {
       for (const [key, item] of storeInfo.schoolAddress.entries()) {
@@ -149,7 +149,7 @@ Page({
           businessId: wx.getStorageSync('id')
         },
         success: res => {
-          if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == 1204) {
+          if (res && (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == 1204) ){
             totast('提交成功', 1500)
             wx.redirectTo({
               url: '/pages/registerFail/registerFail?shopFlag=3',
@@ -172,7 +172,7 @@ Page({
     wx.request({
       url: BASE_URL + API_URL_getShopType,
       success: res => {
-        if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getShopType_SUCCESS) {
+        if (res && (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getShopType_SUCCESS) ){
           this.setData({
             shopTypePickerRange: res.data.data
           })
@@ -192,8 +192,7 @@ Page({
     wx.request({
       url: BASE_URL + API_URL_getAllSchool,
       success: res => {
-        console.log(res);
-        if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getAllSchool_SUCCESS) {
+        if (res && (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getAllSchool_SUCCESS) ){
           this.setData({
             schoolPickerRange: res.data.data
           })
@@ -253,7 +252,7 @@ Page({
       },
       success: res => {
         res = JSON.parse(res.data)
-        if (res.code == STATUS_CODE_SUCCESSE || res.code == STATUS_CODE_addOrModifyGoodPicture_SUCCESS) {
+        if (res.code == STATUS_CODE_SUCCESSE || res.code == STATUS_CODE_addOrModifyGoodPicture_SUCCESS){
           const temp = `picturePath[${index}].url`
           index++
           this.setData({
@@ -276,7 +275,7 @@ Page({
                 shopOut: this.data.picturePath[5].url,
               },
               success: res => {
-                if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyShopLicense_SUCCESS) {
+                if (res && (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyShopLicense_SUCCESS) ){
                   this.setData({
                     path: res.data.data,
                     showPicture: false

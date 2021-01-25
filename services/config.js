@@ -23,7 +23,7 @@ export function totast(text,timeout=1500,icon='none'){
 
 /* export const BASE_URL = 'http://175.24.113.119:8081' */ //泽强的服务器
 /* export const BASE_URL = 'http://121.41.229.2:8081' */
-// export const BASE_URL = 'https://192.168.1.107:8888'
+// export const BASE_URL = 'https://192.168.1.105:8888'
 export const BASE_URL = 'https://www.lizeqiang.top:8888'
 // export const BASE_URL = 'https://192.168.1.103:8888'
 
@@ -60,13 +60,18 @@ export const STATUS_CODE_getShopRegisterInfo_SUCCES = 1200
 
 //凯悦的状态
 export const STATUS_CODE_getShopWorkInfo1_SUCCESS = 3208
+export const STATUS_CODE_getShopWorkInfo2_SUCCESS = 1200
 export const STATUS_CODE_getOrders_SUCCES = 3203
 export const STATUS_CODE_getHadNewShopOrder_SUCCESS = 3209
 export const STATUS_CODE_getShopAllOrder_SUCCESS = 3203
 export const STATUS_CODE_modifyOrderStatus_SUCCES = 3255
+export const STATUS_CODE_modifyOrderStatus_deliveryGoods_SUCCESS = 3210
+export const STATUS_CODE_getSaleHistory_SUCCESS = 3207
+export const STATUS_CODE_getOrderHistory_SUCCESS = 3203
 
 // 东龙的状态
 export const STATUS_CODE_getAllSchool_SUCCESS = 3200
+export const STATUS_CODE_refundMoneyToWX_SUCCESS = 3200
 /**
  * api 名称
  */
@@ -99,11 +104,16 @@ export const API_URL_deleteGoods = '/modifyCommodity/deleteCommodity'
 // 凯悦的接口
 
 export const API_URL_getShopWorkInfo1 = '/data/getStatisticalData'
+export const API_URL_getShopWorkInfo2 = '/getShopInfo/shopIdGetCount'
 export const API_URL_getOrders = '/order/getShopOrderByStatus'
 export const API_URL_getHadNewShopOrder = '/order/hadNewShopOrder'
 // export const API_URL_getShopAllOrder = '/order/selectTotalShopOrder'
 export const API_URL_getShopAllOrder = '/order/selectTotalShopOrder'
 export const API_URL_modifyOrderStatus = '/order/updateOrderStatus'
-
+export const API_URL_modifyOrderStatus_deliveryGoods = '/order/deliveryGoods'
+export const API_URL_getSaleHistory = '/data/getSaleHistory'
+export const API_URL_getOrderHistory = '/order/selectShopOrderHistory'
 // 东龙的接口
 export const API_URL_getAllSchool = '/campus/selectAllCampusName'
+export const API_URL_refundMoneyToWX = '/wechatpay/refund'
+export const API_URL_oncePaySharing = '/wechatpay/oncePaySharing'

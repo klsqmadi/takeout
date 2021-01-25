@@ -7,23 +7,23 @@
   <view class="padding-sm margin-bottom-xs flex align-center bg-white" wx:for="{{category}}" wx:key="index">
     <view class="flex-sub">{{item.category}}</view>
     <button class="text-sm margin-right-sm text-black padding-0 text-center"
-      style="width:100rpx;height:50rpx;line-height:50rpx;border:3.5rpx solid #F1F1F1" bindtap="showModal" data-index="{{index}}" data-currentModalType="{{modalName[1]}}">删除</button>
+      style="width:100rpx;height:50rpx;line-height:50rpx;border:3.5rpx solid #F1F1F1" bindtap="showDeleteModal" data-index="{{index}}">删除</button>
     <button class=" text-sm text-blue padding-0 text-center"
-      style="width:100rpx;height:50rpx;line-height:50rpx;border:3.5rpx solid #1195DD" bindtap="showModal" data-index="{{index}}" data-currentModalType="{{modalName[0]}}">编辑</button>
+      style="width:100rpx;height:50rpx;line-height:50rpx;border:3.5rpx solid #1195DD" bindtap="showEditModal" data-index="{{index}}">编辑</button>
     <!-- <button class="cu-btn margin-right-sm bg-red" style="border:none">删除</button>s
     <button class="cu-btn bg-blue-1 " bindtap="showModal">编辑</button> -->
   </view>
   <view class="bg-white padding-sm margin-bottom-xs of-hid">
     <view class="text-sm margin-right-sm text-blue radius text-center fr"
-      style="width:150rpx;height:50rpx;line-height:50rpx;border:3.6rpx solid #1195DD" bindtap="showModal" data-currentModalType="{{modalName[2]}}">新增分类</view>
+      style="width:150rpx;height:50rpx;line-height:50rpx;border:3.6rpx solid #1195DD" bindtap="showAddModal">新增分类</view>
   </view>
 </view>
 <!-- 编辑模态框 -->
 <view class="cu-modal {{currentModalType == 'edit'?'show':''}}">
   <view class="cu-dialog">
     <view class="padding margin">
-      <input type="text" class="solids input" style="height:80rpx;line-height:80rpx" value="{{modal[currentModalType].inputValue}}"
-        bindinput="input"></input>
+      <input type="text" class="solids input" style="height:80rpx;line-height:80rpx" value="{{inputValue}}"
+        bindinput="eventInput"></input>
     </view>
     <view class="flex padding-tb-sm">
       <view class="flex-sub " bindtap="hideModal">取消</view>
@@ -49,8 +49,8 @@
 <view class="cu-modal {{currentModalType == 'add'?'show':''}}">
   <view class="cu-dialog">
     <view class="padding margin">
-      <input type="text" class="solids input" style="height:80rpx;line-height:80rpx" value="{{modal[currentModalType].inputValue}}"
-        bindinput="input"></input>
+      <input type="text" class="solids input" style="height:80rpx;line-height:80rpx" value="{{inputValue}}"
+      bindinput="eventInput"></input>
     </view>
     <view class="flex padding-tb-sm">
       <view class="flex-sub " bindtap="hideModal">取消</view>

@@ -40,7 +40,7 @@
   },
   "compileType": "miniprogram",
   "libVersion": "2.13.1",
-  "appid": "wxb2dfbd203ddd200f",
+  "appid": "wx1db69e7d9603cc38",
   "projectname": "takeout",
   "debugOptions": {
     "hidedInDevtools": []
@@ -104,8 +104,8 @@
           "scene": null
         },
         {
-          "name": "cash",
-          "pathName": "subPages/work/takeCash/takeCash",
+          "name": "history",
+          "pathName": "subPages/work/orderHistory/orderHistory",
           "query": "",
           "scene": null
         },
@@ -136,6 +136,7 @@
         {
           "name": "pages/shopRegister/shopRegister",
           "pathName": "pages/shopRegister/shopRegister",
+          "query": "",
           "scene": null
         }
       ]

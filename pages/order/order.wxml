@@ -39,16 +39,20 @@
         <view class="text-blue" wx:if="{{item.orderState == '交易完成'}}">{{item.orderState}}</view>
         <view class="text-red" wx:elif="{{item.orderState == '待接单'}}">{{item.orderState}}</view>
         <view class="text-red" wx:elif="{{item.orderState == '拒绝接单'}}">{{item.orderState}}</view>
-        <view class="text-yellow" wx:elif="{{item.orderState == '待发货'}}">{{item.orderState}}</view>
-        <view class="text-green" wx:elif="{{item.orderState == '待送达'}}">{{item.orderState}}</view>
+        <view class="text-yellow" wx:elif="{{item.deliveryAddress == null}}">到店自取</view>
+        <view class="text-yellow" wx:elif="{{item.riderId && item.status == 6}}">待骑手取货</view>
+        <view class="text-blue" wx:elif="{{item.status == 2 && item.isDelivered == 0 && item.isReserved}}">待商家发货</view>
+        <view class="text-yellow" wx:elif="{{item.status == 2 && item.isDelivered == 1 && item.deliveryAddress != null }}">待骑手抢单</view>
+        <view class="text-black" wx:elif="{{item.status == 3 && !item.riderId}}">待商家送达</view>
+        <view class="text-green" wx:elif="{{item.status == 3 && item.riderId}}">待骑手送达</view>
         <view class="text-red" wx:elif="{{item.orderState == '已退款'}}">{{item.orderState}}</view>
-        <view class="text-red" wx:else>{{item.orderState}}</view>
+        <view class="text-red" wx:else>订单异常</view>
         <view class="text-gray">{{item.orderNumber}}</view>
       </view>
     </view>
     <!-- --- -->
     <view class="flex margin-top-sm solids-bottom padding-bottom-sm">
-      <view class="bg-black margin-right-sm radius" style="width:150rpx;height:150rpx"></view>
+      <image src="{{item.picSrc}}" class="bg-black margin-right-sm radius" style="width:150rpx;height:150rpx"></image>
       <view class="flex-sub of-hid text-sm" style="height:150rpx;font-weight:100rpx">
         <view class="flex justify-between align-center" style="height:calc(150rpx / 4)" wx:for="{{item.items}}" wx:key="index" wx:for-item="iItem">
           <view class="text-darkGray text-cut" style="width:60%">{{iItem.goodsName}}</view>
@@ -67,15 +71,22 @@
         <view>(含配送费${{item.freight}})</view>
       </view>
     <!-- --- -->
-    <view class="flex justify-end margin-top-sm">
+    <view class="flex justify-end margin-top-sm flex-wrap status-btn">
       <view class="padding-lr padding-tb-xs " wx:if="{{item.deliveryAddress == null}}"><text class="cuIcon-warn text-yellow margin-right-sm" ></text><text class="text-yellow">自取</text></view>
       <view class="padding-lr padding-tb-xs " wx:if="{{item.isReserved}}"><text class="cuIcon-warn text-blue margin-right-sm" ></text><text class="text-blue">预定</text></view>
-      <view class="padding-lr padding-tb-xs border radius margin-left text-blue" wx:if="{{item.isReserved && item.orderState == '待发货'}}" catchtap="shopSend" data-index="{{index}}">发货</view>
-      <view class="padding-lr padding-tb-xs border radius margin-left text-blue" wx:if="{{item.orderState == '待接单'}}" catchtap="acceptOrder" data-index="{{index}}">接单</view>
-      <view class="padding-lr padding-tb-xs border radius margin-left text-red" wx:if="{{item.orderState == '待接单'}}" catchtap="refuseReceiveOrder" data-index="{{index}}">拒绝接单</view>
-      <view class="padding-lr padding-tb-xs border radius margin-left text-red" wx:if="{{item.orderState == '待发货' || item.orderState == '待送达'}}" catchtap="refund" data-index="{{index}}">退款</view>
-      <view class="padding-lr padding-tb-xs border radius margin-left text-green" wx:if="{{item.orderState == '待发货'}}" catchtap="completeOrder" data-index="{{index}}">订单完成</view>
+      <view class="padding-lr padding-tb-xs border radius margin-left text-blue" wx:if="{{item.isDelivered == 0 && item.deliveryAddress != null && item.isReserved && item.orderState == '待发货'}}" catchtap="shopSend" data-index="{{index}}">发货</view>
+      <view class="padding-lr padding-tb-xs border radius margin-left text-blue" wx:if="{{item.status == 1}}" catchtap="acceptOrder" data-index="{{index}}">接单</view>
+      <view class="padding-lr padding-tb-xs border radius margin-left text-red" wx:if="{{item.status == 1}}" catchtap="refuseReceiveOrder" data-index="{{index}}">拒绝接单</view>
+      <view class="padding-lr padding-tb-xs border radius margin-left text-red" wx:if="{{(item.orderState == '待发货'&& !item.riderId)}}" catchtap="refund" data-index="{{index}}">退款</view>
+      <view class="padding-lr padding-tb-xs border radius margin-left text-green" wx:if="{{(item.status == 3 && (item.riderId == null || item.riderId == '')) || (item.deliveryAddress == null && item.status == 2)}}" catchtap="completeOrder" data-index="{{index}}">订单完成</view>
+      <view class="padding-lr padding-tb-xs border radius margin-left text-black" wx:if="{{item.status == 2 && item.isDelivered == 1 && item.deliveryAddress != null}}" catchtap="shopDelivered" data-index="{{index}}">商家配送</view>
     </view>
+  </view>
+  <!-- <view class="text-sm text-center padding border-top margin-top">已经到底啦</view> -->
+  <view class="flex text-sm text-center align-center margin-tb-xl">
+    <view class="flex-sub border" style="height:2rpx"></view>
+    <view class="margin-lr">已经到底啦</view>
+    <view class="flex-sub border" style="height:2rpx"></view>
   </view>
 </view>
 <!-- --- -->
@@ -95,7 +106,7 @@
   <view class="cu-dialog">
     <view class="padding margin-sm">
       你确定订单
-      <text class="text-green">已送达</text>吗
+      <text class="text-green">已送达</text> 吗
     </view>
     <view class="flex padding-tb-sm">
       <view class="flex-sub " bindtap="hideModal">取消</view>
@@ -112,6 +123,30 @@
     <view class="flex padding-tb-sm">
       <view class="flex-sub " bindtap="hideModal">取消</view>
       <view class="flex-sub text-red" bindtap="confirmRefund">确定</view>
+    </view>
+  </view>
+</view>
+<view class="cu-modal {{currentModalType == 'shopSend'?'show':''}}">
+  <view class="cu-dialog">
+    <view class="padding margin-sm">
+      你确定给
+      <text class="text-blue">已预定商品发货</text> 吗
+    </view>
+    <view class="flex padding-tb-sm">
+      <view class="flex-sub " bindtap="hideModal">取消</view>
+      <view class="flex-sub text-red" bindtap="confirmShopSend">确定</view>
+    </view>
+  </view>
+</view>
+<view class="cu-modal {{currentModalType == 'shopDelivered'?'show':''}}">
+  <view class="cu-dialog">
+    <view class="padding margin-sm">
+      你确定
+      <text class="text-blue">自行配送</text> 吗
+    </view>
+    <view class="flex padding-tb-sm">
+      <view class="flex-sub " bindtap="hideModal">取消</view>
+      <view class="flex-sub text-red" bindtap="confirmShopDelivered">确定</view>
     </view>
   </view>
 </view>

@@ -1,53 +1,78 @@
 import {
-   loading 
-  } from '../../../services/config'
-
+  loading,
+  hideLoading,
+  totast,
+  STATUS_CODE_SUCCESSE,
+  STATUS_CODE_modifyOrderStatus_SUCCES,
+  STATUS_CODE_refundMoneyToWX_SUCCESS,
+  STATUS_CODE_modifyOrderStatus_deliveryGoods_SUCCESS
+} from '../../../services/config'
+import {
+  modifyOrderStatus,
+  refundMoneyToWX,
+  modifyOrderStatus_deliveryGoods,
+  oncePaySharing
+} from '../../../services/order'
 const app = getApp()
 //获取app.js的eventBus
 let bus = app.globalData.bus
 Page({
   data: {
-    item:{
-      ringCustomer:12345678900,
-      ringExpressman:98765432100,
-      shopName:'测试测试测试测试',
-            time:'1111-1111-1111 11:11:11',
-            orderState:'待接单',
-            orderNumber:'1111 1111 1111 1111 1111',
-            image:'',
-            items:[
-              {itemName:'测试测试',price:11.11,number:1,specification:'测试测试/测试测试/测试测试'},
-              {itemName:'测试测试测试',price:11.11,number:1,specification:'测试/测试/测试'},
-              {itemName:'测试测试测试测试',price:11.11,number:11,specification:'测试测试测试/测试测试测试/测试测试测试'}
-            ],
-            itemsNumber:1,
-            money:11.11,
-            freight:11,
-            remarks:'测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试',
-            address:'测试测试测试-测试测试测试测试测试测试测试测试测试测试测试测试(测试测试) 11111111111',
-            deliveredMethod:'测试测试'
+    item: {
+      ringCustomer: 12345678900,
+      ringExpressman: 98765432100,
+      shopName: '测试测试测试测试',
+      time: '1111-1111-1111 11:11:11',
+      orderState: '待接单',
+      orderNumber: '1111 1111 1111 1111 1111',
+      image: '',
+      items: [{
+          itemName: '测试测试',
+          price: 11.11,
+          number: 1,
+          specification: '测试测试/测试测试/测试测试'
+        },
+        {
+          itemName: '测试测试测试',
+          price: 11.11,
+          number: 1,
+          specification: '测试/测试/测试'
+        },
+        {
+          itemName: '测试测试测试测试',
+          price: 11.11,
+          number: 11,
+          specification: '测试测试测试/测试测试测试/测试测试测试'
+        }
+      ],
+      itemsNumber: 1,
+      money: 11.11,
+      freight: 11,
+      remarks: '测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试',
+      address: '测试测试测试-测试测试测试测试测试测试测试测试测试测试测试测试(测试测试) 11111111111',
+      deliveredMethod: '测试测试'
     },
-    currentModalType:'',
-    telephoneNumber:10000000000,
-    name:'',
-    currentTelephone:'customer',
-    ring:null
+    currentModalType: '',
+    telephoneNumber: 10000000000,
+    name: '',
+    currentTelephone: 'customer',
+    ring: null
   },
-  onLoad(options){
+  onLoad(options) {
     loading('加载中')
     //拿到由父页面传过来的对象参数item,通过url传输过来
-    if(options.item){
+    if (options.item) {
       const item = JSON.parse(options.item)
       console.log(item);
       this.setData({
-        item:item
+        item: item
       })
     }
   },
-  onReady(){
+  onReady() {
     wx.hideLoading()
   },
-  onUnload(){
+  onUnload() {
     bus.clear()
   },
   /**
@@ -67,256 +92,284 @@ Page({
   /**
    * 接单或拒绝接单  模块
    */
-  confirmRefuseOrder(){
+  confirmRefuseOrder() {
     //遍历order 与orderNumber匹配的item,更改item的orderState 同时删除在待接单的相同item
-    const {currentType,currentClickIndex,orders} = this.data
-    const {orderNumber,id,orderId,userId} = orders[currentType].list[currentClickIndex]
-    this._modifyOrderStatus(id,orderNumber,orderId,userId,3).then(res=>{
-      if(res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyOrderStatus_SUCCES){
-        if(currentType == 'all'){
-          orders[currentType].list[currentClickIndex].orderState = '拒绝接单'
-          orders[currentType].list[currentClickIndex].status = 3
-          for (const [key,item] of orders['pendingOrders'].list.entries()) {
-            if(item.orderNumber == orderNumber){
-              orders['pendingOrders'].list.splice(key,1)
-              break
-            }
+    const {
+      item
+    } = this.data
+    const {
+      id,
+      orderNumber,
+      orderId,
+      userId,
+      orderState,
+      money
+    } = item
+    modifyOrderStatus(id, orderNumber, orderId, userId, 3).then(res => {
+      if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyOrderStatus_SUCCES) {
+        refundMoneyToWX(orderNumber, money, '商家主动退款').then(res => {
+          if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_refundMoneyToWX_SUCCESS) {
+            item.orderState = '拒绝接单'
+            item.status = 5
+            this.setData({
+              item: this.data.item
+            })
+            totast('退款成功',2000,'success')
+          } else {
+            totast('退款失败,请重试', 2000,'fail')
           }
-        }else if(currentType == 'pendingOrders'){
-          for (const [key,item] of orders['all'].list.entries()) {
-            if(item.orderNumber == orderNumber){
-              orders['all'].list[key].orderState = '拒绝接单'
-              orders['all'].list[key].status = 3
-              orders['all'].pleaseRefresh = false
-              break
-            }else{
-              orders['all'].pleaseRefresh = true
-            }
-          }
-          orders[currentType].list.splice(currentClickIndex,1)
-        }
-        this.setData({
-          orders:orders
         })
-      }else{
-        totast('系统错误,接单失败,请重试',1500)
+      } else {
+        totast('系统错误,拒绝接单失败,请重试', 1500,'fail')
       }
       hideLoading()
       this.hideModal()
     })
   },
-  refuseReceiveOrder(e){
+  refuseReceiveOrder(e) {
     this.setData({
-      currentClickIndex:e.currentTarget.dataset.index
+      currentClickIndex: e.currentTarget.dataset.index
     })
-    this.showModal(e,'show')
+    this.showModal(e, 'show')
   },
-  async acceptOrder(e){
+  acceptOrder(e) {
     //遍历order 与orderNumber匹配的item,更改item的orderState 同时删除在待接单的相同item
-    this.setData({
-      currentClickIndex:e.currentTarget.dataset.index
-    })
-    const {currentType,currentClickIndex,orders} = this.data
-    const {orderNumber,orderId,id,userId} = orders[currentType].list[currentClickIndex]
-    let index = null;
-    await this._modifyOrderStatus(id,orderNumber,orderId,userId,2).then(res=>{
-      if(res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyOrderStatus_SUCCES){
-        if(currentType == 'all'){
-          orders[currentType].list[currentClickIndex].orderState = '待发货'
-          orders[currentType].list[currentClickIndex].status = 2
-          for (const [key,item] of orders['pendingOrders'].list.entries()) {
-            if(item.orderNumber == orderNumber){
-              item.orderState = '待发货'
-              item.status = 2
-              orders['pendingDelivered'].list.push(item)
-              orders['pendingOrders'].list.splice(key,1)
-              break
-            }
-          }
-        }else if(currentType == 'pendingOrders'){
-          for (const [key,item] of orders['all'].list.entries()) {
-            if(item.orderNumber == orderNumber){
-              item.orderState = '待发货'
-              item.status = 2
-              orders['all'].pleaseRefresh = false
-              break
-            }else{
-              orders['all'].pleaseRefresh = true
-            }
-          }
-          orders[currentType].list[currentClickIndex].status = 2
-          orders[currentType].list[currentClickIndex].orderState = '待发货'
-          orders['pendingDelivered'].list.push(orders[currentType].list[currentClickIndex])
-          orders[currentType].list.splice(currentClickIndex,1)
-        }
-      }else{
-        totast('系统错误,订单状态修改失败,请重试',1500)
+    const {
+      item
+    } = this.data
+    const {
+      id,
+      orderNumber,
+      orderId,
+      userId
+    } = item
+    modifyOrderStatus(id, orderNumber, orderId, userId, 2).then(res => {
+      if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyOrderStatus_SUCCES) {
+        item.orderState = '待发货'
+        item.status = 2
+        item.isReserved?(item.isDelivered = 0):(item.isDelivered = 1)
+        totast('接单成功',2000,'success')
+        this.setData({
+          item: this.data.item
+        })
+      } else {
+        totast('系统错误,订单状态修改失败,请重试', 1500)
       }
     })
     hideLoading()
-    this.setData({
-      orders:this.data.orders
-    })
   },
-  completeOrder(e){
+  completeOrder(e) {
     this.setData({
-      currentClickIndex:e.currentTarget.dataset.index
+      currentClickIndex: e.currentTarget.dataset.index
     })
-    this.showModal(e,'completeOrder')
+    this.showModal(e, 'completeOrder')
   },
-  confirmCompleteOrder(e){
-    const {currentType,currentClickIndex,orders} = this.data
-    const {orderNumber,id,orderId,userId} = orders[currentType].list[currentClickIndex]
-    this._modifyOrderStatus(id,orderNumber,orderId,userId,10).then(res=>{
-      hideLoading()
-      if(res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyOrderStatus_SUCCES){
-        if(currentType == 'all'){
-          orders[currentType].list[currentClickIndex].orderState = '交易完成'
-          orders[currentType].list[currentClickIndex].status = 10
-          for (const [key,item] of orders['pendingDelivered'].list.entries()) {
-            if(item.orderNumber == orderNumber){
-              orders['pendingDelivered'].list.splice(key,1)
-              break
-            }
+  confirmCompleteOrder(e) {
+    const {
+      item
+    } = this.data
+    const {
+      id,
+      orderNumber,
+      orderId,
+      userId,
+      money,
+      freight
+    } = item
+    modifyOrderStatus(id, orderNumber, orderId, userId, 10).then(res => {
+      if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyOrderStatus_SUCCES) {
+        oncePaySharing(orderNumber, money,freight,wx.getStorageSync('shopId')).then(res=>{
+          if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_refundMoneyToWX_SUCCESS){
+            item.orderState = '交易完成'
+            item.status = 4
+            this.setData({
+              item: this.data.item
+            })
+            totast('订单已完成',2000,'success')
+          }else{
+            totast('订单完成失败,请重试', 2000,'fail')
           }
-        }else if(currentType == 'pendingDelivered'){
-          for (const [key,item] of orders['all'].list.entries()) {
-            if(item.orderNumber == orderNumber){
-              orders['all'].list[key].orderState = '交易完成'
-              orders['all'].list[key].status = 10
-              orders['all'].pleaseRefresh = false
-              break
-            }else{
-              orders['all'].pleaseRefresh = true
-            }
-          }
-          orders[currentType].list.splice(currentClickIndex,1)
-        }
-        this.setData({
-          orders:orders
         })
-      }else{
-        totast('系统错误,完成订单失败,请重试',1500)
+      } else {
+        totast('系统错误,完成订单失败,请重试', 1500,'fail')
       }
+      hideLoading()
       this.hideModal()
     })
   },
-  shopSend(e){
-    
-  },
-  refund(e){
+  shopSend(e) {
     this.setData({
-      currentClickIndex:e.currentTarget.dataset.index
+      currentClickIndex: e.currentTarget.dataset.index
     })
-    this.showModal(e,'refund')
+    this.showModal(e, 'shopSend')
   },
-  confirmRefund(e){
-    const {currentType,currentClickIndex,orders} = this.data
-    const {orderNumber,id,orderId,userId,orderState} = orders[currentType].list[currentClickIndex]
-    if(orderState == '待发货'){
-      this._modifyOrderStatus(id,orderNumber,orderId,userId,4).then(res=>{
-        if(res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyOrderStatus_SUCCES){
-          if(currentType == 'all'){
-            orders[currentType].list[currentClickIndex].orderState = '已退款'
-            orders[currentType].list[currentClickIndex].status = 5
-            for (const [key,item] of orders['pendingDelivered'].list.entries()) {
-              if(item.orderNumber == orderNumber){
-                orders['pendingDelivered'].list.splice(key,1)
-                break
-              }
-            }
-          }else if(currentType == 'pendingDelivered'){
-            for (const [key,item] of orders['all'].list.entries()) {
-              if(item.orderNumber == orderNumber){
-                orders['all'].list[key].orderState = '已退款'
-                orders['all'].list[key].status = 5
-                orders['all'].pleaseRefresh = false
-                break
-              }else{
-                orders['all'].pleaseRefresh = true
-              }
-            }
-            orders[currentType].list.splice(currentClickIndex,1)
-          }
+  refund(e) {
+    this.setData({
+      currentClickIndex: e.currentTarget.dataset.index
+    })
+    this.showModal(e, 'refund')
+  },
+  shopDelivered(e){
+    this.setData({
+      currentClickIndex: e.currentTarget.dataset.index
+    })
+    this.showModal(e, 'shopDelivered')
+  },
+  confirmShopDelivered(){
+    const {
+      item
+    } = this.data
+    const {
+      id,
+      orderNumber,
+      orderId,
+      userId,
+      orderState,
+      money
+    } = item
+      loading('加载中')
+      this._modifyOrderStatus(id, orderNumber, orderId, userId, 11).then(res=>{
+        if (res && (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyOrderStatus_SUCCES)){
+          item.orderState = '待送达'
+          item.status = 3
           this.setData({
-            orders:orders
+            item:this.data.item
           })
+          totast('操作成功',2000,'success')
         }else{
-          totast('系统错误,接单失败,请重试',1500)
+          totast('操作失败,请重试',2000,'fail')
         }
         hideLoading()
         this.hideModal()
       })
-    }else if(orderState == '待送达'){
-      this._modifyOrderStatus(id,orderNumber,orderId,userId,5).then(res=>{
-        if(res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyOrderStatus_SUCCES){
-          if(currentType == 'all'){
-            orders[currentType].list[currentClickIndex].orderState = '已退款'
-            orders[currentType].list[currentClickIndex].status = 5
-            for (const [key,item] of orders['pendingArrive'].list.entries()) {
-              if(item.orderNumber == orderNumber){
-                orders['pendingArrive'].list.splice(key,1)
-                break
-              }
+  },
+  confirmRefund(e) {
+    const {
+      item
+    } = this.data
+    const {
+      id,
+      orderNumber,
+      orderId,
+      userId,
+      orderState,
+      money
+    } = item
+    loading('更改中')
+    if (orderState == '待发货') {
+      modifyOrderStatus(id, orderNumber, orderId, userId, 4).then(res => {
+        if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyOrderStatus_SUCCES) {
+          refundMoneyToWX(orderNumber, money, '商家主动退款').then(res => {
+            if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_refundMoneyToWX_SUCCESS) {
+              item.orderState = '已退款'
+              item.status = 5
+              this.setData({
+                item: this.data.item
+              })
+              totast('退款成功', 2000,'success')
+            } else {
+              totast('退款失败,请重试', 2000,'fail')
             }
-          }else if(currentType == 'pendingArrive'){
-            for (const [key,item] of orders['all'].list.entries()) {
-              if(item.orderNumber == orderNumber){
-                orders['all'].list[key].orderState = '已退款'
-                orders['all'].list[key].status = 5
-                orders['all'].pleaseRefresh = false
-                break
-              }else{
-                orders['all'].pleaseRefresh = true
-              }
-            }
-            orders[currentType].list.splice(currentClickIndex,1)
-          }
-          this.setData({
-            orders:orders
           })
-        }else{
-          totast('系统错误,接单失败,请重试',1500)
+        } else {
+          totast('系统错误,退款失败,请重试', 2000,'fail')
         }
-        hideLoading()
         this.hideModal()
+        hideLoading()
       })
+    } else if (orderState == '待送达') {
+      this._modifyOrderStatus(id, orderNumber, orderId, userId, 5).then(res => {
+        if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyOrderStatus_SUCCES) {
+          refundMoneyToWX(orderNumber, money, '商家主动退款').then(res => {
+            if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_refundMoneyToWX_SUCCESS) {
+              item.orderState = '已退款'
+              item.status = 5
+              this.setData({
+                item: this.data.item
+              })
+              totast('退款成功', 2000)
+            } else {
+              totast('退款失败,请重试', 2000)
+            }
+          })
+        } else {
+          totast('系统错误,退款失败,请重试', 2000)
+        }
+      })
+      this.hideModal()
+      hideLoading()
     }
+  },
+  confirmShopSend(e) {
+    const {
+      item
+    } = this.data
+    loading('发货中')
+    modifyOrderStatus_deliveryGoods(item.id).then(res => {
+      if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyOrderStatus_deliveryGoods_SUCCESS) {
+        item.isDelivered = 1
+        this.setData({
+          item: this.data.item,
+          currentModalType: ''
+        })
+        totast('发货成功,等待骑手抢单', 2000,'success')
+      } else {
+        totast('发货失败,请重试', 2000,'fail')
+      }
+      hideLoading()
+    })
   },
   /**
    * 电话联系 客户或骑手 模块
    */
-  ringCustomer(e){
-    const {item} = this.data
+  ringCustomer(e) {
+    const {
+      item
+    } = this.data
     this.setData({
-      telephoneNumber:item.userPhone,
-      name:item.userName,
-      currentTelephone:'customer'
+      telephoneNumber: item.userPhone,
+      name: item.userName,
+      currentTelephone: 'customer'
     })
-    this.showModal(e,'bottomModal')
+    this.showModal(e, 'bottomModal')
   },
-  ringExpressman(e){
-    const {item} = this.data
+  ringExpressman(e) {
+    const {
+      item
+    } = this.data
     this.setData({
-      telephoneNumber:item.riderPhone,
-      name:item.riderName,
-      currentTelephone:'expressman'
+      telephoneNumber: item.riderPhone,
+      name: item.riderName,
+      currentTelephone: 'expressman'
     })
-    this.showModal(e,'bottomModal')
+    this.showModal(e, 'bottomModal')
   },
-  confirmRing(){
-    if(this.data.currentTelephone == 'customer'){
+  confirmRing() {
+    if (this.data.currentTelephone == 'customer') {
       this.setData({
-        telephoneNumber:null,
-        name:'',
-        ring:'呼叫客户'
+        telephoneNumber: null,
+        name: '',
+        ring: '呼叫客户'
       })
-    }else if(this.data.currentTelephone == 'expressman'){
+    } else if (this.data.currentTelephone == 'expressman') {
       this.setData({
-        telephoneNumber:null,
-        name:'',
-        ring:'呼叫骑手'
+        telephoneNumber: null,
+        name: '',
+        ring: '呼叫骑手'
       })
     }
+  },
+  copyPhoneNumber() {
+    wx.setClipboardData({
+      data: this.data.telephoneNumber,
+      success: () => {
+        totast('复制成功', 1500)
+        this.hideModal()
+      },
+      fail: () => {
+        totast('复制失败,请重试', 1500)
+        this.hideModal()
+      }
+    })
   }
 })

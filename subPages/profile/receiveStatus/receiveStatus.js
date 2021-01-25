@@ -16,14 +16,12 @@ Page({
     changeStatus:''
   },
   onLoad(){
-    loading('加载中')
     const currentPage = getCurrentPages()
     this.setData({
       currentStatus: currentPage[0].data.receiveStatus == 1?'自动接单':'手动接单'
     })
   },
   onReady(){
-    hideLoading()
   },
   _modifyReceiveStatus(autoStatus){
     return modifyReceiveStatu(autoStatus)
@@ -56,8 +54,7 @@ Page({
     const {changeStatus} = this.data
     const autoStatus = changeStatus == '自动接单'?1:0
     this._modifyReceiveStatus(autoStatus).then(res => {
-      hideLoading()
-      if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyReceiveStatus_SUCCESS) {
+      if (res && (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyReceiveStatus_SUCCESS) ){
         if (changeStatus == '自动接单') {
           this.setData({
             currentStatus: '自动接单'
@@ -70,6 +67,7 @@ Page({
       } else {
         totast('系统错误,更改失败',1500)
       }
+      hideLoading()
       this.hideModal()
     })
   }

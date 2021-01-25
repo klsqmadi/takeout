@@ -1,5 +1,0 @@
-/* subPages/order/takeCash/takeCash.wxss */
-page{
-  height:100vh;
-  background-color: #ffffff;
-}

@@ -13,6 +13,8 @@ import {
   API_URL_getShopRegisterInfo,
   /*凯悦的接口 */
   API_URL_getShopWorkInfo1,
+  API_URL_getSaleHistory,
+  API_URL_getOrderHistory
 } from './config'
 
 /*泽强的接口 */
@@ -118,6 +120,29 @@ export function getShopRegisterInfo(){
     url:API_URL_getShopRegisterInfo,
     method:'POST'
   },'application/x-www-form-urlencoded')
+}
+
+export function getSaleHistory(date){
+  return request({
+    url:API_URL_getSaleHistory,
+    data:{
+      date,
+      shopId:wx.getStorageSync('shopId')
+    }
+  })
+}
+
+export function getOrderHistory(date,pageNumber){
+  return request({
+    url:API_URL_getOrderHistory,
+    method:'POST',
+    data:{
+      date,
+      pageNumber,
+      pageSize:10,
+      shopId:wx.getStorageSync('shopId')
+    }
+  })
 }
 
 

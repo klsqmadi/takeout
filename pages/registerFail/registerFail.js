@@ -5,7 +5,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    shopFlag:2
+    shopFlag:4
   },
   onLoad: function (options) {
     if(options.shopFlag){

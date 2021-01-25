@@ -10,8 +10,8 @@ import {
   STATUS_CODE_getShopInfo_SUCCESS,
   STATUS_CODE_SUCCESSE
 } from '../../services/config'
-let token = wx.getStorageSync('token') || null
-let id = wx.getStorageSync('id') || null
+/* let token = wx.getStorageSync('token') || null
+let id = wx.getStorageSync('id') || null */
 Page({
   data: {
     bizStatus: 3,
@@ -23,9 +23,9 @@ Page({
    
   },
   _getShopInfo() {
+    loading('加载中')
     getShopProfileInfo().then(res => {
-      hideLoading()
-      if(res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getShopInfo_SUCCESS){
+      if(res && (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getShopInfo_SUCCESS)){
         this.setData({
           bizStatus:res.data.data.runStatus,
           receiveStatus:res.data.data.autoOrder,
@@ -34,20 +34,20 @@ Page({
         })
       }else{
         totast('系统错误',1500)
-      }
+      }hideLoading()
     })
   },
   onShow(){
-    token = wx.getStorageSync('token') || null
-    id = wx.getStorageSync('id') || null
-    if (!token && !id) {
+    /* token = wx.getStorageSync('token') || null
+    id = wx.getStorageSync('id') || null */
+    /* if (!token && !id) {
       wx.redirectTo({
         url: '/pages/wxLogin/wxLogin',
         success: res => {
           console.log(res);
         }
       })
-    }
+    } */
     this._getShopInfo()
   }
 })

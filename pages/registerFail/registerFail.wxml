@@ -4,5 +4,5 @@
 <view class="text-center text-lg" style="margin-top:200rpx">
   <view wx:if="{{shopFlag == 2}}">审核失败</view>
   <view wx:if="{{shopFlag == 3}}">审核中</view>
-  <view wx:if="{{shopFlag == 4}}">系统错误,待审核</view>
+  <view wx:if="{{shopFlag == 4}}">系统错误,请联系管理员</view>
 </view>

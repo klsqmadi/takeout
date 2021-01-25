@@ -9,12 +9,14 @@ import {
 } from '../../services/work'
 import {
   API_URL_getShopWorkInfo1,
+  API_URL_getShopWorkInfo2,
   BASE_URL,
   loading,
   hideLoading,
   totast,
   STATUS_CODE_SUCCESSE,
-  STATUS_CODE_getShopWorkInfo1_SUCCESS
+  STATUS_CODE_getShopWorkInfo1_SUCCESS,
+  STATUS_CODE_getShopWorkInfo2_SUCCESS
 } from '../../services/config'
 const app = getApp()
 Page({
@@ -34,26 +36,51 @@ Page({
 
   },
   async onShow() {
-    let token = wx.getStorageSync('token') || null
-    let id = wx.getStorageSync('id') || null
     await app.flagHadSuccessRegisterShop()
-    if (token && id) {
+    if (wx.getStorageSync('token') && wx.getStorageSync('id') && wx.getStorageSync('shopId')) {
       loading('加载中')
-      wx.request({
+      await wx.request({
         url: BASE_URL + API_URL_getShopWorkInfo1,
         data:{
           shopId:wx.getStorageSync('shopId')
         },
         success:res=>{
-          if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getShopWorkInfo1_SUCCESS) {
+          if (res && (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getShopWorkInfo1_SUCCESS)) {
             this.setData({
-              todayMoney: res.data.data.todayIncome,
+              todayMoney: res.data.data.todayIncome.toFixed(2),
               ordersPaymentNumber: res.data.data.todayOrderQuantity,
               totalPayment: res.data.data.todaySalesVolume,
               pendingOrders: res.data.data.waitToReceive,
               pendingDelivered: res.data.data.waitToDeliver,
               pendingArrive: res.data.data.waitToComplete,
               historicalOrdersNumber: res.data.data.monthlyOrderQuantity
+            })
+          } else {
+            totast('系统错误,信息获取失败,请重新刷新', 1500)
+          }
+          hideLoading()
+        },
+        fail:res=>{
+          hideLoading()
+          totast('系统错误,信息获取失败,请重新刷新', 1500)
+        }
+      })
+      loading('加载中')
+      wx.request({
+        url:BASE_URL + API_URL_getShopWorkInfo2,
+        data:{
+          shopId:wx.getStorageSync('shopId')
+        },
+        method:'POST',
+        header:{
+          'Content-Type':'application/x-www-form-urlencoded'
+        },
+        success:res=>{
+          if (res && (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getShopWorkInfo2_SUCCESS)) {
+            this.setData({
+              visitors:res.data.data.glanceCountAll,
+              monthViews:res.data.data.glanceCountMonthly,
+              monthSales:res.data.data.commoditySaleMonthly
             })
           } else {
             totast('系统错误,信息获取失败,请重新刷新', 1500)

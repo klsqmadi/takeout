@@ -69,10 +69,10 @@
       <view class="flex-sub text-right cuIcon-right text-gray" style="font-size:50rpx;"></view>
     </view>
   </navigator>
-  <navigator url="/subPages/work/takeCash/takeCash">
-    <view class=" flex align-center text-left margin-top-xs padding-tb-sm bg-white padding-lr-lg">
+  <navigator url="/subPages/work/orderHistory/orderHistory">
+    <view class="flex align-center text-left margin-top-xs padding-tb-sm bg-white padding-lr-lg">
       <view class="cuIcon-moneybag text-red margin-right-lg margin-top-xs" style="font-size:50rpx;"></view>
-      <view class="margin-top-xs text-lg ">提现</view>
+      <view class="margin-top-xs text-lg ">订单历史</view>
       <view class="flex-sub text-right cuIcon-right text-gray" style="font-size:50rpx;"></view>
     </view>
   </navigator>

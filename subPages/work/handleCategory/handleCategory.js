@@ -16,6 +16,9 @@ import {
   STATUS_CODE_deleteCategory_SUCCESS,
   STATUS_CODE_addCategory_SUCCESS
 } from '../../../services/config'
+import {
+  RegExp
+}from '../../../utils/RE'
 Page({
   data: {
     activeNames: 0,
@@ -37,43 +40,38 @@ Page({
         inputValue: ''
       }
     },
-    noticeContent: '系统错误'
+    noticeContent: '系统错误',
+    inputValue:'',
   },
   onLoad() {
+    this.data.RE = new RegExp()
     this._getGoodsCategoryInfo()
   },
   onReady() {
-    hideLoading()
   },
   onShow() {
-    let token = wx.getStorageSync('token') || null
-    let id = wx.getStorageSync('id') || null
-    if (!token && !id) {
-      wx.redirectTo({
-        url: '/pages/wxLogin/wxLogin',
-        success: res => {
-          console.log(res);
-        }
-      })
-    }
+    
   },
   _getGoodsCategoryInfo() {
+    loading('加载中')
     getGoodsCategoryInfo().then(res => {
-      if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getGoodsCategoryInfo) {
-        let {
-          category
-        } = this.data
-        for (const [index, item] of res.data.data.entries()) {
-          const TempCategory = {
-            category: item.categoryName,
-            categoryId: item.categoryId,
-            shopId: item.shopId
+      if (res && (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getGoodsCategoryInfo) ){
+        if(res.data.data){
+          let {
+            category
+          } = this.data
+          for (const [index, item] of res.data.data.entries()) {
+            const TempCategory = {
+              category: item.categoryName,
+              categoryId: item.categoryId,
+              shopId: item.shopId
+            }
+            category.push(TempCategory)
           }
-          category.push(TempCategory)
+          this.setData({
+            category: category
+          })
         }
-        this.setData({
-          category: category
-        })
       } else {
         totast('系统错误,信息获取失败', 1500)
       }
@@ -89,59 +87,71 @@ Page({
   _modifyCategoryName(categoryyId, categoryName) {
     return modifyCategoryName(categoryyId, categoryName)
   },
-  showModal(e, currentModalType) {
-    const index = e.currentTarget.dataset.index
-    currentModalType = currentModalType || e.currentTarget.dataset.currentmodaltype
-    this.data.modal[currentModalType].modalShow = true
-    if (currentModalType == 'edit') {
-      this.data.modal[currentModalType].inputValue = this.data.category[index].category
-    }
+  showModal(currentModalType) {
     this.setData({
-      currentModalType: currentModalType,
-      modal: this.data.modal,
-      currentIndex: index
+      currentModalType:currentModalType
     })
   },
-  hideModal(e) {
-    /* this.data.modal[currentModalType].modalShow = false */
+  showEditModal(e){
+    const {index} = e.currentTarget.dataset
+    this.showModal('edit')
     this.setData({
-      currentModalType: '',
-      modal: this.data.modal
+      currentIndex:index,
+      inputValue:this.data.category[index].category
+    })
+  },
+  showAddModal(){
+    this.showModal('add')
+  },
+  showDeleteModal(e){
+    this.showModal('delete')
+    this.setData({
+      currentIndex:e.currentTarget.dataset.index
+    })
+  },
+  hideModal() {
+    this.setData({
+      currentModalType: ''
     })
   },
   //更改分类名
-  async modifyCategory(e) {
+  modifyCategory(e) {
     const {
       category,
-      currentIndex
+      currentIndex,
+      inputValue
     } = this.data
-    await this._modifyCategoryName(category[currentIndex].categoryId, this.data.modal[this.data.currentModalType].inputValue).then(res => {
-      if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyCategoryName_SUCCESS) {
-        category[currentIndex].category = this.data.modal[this.data.currentModalType].inputValue
-        this.setData({
-          category: this.data.category
-        })
-      } else {
-        totast('系统错误,更改失败', 1500)
+    const testInputValue = inputValue
+    for (const item of testInputValue.split('')) {
+      if(item == ' '){
+        totast('输入存在空格,请检查',1500)
+        return
       }
-    })
-    hideLoading()
-    this.hideModal(e)
+    }
+    if(this.data.RE.isMinToMaxLength(inputValue.trim(),1,10)){
+      this._modifyCategoryName(category[currentIndex].categoryId,inputValue).then(res => {
+        if (res && (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyCategoryName_SUCCESS) ){
+          category[currentIndex].category = inputValue
+          this.setData({
+            category: this.data.category
+          })
+        } else {
+          totast('系统错误,更改名称失败', 2000)
+        }
+        hideLoading()
+        this.hideModal()
+      })
+    }else{
+      totast('请输入1~10位中文或数字',2000)
+    }
   },
   //监听input  实时响应value
-  input(e) {
-    this.data.modal[this.data.currentModalType].inputValue = e.detail.value
-    this.setData({
-      modal: this.data.modal
-    })
-
-  },
   deleteCategory(e) {
     const ids = []
     const categoryId = this.data.category[this.data.currentIndex].categoryId
     ids.push(categoryId)
     this._deleteCategory(ids).then(res => {
-      if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_deleteCategory_SUCCESS) {
+      if (res&& (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_deleteCategory_SUCCESS) ){
         this.data.category.splice(this.data.currentIndex, 1)
         this.setData({
           category: this.data.category
@@ -154,24 +164,39 @@ Page({
     })
   },
   addCategory(e) {
-    this._addCategory(this.data.modal[this.data.currentModalType].inputValue).then(res => {
-      if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_addCategory_SUCCESS) {
-        const data = {
-          category: this.data.modal[this.data.currentModalType].inputValue,
-          goods: []
-        }
-        data.categoryId = res.data.data
-        this.data.category.push(data)
-        this.data.modal[this.data.currentModalType].inputValue = ''
-        this.setData({
-          category: this.data.category,
-          modal: this.data.modal
-        })
-      } else {
-        totast('系统错误,添加失败', 1500)
+    const {inputValue} = this.data
+    const testInputValue = inputValue
+    for (const item of testInputValue.split('')) {
+      if(item == ' '){
+        totast('输入存在空格,请检查',1500)
+        return
       }
-      hideLoading()
-      this.hideModal(e)
-    })
+    }
+    if(this.data.RE.isMinToMaxLength(inputValue.trim(),1,10)){
+      this._addCategory(inputValue).then(res => {
+        if (res && (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_addCategory_SUCCESS) ){
+          const data = {
+            category: inputValue,
+            goods: []
+          }
+          data.categoryId = res.data.data
+          this.data.category.push(data)
+          this.setData({
+            category: this.data.category
+          })
+        } else {
+          totast('系统错误,添加分类失败', 2000)
+        }
+        hideLoading()
+        this.hideModal()
+      })
+    }else{
+      totast('请输入1~10位中文或数字',2000)
+    }
   },
+  eventInput(e){
+    this.setData({
+      inputValue:e.detail.value
+    })
+  }
 })

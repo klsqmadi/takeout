@@ -34,12 +34,16 @@ App({
   onShow() {
       this.wsConnect()
   },
+  onHide(){
+    this.wsClose()
+    
+  },
   flagHadSuccessRegisterShop(){
     if (wx.getStorageSync('id')) {
       getShopRegisterInfo().then(res => {
-        if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getShopRegisterInfo_SUCCES) {
+        if (res && (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getShopRegisterInfo_SUCCES) ){
           if (res.data.data.status == 0) {
-            let token = wx.getStorageSync('token') || null
+            // let token = wx.getStorageSync('token') || null
               wx.redirectTo({
                 url: '/pages/wxLogin/wxLogin?registerStatus=' + res.data.data.status,
               })
@@ -51,12 +55,12 @@ App({
             wx.setStorageSync('shopId', res.data.data.shopId)
           }
         } else {
-          wx.redirectTo({
-            url: '/pages/registerFail/registerFail?shopFlag=4',
-          })
+          totast('店铺注册信息获取失败,请重新注册',2000)
         }
         hideLoading()
       })
+    }else{
+      
     }
   },
   async wsConnect(sid = wx.getStorageSync('shopId'), identity = 'shop') {
@@ -86,10 +90,10 @@ App({
       if (res.data !== '服务器连接成功！') {
         a = JSON.parse(res.data)
         this.globalData.bus.emit('orderDataChange', a, a.currentStatus)
-        if (a.currentStatus == 1 || a.currentStatus == 2) {
-          totast('你有新订单啦', 1000)
+        if (a.currentStatus == 1) {
+          totast('你有新订单啦', 1500,'success')
         } else {
-          totast('你有订单变化啦', 1000)
+          totast('你的订单变化啦', 1500,'success')
         }
       }
     })
