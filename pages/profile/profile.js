@@ -30,7 +30,8 @@ Page({
           bizStatus:res.data.data.runStatus,
           receiveStatus:res.data.data.autoOrder,
           headImage:BASE_URL+'/'+res.data.data.shopHead,
-          shopName:res.data.data.shopName
+          shopName:res.data.data.shopName,
+          businessName:res.data.data.businessName
         })
       }else{
         totast('系统错误',1500)
@@ -38,16 +39,6 @@ Page({
     })
   },
   onShow(){
-    /* token = wx.getStorageSync('token') || null
-    id = wx.getStorageSync('id') || null */
-    /* if (!token && !id) {
-      wx.redirectTo({
-        url: '/pages/wxLogin/wxLogin',
-        success: res => {
-          console.log(res);
-        }
-      })
-    } */
     this._getShopInfo()
   }
 })

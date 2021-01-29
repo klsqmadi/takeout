@@ -549,6 +549,7 @@ Page({
           temp = item.index
           flag1++
         }
+        totast('删除商品成功',2000,'success')
         this.setData({
           list: this.data.list,
           deletedGoodsLength: 0,
@@ -557,7 +558,7 @@ Page({
         this.controlCheckBoxShowOrHide(e, false)
         this.hideModal()
       } else {
-        totast('系统错误,删除商品失败,请重试', 1500)
+        totast('删除商品失败', 2000,'error')
       }
     })
   },
@@ -646,18 +647,19 @@ Page({
                     addGood: this.data.addGood
                   })
                   this.hideModal()
+                  totast('新增商品成功',2000,'success')
                 } else {
-                  totast('系统错误,新增商品失败,请重试', 1500)
+                  totast('新增商品失败', 2000,'error')
                 }
               })
             } else {
-              totast('系统错误,新增商品失败,请重试', 1500)
+              totast('新增商品失败', 2000,'error')
             }
             hideLoading()
           },
           fail(res) {
             hideLoading()
-            totast('系统错误,新增商品失败,请重试', 1500)
+            totast('新增商品失败', 2000,'error')
           }
         })
         //往分类添加新的商品
@@ -844,8 +846,9 @@ Page({
                   addGood: this.data.addGood
                 })
                 this.hideModal()
+                totast('商品修改成功',2000,'success')
               } else {
-                totast('系统错误,商品信息修改失败,请重试', 1500)
+                totast('商品信息修改失败', 2000,'error')
               }
               hideLoading()
             })
@@ -875,17 +878,17 @@ Page({
                       })
                       this.hideModal()
                     } else {
-                      totast('系统错误,商品信息修改失败,请重试', 1500)
+                      totast('商品信息修改失败', 2000,'error')
                     }
                   })
                 } else {
-                  totast('系统错误,商品信息修改失败,请重试', 1500)
+                  totast('商品信息修改失败', 2000,'error')
                 }
                 hideLoading()
               },
               fail: res => {
                 hideLoading()
-                totast('系统错误,商品信息修改失败,请重试', 1500)
+                totast('商品信息修改失败', 2000,'error')
               }
 
             })
@@ -925,13 +928,14 @@ Page({
                       addGood: this.data.addGood
                     })
                     this.hideModal()
+                    totast('商品修改成功',2000,'success')
                   } else {
-                    totast('系统错误,商品信息修改失败,请重试', 1500)
+                    totast('商品信息修改失败', 2000,'error')
                   }
                   hideLoading()
                 })
               } else {
-                totast('系统错误,商品信息修改失败,请重试', 1500)
+                totast('系商品信息修改失败', 2000,'error')
               }
               hideLoading()
             })
@@ -1086,6 +1090,7 @@ Page({
             this.data.list[flag].goods.push(addGood)
             this.data.list1[index].goods.splice(itemIndex, 1)
           }
+          totast('修改商品成功',2000,'success')
           this.clearthisDataAddGood()
           this.setData({
             list: this.data.list,
@@ -1094,7 +1099,7 @@ Page({
             list1CurrentModalType: ''
           })
         } else {
-          totast('系统错误,修正商品状态失败,请重试', 1500)
+          totast('修改商品失败', 2000,'error')
         
         }hideLoading()
       })

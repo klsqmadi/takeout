@@ -92,7 +92,8 @@ Page({
       storeIntroduce: '',
       phoneNumber: '',
       schoolAddress: [],
-      shopType: []
+      shopType: [],
+      name:''
     },
     currentModalType: '',
     inputTitle: '',
@@ -119,7 +120,7 @@ Page({
     } = this.data
     let campusArray = []
     let shopTypeArray = []
-    if (storeInfo.storeName == '' || storeInfo.storeAddress == '' || storeInfo.storeIntroduce == '' || storeInfo.phoneNumber == ''||storeInfo.schoolAddress[0] == undefined || storeInfo.shopType[0] == undefined) {
+    if (storeInfo.storeName == '' || storeInfo.storeAddress == '' || storeInfo.storeIntroduce == '' || storeInfo.phoneNumber == ''||storeInfo.schoolAddress[0] == undefined || storeInfo.shopType[0] == undefined || storeInfo.name == '') {
       totast('输入不许为空', 2000)
     } else {
       for (const [key, item] of storeInfo.schoolAddress.entries()) {
@@ -146,7 +147,8 @@ Page({
           shopIntroduce: storeInfo.storeIntroduce,
           shopName: storeInfo.storeName,
           licenseUuid: this.data.path,
-          businessId: wx.getStorageSync('id')
+          businessId: wx.getStorageSync('id'),
+          name:storeInfo.name
         },
         success: res => {
           if (res && (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == 1204) ){
@@ -155,7 +157,7 @@ Page({
               url: '/pages/registerFail/registerFail?shopFlag=3',
             })
           } else {
-            totast('上传失败,请重试', 3000)
+            totast('上传失败', 2000,'error')
           }
           hideLoading()
         },
@@ -295,13 +297,13 @@ Page({
           }
         } else {
           hideLoading()
-          totast('上传失败,请重试', 3000)
+          totast('上传失败', 2000,'error')
         }
         // hideLoading()
       },
       fail: res => {
         hideLoading()
-        totast('上传失败,请重试', 3000)
+        totast('上传失败', 2000,'error')
       }
     })
   },
@@ -346,17 +348,25 @@ Page({
         return 
       }
     }
-    if (inputType == 'phoneNumber') {
-      if (this.data.RE.isMobile(inputValue.trim())) {
+    if(inputType == 'name'){
+      if(/^(?:[\u4e00-\u9fa5·]{2,6})$/.test(inputValue.trim())){
         flag = 1
-      } else {
-        totast('请输入正确的手机号码', 1500)
+      }else{
+        totast('请输入2-6位姓名', 1500)
       }
-    } else {
-      if (this.data.RE.isMinToMaxLength(inputValue.trim(),2,30)) {
-        flag = 1
+    }else{
+      if (inputType == 'phoneNumber') {
+        if (this.data.RE.isMobile(inputValue.trim())) {
+          flag = 1
+        } else {
+          totast('请输入正确的手机号码', 1500)
+        }
       } else {
-        totast('请输入长度2~30的中文或数字', 2000)
+        if (this.data.RE.isMinToMaxLength(inputValue.trim(),2,30)) {
+          flag = 1
+        } else {
+          totast('请输入长度2~30的中文或数字', 2000)
+        }
       }
     }
     if (flag) {

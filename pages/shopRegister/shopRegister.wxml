@@ -23,6 +23,12 @@
       <view class="flex-sub text-right">{{storeInfo.storeName}}</view>
       <view class="margin-left cuIcon-right" style="font-size:36rpx"></view>
     </view>
+    <view class="flex padding margin-top-sm bg-white" bindtap="getInput" data-inputType="name"
+      data-title="真实姓名">
+      <view style="margin-right:100rpx">真实姓名</view>
+      <view class="flex-sub text-right">{{storeInfo.name}}</view>
+      <view class="margin-left cuIcon-right" style="font-size:36rpx"></view>
+    </view>
     <view class="flex padding margin-top-sm bg-white" bindtap="getInput" data-inputType="storeAddress"
       data-title="店铺地址">
       <view style="margin-right:100rpx">店铺地址</view>

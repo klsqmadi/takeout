@@ -114,13 +114,13 @@ Page({
             this.setData({
               item: this.data.item
             })
-            totast('退款成功',2000,'success')
+            totast('拒绝接单成功',2000,'success')
           } else {
-            totast('退款失败,请重试', 2000,'fail')
+            totast('拒接接单失败', 2000,'error')
           }
         })
       } else {
-        totast('系统错误,拒绝接单失败,请重试', 1500,'fail')
+        totast('拒接接单失败', 1500,'error')
       }
       hideLoading()
       this.hideModal()
@@ -153,7 +153,7 @@ Page({
           item: this.data.item
         })
       } else {
-        totast('系统错误,订单状态修改失败,请重试', 1500)
+        totast('接单失败', 1500,'error')
       }
     })
     hideLoading()
@@ -187,11 +187,11 @@ Page({
             })
             totast('订单已完成',2000,'success')
           }else{
-            totast('订单完成失败,请重试', 2000,'fail')
+            totast('订单完成失败', 2000,'error')
           }
         })
       } else {
-        totast('系统错误,完成订单失败,请重试', 1500,'fail')
+        totast('完成订单失败', 1500,'error')
       }
       hideLoading()
       this.hideModal()
@@ -237,7 +237,7 @@ Page({
           })
           totast('操作成功',2000,'success')
         }else{
-          totast('操作失败,请重试',2000,'fail')
+          totast('操作失败,请重试',2000,'error')
         }
         hideLoading()
         this.hideModal()
@@ -268,11 +268,11 @@ Page({
               })
               totast('退款成功', 2000,'success')
             } else {
-              totast('退款失败,请重试', 2000,'fail')
+              totast('退款失败,请重试', 2000,'error')
             }
           })
         } else {
-          totast('系统错误,退款失败,请重试', 2000,'fail')
+          totast('系统错误,退款失败,请重试', 2000,'error')
         }
         this.hideModal()
         hideLoading()
@@ -287,13 +287,13 @@ Page({
               this.setData({
                 item: this.data.item
               })
-              totast('退款成功', 2000)
+              totast('退款成功', 2000,'success')
             } else {
-              totast('退款失败,请重试', 2000)
+              totast('退款失败', 2000,'error')
             }
           })
         } else {
-          totast('系统错误,退款失败,请重试', 2000)
+          totast('退款失败', 2000,'error')
         }
       })
       this.hideModal()
@@ -312,9 +312,9 @@ Page({
           item: this.data.item,
           currentModalType: ''
         })
-        totast('发货成功,等待骑手抢单', 2000,'success')
+        totast('发货成功', 2000,'success')
       } else {
-        totast('发货失败,请重试', 2000,'fail')
+        totast('发货失败', 2000,'error')
       }
       hideLoading()
     })
@@ -363,11 +363,11 @@ Page({
     wx.setClipboardData({
       data: this.data.telephoneNumber,
       success: () => {
-        totast('复制成功', 1500)
+        totast('复制成功', 1500,'success')
         this.hideModal()
       },
       fail: () => {
-        totast('复制失败,请重试', 1500)
+        totast('复制失败,请重试', 1500,'error')
         this.hideModal()
       }
     })

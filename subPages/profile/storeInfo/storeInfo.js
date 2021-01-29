@@ -32,7 +32,8 @@ Page({
       storeIntroduce: '',
       phoneNumber: 1,
       schoolAddress: [],
-      shopType: []
+      shopType: [],
+      name:''
     },
     shopReviewStatus: 1,
     currentModalType: '',
@@ -58,6 +59,7 @@ Page({
         storeInfo.shopId = result.shopId
         storeInfo.storeAddress = result.detailAddress
         storeInfo.storeName = result.shopName
+        storeInfo.name = result.businessName
         const tempCategory = {
           categoryName: result.shopCategory.slice(0, 2)
         }
@@ -102,7 +104,7 @@ Page({
   _getShopReviewStatus(shopId) {
     return getShopReviewStatus(shopId)
   },
-  _modifyShopInfo(campusAddress, contactPhone, detailAddress, shopCategory, shopId, shopIntroduce, shopName, shopHead) {
+  _modifyShopInfo(name,campusAddress, contactPhone, detailAddress, shopCategory, shopId, shopIntroduce, shopName, shopHead) {
     if(shopHead){
       return new Promise((reslove, reject) => {
         loading('加载中')
@@ -114,6 +116,7 @@ Page({
             /* 'content-type':'multipart/form-data' */
           },
           data: {
+            name,
             campusAddress,
             contactPhone,
             detailAddress,
@@ -129,7 +132,7 @@ Page({
         })
       }).catch(() => {
         hideLoading()
-        totast('系统错误', 1500)
+        totast('系统错误', 1500,'error')
       })
     }else{
       return new Promise((reslove, reject) => {
@@ -142,6 +145,7 @@ Page({
             /* 'content-type':'multipart/form-data' */
           },
           data: {
+            name,
             campusAddress,
             contactPhone,
             detailAddress,
@@ -156,7 +160,7 @@ Page({
         })
       }).catch(() => {
         hideLoading()
-        totast('系统错误', 1500)
+        totast('系统错误', 1500,'error')
       })
     }
   },
@@ -164,8 +168,15 @@ Page({
     loading('加载中')
     getAllSchool().then(res => {
       if (res && (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getAllSchool_SUCCESS)) {
+        for (const [key,item] of res.data.data.entries()) {
+          for (const selectedSchool of this.data.storeInfo.schoolAddress) {
+            if(item.campusName != selectedSchool.campusName){
+              res.data.data.splice(key,1)
+            }
+          }
+        }
         this.setData({
-          schoolPickerRange: res.data.data
+          schoolPickerRange:res.data.data
         })
       } else {
         totast('系统错误,校区获取失败', 1500)
@@ -179,6 +190,13 @@ Page({
       url: BASE_URL + API_URL_getShopType,
       success: res => {
         if (res && (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getShopType_SUCCESS)) {
+          for (const [key,item] of res.data.data.entries()) {
+            for (const selectedSchool of this.data.storeInfo.shopType) {
+              if(item.categoryName == selectedSchool.categoryName){
+                res.data.data.splice(key,1)
+              }
+            }
+          }
           this.setData({
             shopTypePickerRange: res.data.data
           })
@@ -335,7 +353,7 @@ Page({
         url: BASE_URL + API_URL_modifyPicture,
         success: res => {
           if (JSON.parse(res.data).code == STATUS_CODE_SUCCESSE || JSON.parse(res.data).code == 1205) {
-            this._modifyShopInfo(schoolAddress, storeInfo.phoneNumber, storeInfo.storeAddress, shopType, storeInfo.shopId, storeInfo.storeIntroduce, storeInfo.storeName, JSON.parse(res.data).data).then(res2 => {
+            this._modifyShopInfo(storeInfo.name,schoolAddress, storeInfo.phoneNumber, storeInfo.storeAddress, shopType, storeInfo.shopId, storeInfo.storeIntroduce, storeInfo.storeName, JSON.parse(res.data).data).then(res2 => {
               if (res2 && (res2.data.code == STATUS_CODE_SUCCESSE || res2.data.code == STATUS_CODE_modifyShopInfo_SUCCESS)) {
                 totast('信息修改成功', 1500, 'success')
                 setTimeout(() => {
@@ -344,21 +362,21 @@ Page({
                   })
                 }, 1700)
               } else {
-                totast('系统错误,修改信息失败', 1500)
+                totast('系统错误,修改信息失败', 1500,'error')
               }
             })
           } else {
-            totast('图片上传失败,请重试', 2000)
+            totast('图片上传失败,请重试', 2000,'error')
           }
           hideLoading()
         },
         fail: res => {
           hideLoading()
-          totast('系统错误,修改失败', 1500)
+          totast('系统错误,修改失败', 1500,'error')
         }
       })
     } else {
-      this._modifyShopInfo(schoolAddress, storeInfo.phoneNumber, storeInfo.storeAddress, shopType, storeInfo.shopId, storeInfo.storeIntroduce, storeInfo.storeName).then(res => {
+      this._modifyShopInfo(storeInfo.name,schoolAddress, storeInfo.phoneNumber, storeInfo.storeAddress, shopType, storeInfo.shopId, storeInfo.storeIntroduce, storeInfo.storeName).then(res => {
         hideLoading()
         if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyShopInfo_SUCCESS) {
           totast('信息修改成功', 1500, 'success')
@@ -368,7 +386,7 @@ Page({
             })
           }, 1700)
         } else {
-          totast('系统错误,修改信息失败3', 1500)
+          totast('系统错误,修改信息失败3', 1500,'error')
         }
       })
     }

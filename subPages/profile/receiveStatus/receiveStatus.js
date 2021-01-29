@@ -64,8 +64,9 @@ Page({
             currentStatus: '手动接单'
           })
         }
+        totast('修改状态成功',2000,'success')
       } else {
-        totast('系统错误,更改失败',1500)
+        totast('修改状态失败',2000,'error')
       }
       hideLoading()
       this.hideModal()

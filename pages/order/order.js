@@ -552,11 +552,11 @@ Page({
             })
             totast('操作成功',2000,'success')
           }else{
-            totast('拒绝接单失败,请重试', 2000,'fail')
+            totast('拒绝接单失败', 2000,'error')
           }
         })
       } else {
-        totast('系统错误,接单失败,请重试', 1500,'fail')
+        totast('拒绝接单失败', 1500,'error')
       }
       hideLoading()
       this.hideModal()
@@ -684,11 +684,11 @@ Page({
             })
             totast('订单已完成',2000,'success')
           }else{
-            totast('订单完成失败,请重试', 2000,'fail')
+            totast('订单完成失败', 2000,'error')
           }
         })
       } else {
-        totast('系统错误,完成订单失败,请重试', 1500,'fail')
+        totast('完成订单失败', 1500,'error')
       }
       hideLoading()
       this.hideModal()
@@ -722,7 +722,7 @@ Page({
           })
           totast('发货成功', 2000,'success')
         } else {
-          totast('发货失败,请重试', 2000)
+          totast('发货失败', 2000,'error')
         }
         hideLoading()
       })
@@ -740,9 +740,9 @@ Page({
             orders: this.data.orders,
             currentModalType: ''
           })
-          totast('', 2000,'success')
+          totast('发货成功', 2000,'success')
         } else {
-          totast('发货失败,请重试', 2000,'fail')
+          totast('发货失败', 2000,'error')
         }
         hideLoading()
       })
@@ -801,11 +801,11 @@ Page({
               }
               totast('退款成功', 2000,'success')
             } else {
-              totast('退款失败,请重试', 2000,'fail')
+              totast('退款失败', 2000,'error')
             }
           })
         } else {
-          totast('系统错误,退款失败,请重试', 1500,'fail')
+          totast('退款失败', 1500,'error')
         }
         hideLoading()
         this.hideModal()
@@ -842,11 +842,11 @@ Page({
               })
               totast('退款成功', 2000,'success')
             } else {
-              totast('退款失败,请重试', 2000)
+              totast('退款失败', 2000,'error')
             }
           })
         } else {
-          totast('系统错误,退款失败,请重试', 1500)
+          totast('退款失败', 1500,'error')
         }
         hideLoading()
         this.hideModal()
@@ -899,7 +899,7 @@ Page({
           })
           totast('操作成功',2000,'success')
         }else{
-          totast('操作失败,请重试',2000,'fail')
+          totast('操作失败',2000,'error')
         }
         hideLoading()
         this.hideModal()
@@ -908,11 +908,6 @@ Page({
       loading('加载中')
       this._modifyOrderStatus(id, orderNumber, orderId, userId, 11).then(res=>{
         if (res && (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyOrderStatus_SUCCES)){
-          orders[currentType].list[currentClickIndex].orderState = '待送达'
-          orders[currentType].list[currentClickIndex].status = 3
-          const tempList = orders[currentType].list[currentClickIndex]
-          orders['pendingArrive'].push(tempList)
-          orders['pendingDelivered'].list.splice(currentClickIndex,1)
           for (const item of orders['all'].list) {
             if(item.orderNumber == orderNumber){
               item.status = 3
@@ -920,12 +915,17 @@ Page({
               break
             }
           }
+          orders[currentType].list[currentClickIndex].orderState = '待送达'
+          orders[currentType].list[currentClickIndex].status = 3
+          const tempList = orders[currentType].list[currentClickIndex]
+          orders['pendingArrive'].list.push(tempList)
+          orders['pendingDelivered'].list.splice(currentClickIndex,1)
           this.setData({
             orders:this.data.orders
           })
           totast('操作成功',2000,'success')
         }else{
-          totast('操作失败,请重试',2000,'fail')
+          totast('操作失败',2000,'error')
         }
         hideLoading()
         this.hideModal()

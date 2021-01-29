@@ -136,7 +136,7 @@ Page({
             category: this.data.category
           })
         } else {
-          totast('系统错误,更改名称失败', 2000)
+          totast('更改名称失败', 2000,'error')
         }
         hideLoading()
         this.hideModal()
@@ -157,7 +157,7 @@ Page({
           category: this.data.category
         })
       } else {
-        totast('系统错误,删除失败', 2000)
+        totast('删除失败', 2000,'error')
       }
       hideLoading()
       this.hideModal(e)
@@ -184,8 +184,9 @@ Page({
           this.setData({
             category: this.data.category
           })
+          totast('添加分类成功',2000,'success')
         } else {
-          totast('系统错误,添加分类失败', 2000)
+          totast('系统错误,添加分类失败', 2000,'error')
         }
         hideLoading()
         this.hideModal()
