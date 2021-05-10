@@ -73,7 +73,7 @@ Page({
           })
         }
       } else {
-        totast('系统错误,信息获取失败', 1500)
+        totast('信息获取失败', 2000,'error')
       }
       hideLoading()
     })
@@ -186,7 +186,7 @@ Page({
           })
           totast('添加分类成功',2000,'success')
         } else {
-          totast('系统错误,添加分类失败', 2000,'error')
+          totast('添加分类失败', 2000,'error')
         }
         hideLoading()
         this.hideModal()

@@ -1,16 +1,16 @@
 <!--pages/work/work.wxml-->
 <!-- 自定义导航栏 -->
-<cu-custom bgColor="bg-blue-1">
+<cu-custom bgColor="bg-cyan">
   <view slot="content">工作区</view>
 </cu-custom>
 <!-- --- -->
-<view class="today-money text-center text-xl text-white light"
-  style="padding:180rpx 0 100rpx 0;background-color:#1195DD">
+<view class="bg-cyan today-money text-center text-xl"
+  style="padding:180rpx 0 100rpx 0;">
   <view class=" margin-bottom-xl">今日付款金额</view>
   <view class="" style="font-size:80rpx">{{todayMoney}}</view>
 </view>
 <!-- --- -->
-<view class="flex text-center text-white text-df" style="background-color:#1195DD;">
+<view class="flex text-center text-white text-df bg-cyan" style="">
   <view class="cu-item flex-sub pos-re">
     <view class="padding-bottom">浏览人数</view>
     <view class="padding-bottom">{{visitors}}</view>

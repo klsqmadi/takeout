@@ -9,7 +9,8 @@ import {
 }from  '../../../services/config.js'
 import {
   getSaleHistory,
-  getOrderHistory
+  getOrderHistory,
+  getMonthSaleHistory
 }from '../../../services/work'
 Page({
 
@@ -21,6 +22,7 @@ Page({
       date: '',
       start: '2020-01-01',
       end: '',
+      dateMonth:'',
       totalIncome: 0,
       monthlyIncome:0,
       monthlyOrderQuantity:0,
@@ -33,7 +35,8 @@ Page({
   async onLoad(){
     await this.initTime()
     await this.getOrderHistory()
-    this.getSaleHistory()
+    await this.getSaleHistory()
+    this.getMonthSaleHistory()
   },
   onReachBottom(){
     this.getOrderHistory()
@@ -54,7 +57,7 @@ Page({
             incomeDetail:this.data.incomeDetail
           })
         }else{
-          totast('订单历史加载失败,请重试',2000)
+          totast('加载失败',2000,'error')
         }
         hideLoading()
       })
@@ -67,21 +70,39 @@ Page({
     loading('加载中')
     getSaleHistory(seleteTime.date).then(res=>{
       if(res && (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getSaleHistory_SUCCESS)){
-        seleteTime.monthlyIncome = res.data.data.monthlyIncome.toFixed(2)
+        // seleteTime.monthlyIncome = res.data.data.monthlyIncome.toFixed(2)
         seleteTime.monthlyOrderQuantity = res.data.data.monthlyOrderQuantity
         seleteTime.totalIncome = res.data.data.dailyIncome.toFixed(2)
         this.setData({
           seleteTime:this.data.seleteTime
         })
       }else{
-        totast('订单历史加载失败,请重试',2000)
+        totast('加载失败',2000,'error')
       }
       hideLoading()
     })
   },
+  getMonthSaleHistory(){
+    loading('加载中')
+    const {seleteTime} = this.data
+    console.log(seleteTime.dateMonth + '');
+    getMonthSaleHistory(seleteTime.dateMonth + '').then(res=>{
+      if(res && res.data.code == 3207){
+        seleteTime.monthlyIncome = res.data.data.toFixed(2)
+        this.setData({
+          seleteTime:this.data.seleteTime
+        })
+      }else{
+        totast('加载失败',2000,'error')
+      }
+    })
+    hideLoading()
+  },
   initTime(){
     const {seleteTime} = this.data
     seleteTime.date = getCurrentTime()
+    seleteTime.dateMonth = getCurrentTime()
+    seleteTime.dateMonth = seleteTime.dateMonth.substring(0,7)
     seleteTime.end = getCurrentTime()
     this.setData({
       seleteTime:this.data.seleteTime
@@ -98,5 +119,14 @@ Page({
     })
     await this.getOrderHistory()
     this.getSaleHistory()
+  },
+  async monthChange(e){
+    let {seleteTime} = this.data
+    console.log(e.detail.value);
+    seleteTime.dateMonth = e.detail.value.substring(0,7)
+    await this.setData({
+      seleteTime:this.data.seleteTime
+    })
+    this.getMonthSaleHistory()
   }
 })

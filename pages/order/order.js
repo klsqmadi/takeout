@@ -204,7 +204,7 @@ Page({
     if (this.data.tabCurrentIndex == 0) {
       const goods = this.data.orders['all']
       const statusArray = ['待接单', '待发货', '待送达', '交易完成', '已退款', '待发货']
-      if (goods.totalPages >= goods.page) {
+      if (goods.totalPages > goods.page) {
         getShopAllOrder(goods.page + 1, 10, wx.getStorageSync('shopId')).then(res => {
           if (res && (res.data.code == STATUS_CODE_getShopAllOrder_SUCCESS || res.data.code == STATUS_CODE_SUCCESSE)) {
             if (res.data.data.list) {
@@ -218,7 +218,7 @@ Page({
                   commodities: item.commodities,
                   completeTime: item.completeTime,
                   time: item.date || item.paymentTime || '',
-                  deliveryAddress: item.deliveryAddress,
+                  deliveryAddress: item.deliveryAddress || '用户自取',
                   freight: item.deliveryFee,
                   deliveryStatus: item.deliveryStatus,
                   id: item.id,
@@ -227,7 +227,7 @@ Page({
                   orderNumber: item.orderNumber,
                   itemsNumber: 0,
                   orderState:/*  item.status == 1 ? '待接单' : item.status == 2 ? '待发货' : item.status == 3 ? '待送达' : item.status == 4 ? '交易完成' : '退款' */statusArray[item.status - 1] || '订单异常',
-                  remarks: item.remarks || '用户无备注',
+                  remarks: item.remarks || '无',
                   riderId:item.riderId,
                   riderName: item.riderName,
                   riderPhone: item.riderPhone,
@@ -236,7 +236,7 @@ Page({
                   totalQuantity: item.totalQuantity,
                   userPhone: item.userPhone,
                   userName: item.userName,
-                  reservedTime: item.reservedTime || '',
+                  reservedTime: item.reservedTime || '非预定',
                   items: [],
                   userId: item.userId,
                   isDelivered: item.isDelivered == 0 ? 0 : 1
@@ -263,7 +263,7 @@ Page({
               })
             }
           } else {
-            totast('系统错误,订单查询失败,请重试', 1500)
+            totast('系统错误,订单查询失败', 1500)
           }
           hideLoading()
         })
@@ -301,7 +301,7 @@ Page({
               orderNumber: item.orderNumber,
               itemsNumber: 0,
               money: item.totalAmount,
-              deliveryAddress: item.deliveryAddress,
+              deliveryAddress: item.deliveryAddress || '自取',
               userPhone: item.userPhone,
               userName: item.userName,
               totalQuantity: item.totalQuantity,
@@ -312,7 +312,7 @@ Page({
               deliveryStatus: item.deliveryStatus,
               status: item.status,
               isReserved: item.isReserved,
-              reservedTime: item.reservedTime || '用户无备注',
+              reservedTime: item.reservedTime || '非预定',
               remarks: item.remarks || '无',
               riderId:item.riderId,
               riderName: item.riderName,
@@ -373,7 +373,7 @@ Page({
               commodities: item.commodities,
               completeTime: item.completeTime,
               time: item.date || item.paymentTime || '',
-              deliveryAddress: item.deliveryAddress,
+              deliveryAddress: item.deliveryAddress || '用户自取',
               freight: item.deliveryFee,
               deliveryStatus: item.deliveryStatus,
               id: item.id,
@@ -383,7 +383,7 @@ Page({
               itemsNumber: 0,
               orderState: statusArray[item.status - 1] || '订单异常',
               // orderState:item.status == 1?'待接单':item.status == 2?'待发货':item.status == 3?'待送达':item.status == 4?'交易完成':'退款',
-              remarks: item.remarks || '用户无备注',
+              remarks: item.remarks || '无',
               riderId:item.riderId,
               riderName: item.riderName,
               riderPhone: item.riderPhone,
@@ -392,7 +392,7 @@ Page({
               totalQuantity: item.totalQuantity,
               userPhone: item.userPhone,
               userName: item.userName,
-              reservedTime: item.reservedTime || '',
+              reservedTime: item.reservedTime || '非预定',
               items: [],
               userId: item.userId,
               isDelivered: item.isDelivered == 0 ? 0 : 1
@@ -414,12 +414,13 @@ Page({
             }
             goods.list.push(good)
           }
+          console.log(goods);
           this.setData({
             orders: this.data.orders
           })
         }
       } else {
-        totast('系统错误,订单查询失败,请重试', 1500)
+        totast('订单查询失败', 2000,'error')
       }
       hideLoading()
     })
@@ -627,7 +628,7 @@ Page({
         })
         totast('接单成功',2000,'success')
       } else {
-        totast('系统错误,订单状态修改失败,请重试', 1500,'fail')
+        totast('系统错误,订单状态修改失败', 1500)
       }
       hideLoading()
 
@@ -688,7 +689,7 @@ Page({
           }
         })
       } else {
-        totast('完成订单失败', 1500,'error')
+        totast('订单完成失败', 2000,'error')
       }
       hideLoading()
       this.hideModal()
@@ -710,7 +711,7 @@ Page({
       modifyOrderStatus_deliveryGoods(this.data.orders['all'].list[currentClickIndex].id).then(res => {
         if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyOrderStatus_deliveryGoods_SUCCESS) {
           this.data.orders['all'].list[currentClickIndex].isDelivered = 1
-          for (const item of this.data.oders['pendingDelivered'].list) {
+          for (const [index,item] of this.data.orders['pendingDelivered'].list.entries()) {
             if(item.orderNumber == this.data.orders['all'].list[currentClickIndex].orderNumber){
               item.isDelivered = 1
               break
@@ -730,7 +731,7 @@ Page({
       modifyOrderStatus_deliveryGoods(this.data.orders['pendingDelivered'].list[currentClickIndex].id).then(res => {
         if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyOrderStatus_deliveryGoods_SUCCESS) {
           this.data.orders['pendingDelivered'].list[currentClickIndex].isDelivered = 1
-          for (const item of this.data.orders['all'].list) {
+          for (const [index,item] of this.data.orders['all'].list.entries()) {
             if(item.orderNumber == this.data.orders['pendingDelivered'].list[currentClickIndex].orderNumber){
               item.isDelivered = 1
               break
@@ -783,6 +784,9 @@ Page({
                     break
                   }
                 }
+                this.setData({
+                  orders: orders
+                })
               } else if (currentType == 'pendingDelivered') {
                 for (const [key, item] of orders['all'].list.entries()) {
                   if (item.orderNumber == orderNumber) {
@@ -805,7 +809,7 @@ Page({
             }
           })
         } else {
-          totast('退款失败', 1500,'error')
+          totast('退款失败', 2000,'error')
         }
         hideLoading()
         this.hideModal()
@@ -824,6 +828,9 @@ Page({
                     break
                   }
                 }
+                this.setData({
+                  orders: orders
+                })
               } else if (currentType == 'pendingArrive') {
                 for (const [key, item] of orders['all'].list.entries()) {
                   if (item.orderNumber == orderNumber) {
@@ -846,7 +853,7 @@ Page({
             }
           })
         } else {
-          totast('退款失败', 1500,'error')
+          totast('退款失败', 2000,'error')
         }
         hideLoading()
         this.hideModal()

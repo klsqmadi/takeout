@@ -33,7 +33,7 @@ export default function (option, headerContentType) {
           // data:option.data||{},
           timeout: option.timeout || 100000,
           success: res => {
-            if (res.data.code == STATUS_CODE_TOKEN_OVERDUE) {
+            if (res.data.code == 400) {
               wx.showModal({
                 title: '提示',
                 content: '登录已过期,请重新登录!',
@@ -56,12 +56,30 @@ export default function (option, headerContentType) {
             }
           },
           // success:reslove,
-          fail: reject
+          fail: (reject=>{
+            // wx.showModal({
+            //   title: '提示',
+            //   content: '登录已过期,请重新登录!',
+            //   confirmText: '登录',
+            //   success: (result) => {
+            //     if (result.confirm) {
+            //       wx.navigateTo({
+            //         url: '/pages/wxLogin/wxLogin',
+            //       })
+            //     }
+            //   },
+            //   fail: () => {
+            //     wx.navigateTo({
+            //       url: '/pages/wxLogin/wxLogin',
+            //     })
+            //   }
+            // })
+          })
         })
       }
     })
     .catch(() => {
       hideLoading()
-      totast('系统错误,加载失败', 1500)
+      totast('加载失败', 1500,'error')
     })
 }

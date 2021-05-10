@@ -23,6 +23,9 @@ Page({
     }
   },
   login(){
+    wx.setStorageSync('id', '')
+    wx.setStorageSync('token', '')
+    wx.setStorageSync('shopId', '')
     wx.login({
       timeout: 1000,
       success:wxloginRes=>{
@@ -79,24 +82,24 @@ Page({
                     })
                   }
                 } else if(apiRes.data.code == 1544 || apiRes.data.code == 1504){
-                  totast('登录超时,请重试',1500)
+                  totast('登录超时',2000,'error')
                   // totast(apiRes.data.data,1500)
                   this.login()
                 }else{
                   this.login()
-                  totast('登录失败,请重试', 1500)
+                  totast('登录失败', 2000,'error')
                   // totast(apiRes.data.data,1500)
                 }
                 hideLoading()
               },
               fail: apiFail => {
                 hideLoading()
-                totast('登录失败,请重试', 1500)
+                totast('登录失败', 2000,'error')
               }
             })
           loading('加载中')
     } else if (res.detail.errMsg == 'getPhoneNumber:fail user deny') {
-      totast('授权失败,请重新授权',1500)
+      totast('授权失败',2000,'error')
     }
   },
   goToRegister(){

@@ -34,7 +34,7 @@ Page({
           businessName:res.data.data.businessName
         })
       }else{
-        totast('系统错误',1500)
+        totast('系统错误',2000,'error')
       }hideLoading()
     })
   },

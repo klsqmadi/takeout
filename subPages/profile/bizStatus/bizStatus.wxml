@@ -1,5 +1,5 @@
 <!--subPages/profile/bizStatus/bizStatus.wxml-->
-<cu-custom bgColor="bg-blue-1" isBack="true">
+<cu-custom bgColor="bg-cyan" isBack="true">
   <view slot="backText">营业状态 ({{currentStatus}})</view>
 </cu-custom>
 <view class="padding text-center flex">

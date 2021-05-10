@@ -3,7 +3,7 @@
   <view slot="content">店铺</view>
 </cu-custom>
 <!-- --- -->
-<view class="bg-blue-1 text-center of-hid">
+<view class="bg-cyan text-center of-hid">
   <image class="bg-white" style="width:200rpx;height:200rpx;border-radius:100%;margin:150rpx 0 0 0" src="{{headImage}}"></image>
   <view class="text-greyLight text-lg margin-tb-xl">{{shopName}}</view>
 </view>

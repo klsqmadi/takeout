@@ -1,5 +1,5 @@
 <!--pages/order/order.wxml-->
-<cu-custom bgColor="bg-blue-1">
+<cu-custom bgColor="bg-cyan">
   <view slot="content">订单</view>
 </cu-custom>
 <!-- --- -->
@@ -77,9 +77,9 @@
       <view class="padding-lr padding-tb-xs border radius margin-left text-blue" wx:if="{{item.isDelivered == 0 && item.deliveryAddress != null && item.isReserved && item.orderState == '待发货'}}" catchtap="shopSend" data-index="{{index}}">发货</view>
       <view class="padding-lr padding-tb-xs border radius margin-left text-blue" wx:if="{{item.status == 1}}" catchtap="acceptOrder" data-index="{{index}}">接单</view>
       <view class="padding-lr padding-tb-xs border radius margin-left text-red" wx:if="{{item.status == 1}}" catchtap="refuseReceiveOrder" data-index="{{index}}">拒绝接单</view>
-      <view class="padding-lr padding-tb-xs border radius margin-left text-red" wx:if="{{(item.orderState == '待发货'&& !item.riderId)}}" catchtap="refund" data-index="{{index}}">退款</view>
       <view class="padding-lr padding-tb-xs border radius margin-left text-green" wx:if="{{(item.status == 3 && (item.riderId == null || item.riderId == '')) || (item.deliveryAddress == null && item.status == 2)}}" catchtap="completeOrder" data-index="{{index}}">订单完成</view>
       <view class="padding-lr padding-tb-xs border radius margin-left text-black" wx:if="{{item.status == 2 && item.isDelivered == 1 && item.deliveryAddress != null}}" catchtap="shopDelivered" data-index="{{index}}">商家配送</view>
+      <view class="padding-lr padding-tb-xs border radius margin-left text-red" wx:if="{{(item.orderState == '待发货'&& !item.riderId)}}" catchtap="refund" data-index="{{index}}">退款</view>
     </view>
   </view>
   <!-- <view class="text-sm text-center padding border-top margin-top">已经到底啦</view> -->

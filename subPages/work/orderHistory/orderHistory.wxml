@@ -1,4 +1,4 @@
-<cu-custom bgColor="bg-blue-1" isBack="true">
+<cu-custom bgColor="bg-cyan" isBack="true">
   <view slot="backText">账单</view>
 </cu-custom>
 <view class="padding flex bg-white border-bottom text-lg">
@@ -7,18 +7,27 @@
     <text class="cuIcon-rank text-blue" style="font-size:36rpx;"></text>
     <text class=""> {{seleteTime.monthlyOrderQuantity}}</text>
   </view>
-  <view class="text-right flex-sub">
+  <!-- <view class="text-right flex-sub">
     <text>本月收入 </text>
     <text class="cuIcon-moneybag text-red" style="font-size:36rpx;"></text>
     <text> {{seleteTime.monthlyIncome}}</text>
-  </view>
+  </view> -->
 </view>
-<view class="text-lg bg-white padding flex justify-between">
+<view class="text-lg bg-white padding flex justify-between border-bottom">
   <picker mode="date" value="{{seleteTime.date}}" start="{{seleteTime.start}}" end="{{seleteTime.end}}" bindchange="dateChange" fields="day">
     <text class="text-blue">{{seleteTime.date}}</text>
     <text class="cuIcon-write"></text>
   </picker>
   <view>本日收入 <text class="text-red cuIcon-recharge" style="font-size:36rpx;"><!--  ￥  --></text><text class="text-red"> {{seleteTime.totalIncome}}</text></view>
+</view>
+
+
+<view class="text-lg bg-white padding flex justify-between">
+  <picker mode="date" value="{{seleteTime.dateMonth}}" start="{{seleteTime.start}}" end="{{seleteTime.end}}" bindchange="monthChange" fields="month">
+    <text class="text-blue">{{seleteTime.dateMonth}}</text>
+    <text class="cuIcon-write"></text>
+  </picker>
+  <view>月收入 <text class="text-red cuIcon-recharge" style="font-size:36rpx;"><!--  ￥  --></text><text class="text-red"> {{seleteTime.monthlyIncome}}</text></view>
 </view>
 <view class="margin-top-sm bg-white">
   <view class="flex padding justify-between align-center solids-bottom" wx:for="{{incomeDetail}}">

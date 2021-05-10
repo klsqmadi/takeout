@@ -1,5 +1,5 @@
 <!--subPages/order/handleGoods/handleGoods.wxml-->
-<cu-custom bgColor="bg-blue-1" isBack="true">
+<cu-custom bgColor="bg-cyan" isBack="true">
   <view slot="backText">商品管理</view>
 </cu-custom>
 <view class="bg-white nav">
@@ -49,7 +49,7 @@
       </view>
     </scroll-view>
   </view>
-  <view class="cu-bar btn-group pos-fix-bl bg-white" style="width:100vw">
+  <view class="cu-bar btn-group pos-fix-bl bg-white" style="width:100vw;bottom:2vh;">
     <button class="cu-btn bg-red shadow-blur {{isCheckBoxShow == true?'dp-none':''}}"
       bindtap="controlCheckBoxShowOrHide" data-flag="{{true}}">删除商品</button>
     <button class="cu-btn bg-blue-1 {{isCheckBoxShow == true?'dp-none':''}}" bindtap="showModal"

@@ -1,4 +1,4 @@
-<cu-custom bgColor="bg-blue-1" isBack="true">
+<cu-custom bgColor="bg-cyan" isBack="true">
   <view slot="backText">
   店铺信息
   <text wx:if="{{shopReviewStatus == 0}}">(提交信息审核中)</text>

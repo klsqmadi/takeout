@@ -1,4 +1,4 @@
-<cu-custom bgColor="bg-blue-1">
+<cu-custom bgColor="bg-cyan">
   <view slot="content">手机号登录</view>
 </cu-custom>
 <view>

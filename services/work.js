@@ -14,7 +14,8 @@ import {
   /*凯悦的接口 */
   API_URL_getShopWorkInfo1,
   API_URL_getSaleHistory,
-  API_URL_getOrderHistory
+  API_URL_getOrderHistory,
+  API_URL_getMonthSaleHistory
 } from './config'
 
 /*泽强的接口 */
@@ -140,6 +141,17 @@ export function getOrderHistory(date,pageNumber){
       date,
       pageNumber,
       pageSize:10,
+      shopId:wx.getStorageSync('shopId')
+    }
+  })
+}
+
+export function getMonthSaleHistory(date){
+  return request({
+    url:API_URL_getMonthSaleHistory,
+    method:'GET',
+    data:{
+      date,
       shopId:wx.getStorageSync('shopId')
     }
   })

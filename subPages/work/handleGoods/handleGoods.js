@@ -161,7 +161,7 @@ Page({
           }
         }
       } else {
-        totast('系统错误,商品信息获取事变', 1500)
+        totast('商品获取失败', 2000,'error')
       }
       hideLoading()
     })
@@ -209,7 +209,7 @@ Page({
           }
         }
       } else {
-        totast('系统错误,商品信息获取事变', 1500)
+        totast('商品获取失败', 2000,'error')
       }
       hideLoading()
     })
@@ -488,13 +488,13 @@ Page({
         totast('请输入正确的数字(正数及小数点后两位)',2000)
       }
     }else{
-      if(this.data.RE.isMinToMaxLength(goodInputValue.trim(),4,20)){
+      if(this.data.RE.isMinToMaxLength(goodInputValue.trim(),1,20)){
         this.setData({
           [temp]:goodInputValue,
         })
         this.hideGoodAttributeModal()
       }else{
-        totast('请输入4~20位中文或数字',2000)
+        totast('请输入1~20位中文,字母或数字',2000)
       }
     }
   },
@@ -635,6 +635,9 @@ Page({
           filePath: addGood.imageUrl,
           name: 'file',
           url: BASE_URL + API_URL_addOrModifyGoodPicture,
+          header:{
+            'businessToken':wx.getStorageSync('token')
+          },
           success: res => {
             if (res && (JSON.parse(res.data).code == STATUS_CODE_SUCCESSE || JSON.parse(res.data).code == STATUS_CODE_addOrModifyGoodPicture_SUCCESS) ){
               this._addGood(commodityInfoQuery.categoryId, commodityInfoQuery.commodityDetail, commodityInfoQuery.commodityName, JSON.parse(res.data).data, commodityInfoQuery.price, commodityInfoQuery.specs).then(result => {
@@ -848,7 +851,7 @@ Page({
                 this.hideModal()
                 totast('商品修改成功',2000,'success')
               } else {
-                totast('商品信息修改失败', 2000,'error')
+                totast('商品修改失败', 2000,'error')
               }
               hideLoading()
             })
@@ -857,6 +860,9 @@ Page({
             wx.uploadFile({
               filePath: addGood.imageUrl,
               name: 'file',
+              header:{
+                'businessToken':wx.getStorageSync('token')
+              },
               url: BASE_URL + API_URL_addOrModifyGoodPicture,
               success: res => {
                 if (res && (JSON.parse(res.data).code == STATUS_CODE_SUCCESSE || JSON.parse(res.data).code == STATUS_CODE_addOrModifyGoodPicture_SUCCESS) ){
@@ -878,17 +884,17 @@ Page({
                       })
                       this.hideModal()
                     } else {
-                      totast('商品信息修改失败', 2000,'error')
+                      totast('商品修改失败', 2000,'error')
                     }
                   })
                 } else {
-                  totast('商品信息修改失败', 2000,'error')
+                  totast('商品修改失败', 2000,'error')
                 }
                 hideLoading()
               },
               fail: res => {
                 hideLoading()
-                totast('商品信息修改失败', 2000,'error')
+                totast('商品修改失败', 2000,'error')
               }
 
             })
@@ -930,12 +936,12 @@ Page({
                     this.hideModal()
                     totast('商品修改成功',2000,'success')
                   } else {
-                    totast('商品信息修改失败', 2000,'error')
+                    totast('商品修改失败', 2000,'error')
                   }
                   hideLoading()
                 })
               } else {
-                totast('系商品信息修改失败', 2000,'error')
+                totast('商品修改失败', 2000,'error')
               }
               hideLoading()
             })
@@ -944,6 +950,9 @@ Page({
             wx.uploadFile({
               filePath: addGood.imageUrl,
               name: 'file',
+              header:{
+                'businessToken':wx.getStorageSync('token')
+              },
               url: BASE_URL + API_URL_addOrModifyGoodPicture,
               success: res => {
                 if (JSON.parse(res.data).code == STATUS_CODE_SUCCESSE || JSON.parse(res.data).code == STATUS_CODE_addOrModifyGoodPicture_SUCCESS) {
@@ -982,21 +991,21 @@ Page({
                           })
                           this.hideModal()
                         } else {
-                          totast('系统错误,商品信息修改失败,请重试', 1500)
+                          totast('商品修改失败', 2000,'error')
                         }
                       })
                     } else {
-                      totast('系统错误,商品信息修改失败,请重试', 1500)
+                      totast('商品修改失败', 2000,'error')
                     }
                   })
                 } else {
-                  totast('系统错误,商品信息修改失败,请重试', 1500)
+                  totast('商品修改失败', 2000,'error')
                 }
                 hideLoading()
               },
               fail: res => {
                 hideLoading()
-                totast('系统错误,商品信息修改失败,请重试', 1500)
+                totast('商品修改失败', 2000,'error')
               }
             })
           }

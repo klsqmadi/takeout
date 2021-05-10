@@ -24,6 +24,7 @@ import {
 } from '../../../services/profile'
 Page({
   data: {
+    TOKEN:wx.getStorageSync('token'),
     showChangeButton: false,
     storeInfo: {
       storeImageUrl: null,
@@ -112,7 +113,8 @@ Page({
           url: `${BASE_URL}${API_URL_modifyShopInfo}`,
           method: 'POST',
           header: {
-            'content-type': 'application/x-www-form-urlencoded'
+            'content-type': 'application/x-www-form-urlencoded',
+            'businessToken':this.data.TOKEN || null
             /* 'content-type':'multipart/form-data' */
           },
           data: {
@@ -141,7 +143,8 @@ Page({
           url: `${BASE_URL}${API_URL_modifyShopInfo}`,
           method: 'POST',
           header: {
-            'content-type': 'application/x-www-form-urlencoded'
+            'content-type': 'application/x-www-form-urlencoded',
+            'businessToken':wx.getStorageSync('token')
             /* 'content-type':'multipart/form-data' */
           },
           data: {
@@ -170,7 +173,7 @@ Page({
       if (res && (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_getAllSchool_SUCCESS)) {
         for (const [key,item] of res.data.data.entries()) {
           for (const selectedSchool of this.data.storeInfo.schoolAddress) {
-            if(item.campusName != selectedSchool.campusName){
+            if(item.campusName == selectedSchool.campusName){
               res.data.data.splice(key,1)
             }
           }
@@ -259,10 +262,10 @@ Page({
         totast('请输入正确的手机号码', 2000)
       }
     } else {
-      if (this.data.RE.isMinToMaxLength(inputValue.trim(), 2, 30)) {
+      if (this.data.RE.isMinToMaxLength(inputValue.trim(), 2, 12)) {
         flag = 1
       } else {
-        totast('请输入长度2~30的中文或数字', 2000)
+        totast('请输入长度2~12的中文,字母或数字', 2000)
       }
     }
     if (flag) {
@@ -351,6 +354,9 @@ Page({
         filePath: storeInfo.storeImageUrl,
         name: 'file',
         url: BASE_URL + API_URL_modifyPicture,
+        header:{
+          'businessToken':wx.getStorageSync('token')
+        },
         success: res => {
           if (JSON.parse(res.data).code == STATUS_CODE_SUCCESSE || JSON.parse(res.data).code == 1205) {
             this._modifyShopInfo(storeInfo.name,schoolAddress, storeInfo.phoneNumber, storeInfo.storeAddress, shopType, storeInfo.shopId, storeInfo.storeIntroduce, storeInfo.storeName, JSON.parse(res.data).data).then(res2 => {
@@ -361,32 +367,89 @@ Page({
                     delta: 1,
                   })
                 }, 1700)
-              } else {
-                totast('系统错误,修改信息失败', 1500,'error')
+              }else if(res2 && res2.data.code == 400){
+                wx.showModal({
+                  title: '提示',
+                  content: '登录已过期,请重新登录!',
+                  confirmText: '登录',
+                  success: (result) => {
+                    if (result.confirm) {
+                      wx.navigateTo({
+                        url: '/pages/wxLogin/wxLogin',
+                      })
+                    }
+                  },
+                  fail: () => {
+                    wx.navigateTo({
+                      url: '/pages/wxLogin/wxLogin',
+                    })
+                  }
+                })
+              } 
+              else {
+                totast('修改信息失败', 1500,'error')
               }
             })
-          } else {
-            totast('图片上传失败,请重试', 2000,'error')
+          }else if(JSON.parse(res.data).code == 400){
+            wx.showModal({
+              title: '提示',
+              content: '登录已过期,请重新登录!',
+              confirmText: '登录',
+              success: (result) => {
+                if (result.confirm) {
+                  wx.navigateTo({
+                    url: '/pages/wxLogin/wxLogin',
+                  })
+                }
+              },
+              fail: () => {
+                wx.navigateTo({
+                  url: '/pages/wxLogin/wxLogin',
+                })
+              }
+            })
+          } 
+          else {
+            totast('图片上传失败', 2000,'error')
           }
           hideLoading()
         },
         fail: res => {
           hideLoading()
-          totast('系统错误,修改失败', 1500,'error')
+          totast('修改失败1', 1500,'error')
         }
       })
     } else {
       this._modifyShopInfo(storeInfo.name,schoolAddress, storeInfo.phoneNumber, storeInfo.storeAddress, shopType, storeInfo.shopId, storeInfo.storeIntroduce, storeInfo.storeName).then(res => {
         hideLoading()
         if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyShopInfo_SUCCESS) {
-          totast('信息修改成功', 1500, 'success')
+          totast('信息修改成功', 2000, 'success')
           setTimeout(() => {
             wx.navigateBack({
               delta: 1,
             })
           }, 1700)
-        } else {
-          totast('系统错误,修改信息失败3', 1500,'error')
+        }else if(res && res.data.code == 400){
+          wx.showModal({
+            title: '提示',
+            content: '登录已过期,请重新登录!',
+            confirmText: '登录',
+            success: (result) => {
+              if (result.confirm) {
+                wx.navigateTo({
+                  url: '/pages/wxLogin/wxLogin',
+                })
+              }
+            },
+            fail: () => {
+              wx.navigateTo({
+                url: '/pages/wxLogin/wxLogin',
+              })
+            }
+          })
+        } 
+        else {
+          totast('修改信息失败', 2000,'error')
         }
       })
     }

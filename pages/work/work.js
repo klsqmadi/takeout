@@ -62,7 +62,7 @@ Page({
         },
         fail:res=>{
           hideLoading()
-          totast('信息获取失败', 1500)
+          totast('信息获取失败', 1500,'error')
         }
       })
       loading('加载中')
@@ -83,13 +83,13 @@ Page({
               monthSales:res.data.data.commoditySaleMonthly
             })
           } else {
-            totast('信息获取失败', 1500)
+            totast('信息获取失败', 1500,'error')
           }
           hideLoading()
         },
         fail:res=>{
           hideLoading()
-          totast('信息获取失败', 1500)
+          totast('信息获取失败', 1500,'error')
         }
       })
     }

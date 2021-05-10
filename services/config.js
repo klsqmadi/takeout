@@ -21,16 +21,11 @@ export function totast(text,timeout=1500,icon='none'){
  * 配置一些跟网络请求相关的常量
  */
 
-/* export const BASE_URL = 'http://175.24.113.119:8081' */ //泽强的服务器
-/* export const BASE_URL = 'http://121.41.229.2:8081' */
-// export const BASE_URL = 'https://192.168.1.105:8888'
-export const BASE_URL = 'https://www.lizeqiang.top:8888'
-// export const BASE_URL = 'https://192.168.1.103:8888'
+export const BASE_URL = 'https://www.sijie666.com:8080'
+export const WS_BASE_URL = 'wss://www.sijie666.com:58080'
 
-// export const BASE_URL = 'http://192.168.1.111:8080'  //凯悦的服务器
-// export const BASE_URL = 'http://175.24.113.119:8080'
-// export const WS_BASE_URL = 'wss://192.168.1.102:58080'
-export const WS_BASE_URL = 'wss://www.lizeqiang.top:58080'
+// export const BASE_URL = 'https://192.168.1.107:8080'
+// export const WS_BASE_URL = 'wss://192.168.1.107:58080'
 export const WEB_SOCKET_URL = `${WS_BASE_URL}/ws`
 
 export const BASE_URL_3 = 'http://47.93.19.109:18080' //东龙服务器
@@ -113,6 +108,7 @@ export const API_URL_modifyOrderStatus = '/order/updateOrderStatus'
 export const API_URL_modifyOrderStatus_deliveryGoods = '/order/deliveryGoods'
 export const API_URL_getSaleHistory = '/data/getSaleHistory'
 export const API_URL_getOrderHistory = '/order/selectShopOrderHistory'
+export const API_URL_getMonthSaleHistory = '/data/getShopMonthProfit'
 // 东龙的接口
 export const API_URL_getAllSchool = '/campus/selectAllCampusName'
 export const API_URL_refundMoneyToWX = '/wechatpay/refund'

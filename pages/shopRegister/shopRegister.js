@@ -136,7 +136,8 @@ Page({
         url: BASE_URL + '/modifyShopInfo/initShopInfo',
         method: 'POST',
         header: {
-          'Content-Type': 'application/x-www-form-urlencoded'
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'businessToken':wx.getStorageSync('token') || ''
         },
         data: {
           campusAddress: schoolcampus,
@@ -156,7 +157,26 @@ Page({
             wx.redirectTo({
               url: '/pages/registerFail/registerFail?shopFlag=3',
             })
-          } else {
+          } else if(res && res.data.code == 400){
+            wx.showModal({
+              title: '提示',
+              content: '登录已过期,请重新登录!',
+              confirmText: '登录',
+              success: (result) => {
+                if (result.confirm) {
+                  wx.navigateTo({
+                    url: '/pages/wxLogin/wxLogin',
+                  })
+                }
+              },
+              fail: () => {
+                wx.navigateTo({
+                  url: '/pages/wxLogin/wxLogin',
+                })
+              }
+            })
+          }
+          else {
             totast('上传失败', 2000,'error')
           }
           hideLoading()
@@ -198,7 +218,26 @@ Page({
           this.setData({
             schoolPickerRange: res.data.data
           })
-        } else {
+        } else if(res && res.data.code ==400){
+          wx.showModal({
+            title: '提示',
+            content: '登录已过期,请重新登录!',
+            confirmText: '登录',
+            success: (result) => {
+              if (result.confirm) {
+                wx.navigateTo({
+                  url: '/pages/wxLogin/wxLogin',
+                })
+              }
+            },
+            fail: () => {
+              wx.navigateTo({
+                url: '/pages/wxLogin/wxLogin',
+              })
+            }
+          })
+        }
+        else {
           totast('系统错误,校区获取失败', 1500)
         }
         hideLoading()
@@ -249,6 +288,9 @@ Page({
       filePath: pictureArray[index].url,
       name: 'file',
       url: BASE_URL + API_URL_modifyPicture,
+      header:{
+        'businessToken':wx.getStorageSync('token') || ''
+      },
       formData: {
         name: pictureArray[index].name
       },
@@ -266,7 +308,8 @@ Page({
               url: BASE_URL + API_URL_modifyShopLicense,
               method: 'POST',
               header: {
-                'Content-Type': 'application/x-www-form-urlencoded'
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'businessToken':wx.getStorageSync('token') || ''
               },
               data: {
                 busLicense: this.data.picturePath[0].url,

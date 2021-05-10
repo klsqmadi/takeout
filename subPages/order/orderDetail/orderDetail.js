@@ -191,7 +191,7 @@ Page({
           }
         })
       } else {
-        totast('完成订单失败', 1500,'error')
+        totast('订单完成失败', 1500,'error')
       }
       hideLoading()
       this.hideModal()
@@ -228,7 +228,7 @@ Page({
       money
     } = item
       loading('加载中')
-      this._modifyOrderStatus(id, orderNumber, orderId, userId, 11).then(res=>{
+      modifyOrderStatus(id, orderNumber, orderId, userId, 11).then(res=>{
         if (res && (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyOrderStatus_SUCCES)){
           item.orderState = '待送达'
           item.status = 3
@@ -237,7 +237,7 @@ Page({
           })
           totast('操作成功',2000,'success')
         }else{
-          totast('操作失败,请重试',2000,'error')
+          totast('操作失败',2000,'error')
         }
         hideLoading()
         this.hideModal()
@@ -272,13 +272,13 @@ Page({
             }
           })
         } else {
-          totast('系统错误,退款失败,请重试', 2000,'error')
+          totast('退款失败', 2000,'error')
         }
         this.hideModal()
         hideLoading()
       })
     } else if (orderState == '待送达') {
-      this._modifyOrderStatus(id, orderNumber, orderId, userId, 5).then(res => {
+      modifyOrderStatus(id, orderNumber, orderId, userId, 5).then(res => {
         if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_modifyOrderStatus_SUCCES) {
           refundMoneyToWX(orderNumber, money, '商家主动退款').then(res => {
             if (res.data.code == STATUS_CODE_SUCCESSE || res.data.code == STATUS_CODE_refundMoneyToWX_SUCCESS) {
@@ -367,7 +367,7 @@ Page({
         this.hideModal()
       },
       fail: () => {
-        totast('复制失败,请重试', 1500,'error')
+        totast('复制失败', 1500,'error')
         this.hideModal()
       }
     })
